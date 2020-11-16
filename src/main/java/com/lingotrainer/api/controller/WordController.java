@@ -1,7 +1,6 @@
 package com.lingotrainer.api.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import com.lingotrainer.api.model.Word;
 import com.lingotrainer.api.security.component.AuthenticationFacade;
 import com.lingotrainer.api.service.UserService;

@@ -3,14 +3,12 @@ package com.lingotrainer.api.controller;
 import com.google.gson.Gson;
 import com.lingotrainer.api.annotation.Authenticated;
 import com.lingotrainer.api.exception.GameException;
-import com.lingotrainer.api.exception.InvalidDataException;
 import com.lingotrainer.api.exception.NotFoundException;
 import com.lingotrainer.api.model.*;
 import com.lingotrainer.api.security.component.AuthenticationFacade;
 import com.lingotrainer.api.service.GameService;
 import com.lingotrainer.api.service.RoundService;
 import com.lingotrainer.api.service.TurnService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,45 +63,20 @@ public class GameController {
     @Authenticated
     @ResponseBody
     public ResponseEntity<?> playTurn(@PathVariable("id") int gameId, @RequestParam("guessedWord") String guessedWord) {
+        Game game = this.gameService.findById(gameId).orElseThrow(() -> new NotFoundException(String.format("Game ID %d could not be found.", gameId)));
         Round currentRound = roundService.findCurrentRound(gameId).orElseThrow(() -> new NotFoundException(String.format("Current round by game ID %d could not be found.", gameId)));
         Turn currentTurn = this.turnService.findCurrentTurn(currentRound).orElseThrow(() -> new NotFoundException("Current turn could not be found."));
-        Game game = this.gameService.findById(gameId).orElseThrow(() -> new NotFoundException(String.format("Game ID %d could not be found.", gameId)));
-
-        if (guessedWord == null) {
-            currentTurn.setGuessedWord("-");
-            finishTurn(currentTurn);
-            throw new NotFoundException("Turn has no guessed word value");
-        }
-
-        guessedWord = guessedWord.trim().toUpperCase();
         currentTurn.setGuessedWord(guessedWord);
 
-        if (currentRound.getWord().length() != guessedWord.length()) {
-            finishTurn(currentTurn);
-            throw new GameException("The words do not have the same length");
-        }
+        validateTurn(currentTurn, guessedWord);
 
-        if (!guessedWord.chars().allMatch(Character::isLetter)) {
-            finishTurn(currentTurn);
-            throw new GameException("The word can only contain alphabetical characters");
-        }
-
-        if (currentRound.getTurns().size() > 5) {
-            createNewRound(game);
-            throw new GameException("5 turns have already been played for this round.");
-        }
-
-        if (Duration.between(currentTurn.getStartedAt(), Instant.now()).getSeconds() > 1500) { // TODO: change 1500 to 10 (seconds)
-            finishTurn(currentTurn);
-            throw new GameException("Your turn took longer than 10 seconds.");
-        }
-
-        currentTurn.setGuessedWord(guessedWord);
+        // Set guessedWord after null check. A null does not have a trim or toUpperCase method. This would otherwise cause an error.
+        currentTurn.setGuessedWord(guessedWord.toUpperCase().trim());
 
         int index = 0;
         List<GuessedLetter> guessedLetters = new ArrayList<>();
 
-        for (char letter : guessedWord.toCharArray()) {
+        for (char letter : currentTurn.getGuessedWord().toCharArray()) {
             LetterFeedback letterFeedback;
             if (letter == Character.toUpperCase(currentRound.getWord().charAt(index))) {
                 letterFeedback = LetterFeedback.CORRECT;
@@ -119,10 +92,10 @@ public class GameController {
             index++;
         }
 
-        boolean correctGuess = guessedWord.equalsIgnoreCase(currentRound.getWord());
+        boolean correctGuess = currentTurn.getGuessedWord().equalsIgnoreCase(currentRound.getWord());
 
         Turn newTurn = Turn.builder()
-                .guessedWord(guessedWord)
+                .guessedWord(currentTurn.getGuessedWord())
                 .guessedLetters(guessedLetters)
                 .correctGuess(correctGuess)
                 .startedAt(Instant.now())
@@ -143,7 +116,10 @@ public class GameController {
     private void finishTurn(Turn currentTurn) {
         turnService.save(currentTurn);
 
-        if (currentTurn.getRound().getTurns().size() >= 5) {
+        if (currentTurn.getRound().getTurns()
+                .stream()
+                .filter(t -> t.getGuessedWord() != null)
+                .count() >= 5) {
             Game game = currentTurn.getRound().getGame();
             game.setGameStatus(Game.GameStatus.FINISHED);
             gameService.save(game);
@@ -197,5 +173,42 @@ public class GameController {
         }
 
         return randomWord;
+    }
+
+    private void validateTurn(Turn turn, String guessedWord) {
+        Round round = turn.getRound();
+        Game game = round.getGame();
+
+        if (game.getGameStatus() != Game.GameStatus.ACTIVE) {
+            throw new GameException("This game is not active. Please start a new game.");
+        }
+
+        if (guessedWord == null) {
+            turn.setGuessedWord("-");
+            finishTurn(turn);
+            throw new NotFoundException("Turn has no guessed word value");
+        }
+
+        if (turn.getRound().getWord().length() != turn.getGuessedWord().length()) {
+            finishTurn(turn);
+            throw new GameException("The words do not have the same length");
+        }
+
+        if (!turn.getGuessedWord().chars().allMatch(Character::isLetter)) {
+            finishTurn(turn);
+            throw new GameException("The word can only contain alphabetical characters");
+        }
+        if (turn.getRound().getTurns()
+                .stream()
+                .filter(t -> t.getGuessedWord() != null)
+                .count() >= 5) {
+            createNewRound(game);
+            throw new GameException("5 turns have already been played for this round.");
+        }
+
+        if (Duration.between(turn.getStartedAt(), Instant.now()).getSeconds() > 1500) { // TODO: change 1500 to 10 (seconds)
+            finishTurn(turn);
+            throw new GameException("Your turn took longer than 10 seconds.");
+        }
     }
 }

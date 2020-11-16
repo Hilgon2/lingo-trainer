@@ -20,8 +20,6 @@ public class TurnServiceImpl implements TurnService {
 
     @Override
     public Turn save(Turn turn) {
-        System.out.println("Nu in de service");
-        System.out.println(turn);
         return turnRepository.save(turn);
     }
 
