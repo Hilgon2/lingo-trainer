@@ -1,6 +1,7 @@
 package com.lingotrainer.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.lingotrainer.api.security.Role;
 import com.lingotrainer.api.security.json.MyJsonView;
@@ -34,6 +35,7 @@ public class User implements UserDetails {
     @NotEmpty(message = "Wachtwoord mag niet leeg zijn")
     @Pattern(regexp="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", message = "Wachtwoord moet minimaal 8 tekens, een kleine letter, een hoofdletter, een getal en een speciaal teken bevatten")
     @ToString.Exclude
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private int highscore;

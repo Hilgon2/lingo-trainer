@@ -11,6 +11,7 @@ public class JwtProperties {
 
 	private String secretKey = "gekkelingo";
 
+	// default: 3600000
 	// valid for 1 hour
-	private long validityInMs = 3600000;
+	private long validityInMs = 36000000;
 }

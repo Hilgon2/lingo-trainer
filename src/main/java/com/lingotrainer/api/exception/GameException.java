@@ -4,12 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value= HttpStatus.BAD_REQUEST)
-public class GeneralException extends RuntimeException {
+public class GameException extends RuntimeException {
 
-    public GeneralException() {
+    public GameException() {
     }
 
-    public GeneralException(String value) {
+    public GameException(String value) {
         super(value);
     }
 

@@ -1,9 +1,9 @@
 package com.lingotrainer.api.model;
 
-import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class Game {
+public class Game  {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -23,9 +22,6 @@ public class Game {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private User user;
 
-    @NotNull
-    private String word;
-
     private int score;
 
     @NotNull
@@ -33,7 +29,7 @@ public class Game {
 
     @OneToMany(mappedBy = "game")
     @Builder.Default
-    private List<Turn> turns = new ArrayList<>();
+    private List<Round> rounds = new ArrayList<>();
 
     @Column(name="game_status")
     @Enumerated(EnumType.STRING)

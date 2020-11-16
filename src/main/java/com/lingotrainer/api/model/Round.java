@@ -1,41 +1,37 @@
 package com.lingotrainer.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "turns")
+@Table(name = "rounds")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Turn {
+public class Round {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(name="guessed_word")
-    private String guessedWord;
+    @NotNull
+    private String word;
 
-    @Transient
-    private List<GuessedLetter> guessedLetters;
-
-    @Transient
-    private boolean correctGuess;
-
-    @Column(name="started_at")
-    private Instant startedAt;
+    @OneToMany(mappedBy = "round")
+    @Builder.Default
+    private List<Turn> turns = new ArrayList<>();
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JsonIgnore
     @ToString.Exclude
-    private Round round;
+    private Game game;
 }
