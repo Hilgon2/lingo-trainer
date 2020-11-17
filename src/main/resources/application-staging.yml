@@ -1,0 +1,29 @@
+# Path naming
+server:
+  servlet:
+    context-path: /api/v1
+  error:
+    include-message: always
+
+# server settings
+spring:
+  jackson:
+    mapper:
+      default-view-inclusion: true
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: false
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB

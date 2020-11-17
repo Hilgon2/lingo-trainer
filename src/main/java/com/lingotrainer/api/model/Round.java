@@ -29,6 +29,9 @@ public class Round {
     @Builder.Default
     private List<Turn> turns = new ArrayList<>();
 
+    @Transient
+    private int lettersCount;
+
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JsonIgnore

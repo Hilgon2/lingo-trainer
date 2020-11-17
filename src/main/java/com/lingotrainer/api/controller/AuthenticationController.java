@@ -32,8 +32,7 @@ public class AuthenticationController {
 
     @PostMapping(path = "/login")
     @Public
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequest data) throws Exception {
-        System.out.println("\n" +  data);
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest data) {
         try {
             String username = data.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
@@ -45,8 +44,6 @@ public class AuthenticationController {
             model.put("token", token);
             return ok(model);
         } catch (AuthenticationException e) {
-            System.out.println(e);
-            System.out.println(e.getMessage());
             throw new BadCredentialsException("Invalid username/password");
         }
     }
