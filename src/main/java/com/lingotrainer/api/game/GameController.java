@@ -1,5 +1,6 @@
 package com.lingotrainer.api.game;
 
+import com.lingotrainer.api.dictionary.Dictionary;
 import com.lingotrainer.api.game.round.Round;
 import com.lingotrainer.api.shared.annotation.Authenticated;
 import com.lingotrainer.api.shared.exception.NotFoundException;
@@ -50,7 +51,7 @@ public class GameController {
 
         game = gameService.createNewGame(game);
 
-        this.roundService.createNewRound(game);
+        this.createNewRound(game);
 
         return ok(game);
     }
@@ -70,7 +71,7 @@ public class GameController {
         currentTurn.setGuessedWord(guessedWord.toUpperCase().trim());
 
         if (Integer.parseInt(currentTurn.getFeedback().get("code").toString()) != -9999) {
-            this.turnService.finishTurn(currentTurn);
+            this.finishTurn(currentTurn);
             return ok(currentTurn);
         }
 
@@ -105,12 +106,67 @@ public class GameController {
 
         if (correctGuess) {
             game.setScore(game.getScore() + 1);
-            this.roundService.createNewRound(game);
+            this.createNewRound(game);
             this.gameService.save(game);
         } else {
-            this.turnService.finishTurn(currentTurn);
+            this.finishTurn(currentTurn);
         }
 
         return ok(newTurn);
+    }
+
+    private void createNewRound(Game game) {
+        com.lingotrainer.api.dictionary.Dictionary dictionary = Dictionary.builder()
+                .language(game.getLanguage())
+                .build();
+        String randomWord = dictionary.getRandomWord();
+
+        if (randomWord.length() < 5 || randomWord.length() > 7) {
+            randomWord = dictionary.getRandomWord();
+        }
+
+        Round round = Round.builder()
+                .word(randomWord)
+                .game(game)
+                .turns(Collections.singletonList(Turn.builder()
+                        .startedAt(Instant.now())
+                        .build()))
+                .build();
+
+        round = this.roundService.save(round);
+        Turn newTurn = round.getTurns().get(0);
+        newTurn.setRound(round);
+        this.turnService.save(newTurn);
+    }
+
+    private void finishTurn(Turn turn) {
+        this.turnService.save(turn);
+
+        if (!turn.isCorrectGuess() &&
+                turn.getRound().getTurns()
+                        .stream()
+                        .filter(t -> t.getGuessedWord() != null)
+                        .count() == 5) {
+            Game game = turn.getRound().getGame();
+            Map<String, Object> feedback = new HashMap<>();
+
+            game.setGameStatus(Game.GameStatus.FINISHED);
+            gameService.save(game);
+
+            feedback.put("code", 5001);
+            feedback.put("status", GameFeedback.GAME_OVER);
+            turn.setFeedback(feedback);
+        }
+
+        if (turn.isCorrectGuess()) {
+            this.createNewRound(turn.getRound().getGame());
+        } else {
+            Turn newTurn = Turn.builder()
+                    .startedAt(Instant.now())
+                    .round(turn.getRound())
+                    .build();
+
+            this.turnService.save(newTurn);
+        }
     }
 }

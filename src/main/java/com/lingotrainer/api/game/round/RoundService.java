@@ -10,6 +10,4 @@ public interface RoundService {
     Round save(Round round);
 
     Optional<Round> findCurrentRound(int gameId);
-
-    void createNewRound(Game game);
 }
