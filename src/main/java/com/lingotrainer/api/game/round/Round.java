@@ -1,8 +1,8 @@
-package com.lingotrainer.api.round;
+package com.lingotrainer.api.game.round;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lingotrainer.api.game.Game;
-import com.lingotrainer.api.turn.Turn;
+import com.lingotrainer.api.game.turn.Turn;
 import com.sun.istack.NotNull;
 import lombok.*;
 

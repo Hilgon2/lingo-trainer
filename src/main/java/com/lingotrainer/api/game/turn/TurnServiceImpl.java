@@ -1,10 +1,10 @@
-package com.lingotrainer.api.turn;
+package com.lingotrainer.api.game.turn;
 
 import com.lingotrainer.api.game.Game;
-import com.lingotrainer.api.shared.GameFeedback;
-import com.lingotrainer.api.round.Round;
+import com.lingotrainer.api.game.GameFeedback;
+import com.lingotrainer.api.game.round.Round;
 import com.lingotrainer.api.game.GameService;
-import com.lingotrainer.api.round.RoundService;
+import com.lingotrainer.api.game.round.RoundService;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -39,10 +39,11 @@ public class TurnServiceImpl implements TurnService {
     public void finishTurn(Turn turn) {
         this.save(turn);
 
-        if (turn.getRound().getTurns()
+        if (!turn.isCorrectGuess() &&
+                turn.getRound().getTurns()
                 .stream()
                 .filter(t -> t.getGuessedWord() != null)
-                .count() >= 5) {
+                .count() == 5) {
             Game game = turn.getRound().getGame();
             Map<String, Object> feedback = new HashMap<>();
 

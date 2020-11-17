@@ -1,6 +1,6 @@
 package com.lingotrainer.api.game;
 
-import com.lingotrainer.api.round.Round;
+import com.lingotrainer.api.game.round.Round;
 import com.lingotrainer.api.user.User;
 import lombok.*;
 

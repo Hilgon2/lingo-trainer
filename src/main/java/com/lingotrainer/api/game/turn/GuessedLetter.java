@@ -1,4 +1,4 @@
-package com.lingotrainer.api.turn;
+package com.lingotrainer.api.game.turn;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

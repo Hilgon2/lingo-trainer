@@ -1,4 +1,4 @@
-package com.lingotrainer.api.turn;
+package com.lingotrainer.api.game.turn;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

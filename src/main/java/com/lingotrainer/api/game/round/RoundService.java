@@ -1,4 +1,4 @@
-package com.lingotrainer.api.round;
+package com.lingotrainer.api.game.round;
 
 import com.lingotrainer.api.game.Game;
 

@@ -1,13 +1,13 @@
-package com.lingotrainer.api.round;
+package com.lingotrainer.api.game.round;
 
 import com.lingotrainer.api.shared.exception.ForbiddenException;
 import com.lingotrainer.api.shared.exception.NotFoundException;
 import com.lingotrainer.api.dictionary.Dictionary;
 import com.lingotrainer.api.game.Game;
-import com.lingotrainer.api.turn.Turn;
+import com.lingotrainer.api.game.turn.Turn;
 import com.lingotrainer.api.game.GameRepository;
 import com.lingotrainer.api.authentication.AuthenticationService;
-import com.lingotrainer.api.turn.TurnService;
+import com.lingotrainer.api.game.turn.TurnService;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

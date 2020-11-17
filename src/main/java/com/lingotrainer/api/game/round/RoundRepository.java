@@ -1,4 +1,4 @@
-package com.lingotrainer.api.round;
+package com.lingotrainer.api.game.round;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

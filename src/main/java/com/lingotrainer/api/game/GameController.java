@@ -1,16 +1,14 @@
 package com.lingotrainer.api.game;
 
-import com.lingotrainer.api.game.Game;
-import com.lingotrainer.api.round.Round;
+import com.lingotrainer.api.game.round.Round;
 import com.lingotrainer.api.shared.annotation.Authenticated;
 import com.lingotrainer.api.shared.exception.NotFoundException;
 import com.lingotrainer.api.authentication.AuthenticationService;
-import com.lingotrainer.api.game.GameService;
-import com.lingotrainer.api.round.RoundService;
-import com.lingotrainer.api.turn.GuessedLetter;
-import com.lingotrainer.api.turn.LetterFeedback;
-import com.lingotrainer.api.turn.Turn;
-import com.lingotrainer.api.turn.TurnService;
+import com.lingotrainer.api.game.round.RoundService;
+import com.lingotrainer.api.game.turn.GuessedLetter;
+import com.lingotrainer.api.game.turn.LetterFeedback;
+import com.lingotrainer.api.game.turn.Turn;
+import com.lingotrainer.api.game.turn.TurnService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

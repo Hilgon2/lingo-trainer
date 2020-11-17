@@ -1,9 +1,9 @@
-package com.lingotrainer.api.turn;
+package com.lingotrainer.api.game.turn;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lingotrainer.api.game.Game;
-import com.lingotrainer.api.round.Round;
-import com.lingotrainer.api.shared.GameFeedback;
+import com.lingotrainer.api.game.round.Round;
+import com.lingotrainer.api.game.GameFeedback;
 import lombok.*;
 
 import javax.persistence.*;
@@ -72,7 +72,7 @@ public class Turn {
         if (this.guessedWord == null) {
             feedbackCode = 5200;
             this.setGuessedWord("-");
-            status = GameFeedback.GUESSED_WORD_NOT_FOUND;
+            status = GameFeedback.GUESSED_WORD_IS_NULL;
         }
 
         if (round.getWord().length() != this.getGuessedWord().length()) {
