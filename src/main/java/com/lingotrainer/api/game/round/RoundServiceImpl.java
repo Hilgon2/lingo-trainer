@@ -20,11 +20,13 @@ public class RoundServiceImpl implements RoundService {
     private final AuthenticationService authenticationService;
     private RoundRepository roundRepository;
     private GameRepository gameRepository;
+    private TurnService turnService;
 
-    public RoundServiceImpl(AuthenticationService authenticationService, RoundRepository roundRepository, GameRepository gameRepository) {
+    public RoundServiceImpl(AuthenticationService authenticationService, RoundRepository roundRepository, GameRepository gameRepository, TurnService turnService) {
         this.authenticationService = authenticationService;
         this.roundRepository = roundRepository;
         this.gameRepository = gameRepository;
+        this.turnService = turnService;
     }
 
     @Override
@@ -48,5 +50,30 @@ public class RoundServiceImpl implements RoundService {
     @Override
     public Optional<Round> findCurrentRound(int gameId) {
         return roundRepository.findCurrentRound(gameId);
+    }
+
+    @Override
+    public void createNewRound(Game game) {
+        Dictionary dictionary = Dictionary.builder()
+                .language(game.getLanguage())
+                .build();
+        String randomWord = dictionary.getRandomWord();
+
+        if (randomWord.length() < 5 || randomWord.length() > 7) {
+            randomWord = dictionary.getRandomWord();
+        }
+
+        Round round = Round.builder()
+                .word(randomWord)
+                .game(game)
+                .turns(Collections.singletonList(Turn.builder()
+                        .startedAt(Instant.now())
+                        .build()))
+                .build();
+
+        round = this.save(round);
+        Turn newTurn = round.getTurns().get(0);
+        newTurn.setRound(round);
+        this.turnService.save(newTurn);
     }
 }

@@ -8,4 +8,6 @@ public interface TurnService {
     Turn save(Turn turn);
 
     Optional<Turn> findCurrentTurn(Round round);
+
+    void finishTurn(Turn turn);
 }
