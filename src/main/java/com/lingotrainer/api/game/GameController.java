@@ -36,7 +36,6 @@ public class GameController {
 
     @PostMapping(produces = "application/json")
     @Authenticated
-    @ResponseBody
     public ResponseEntity<?> startNewGame(@RequestParam("languageCode") String languageCode) {
         if (!new File(String.format("src/main/resources/dictionary/%s.json", languageCode)).exists()) {
             throw new NotFoundException(String.format("Language code '%s' not found.", languageCode));
@@ -57,7 +56,6 @@ public class GameController {
 
     @PutMapping(path = "/{id}")
     @Authenticated
-    @ResponseBody
     public ResponseEntity<?> playTurn(@PathVariable("id") int gameId, @RequestParam("guessedWord") String guessedWord) {
         Game game = this.gameService.findById(gameId).orElseThrow(() -> new NotFoundException(String.format("Game ID %d could not be found.", gameId)));
         Round currentRound = this.roundService.findCurrentRound(gameId).orElseThrow(() -> new NotFoundException(String.format("Current round by game ID %d could not be found.", gameId)));
@@ -66,38 +64,15 @@ public class GameController {
 
         currentTurn.validateTurn();
 
-        // Trim and capitalize the guessed word. A null does not have a trim or toUpperCase method. This could otherwise possibly cause an error.
-        currentTurn.setGuessedWord(guessedWord.toUpperCase().trim());
-
         if (Integer.parseInt(currentTurn.getFeedback().get("code").toString()) != -9999) {
             this.turnService.finishTurn(currentTurn);
             return ok(currentTurn);
-        }
-
-        int index = 0;
-        List<GuessedLetter> guessedLetters = new ArrayList<>();
-
-        for (char letter : currentTurn.getGuessedWord().toCharArray()) {
-            LetterFeedback letterFeedback;
-            if (letter == Character.toUpperCase(currentRound.getWord().charAt(index))) {
-                letterFeedback = LetterFeedback.CORRECT;
-            } else if (currentRound.getWord().toUpperCase().indexOf(letter) != -1) {
-                letterFeedback = LetterFeedback.PRESENT;
-            } else {
-                letterFeedback = LetterFeedback.ABSENT;
-            }
-            guessedLetters.add(GuessedLetter.builder()
-                    .letter(letter)
-                    .letterFeedback(letterFeedback)
-                    .build());
-            index++;
         }
 
         boolean correctGuess = currentTurn.getGuessedWord().equalsIgnoreCase(currentRound.getWord());
 
         Turn newTurn = Turn.builder()
                 .guessedWord(currentTurn.getGuessedWord())
-                .guessedLetters(guessedLetters)
                 .correctGuess(correctGuess)
                 .startedAt(Instant.now())
                 .round(currentRound)

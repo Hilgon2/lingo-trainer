@@ -27,7 +27,7 @@ public class GameServiceImpl implements GameService {
     @Override
     public Game createNewGame(Game game) {
         if (gameRepository.hasActiveGame(game.getUser())) {
-            throw new DuplicateException("An active game by the user");
+            throw new DuplicateException("An active game by the user already exists");
         }
 
         return gameRepository.save(game);

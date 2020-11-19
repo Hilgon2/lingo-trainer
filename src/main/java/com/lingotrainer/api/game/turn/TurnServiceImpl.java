@@ -39,11 +39,13 @@ public class TurnServiceImpl implements TurnService {
     public void finishTurn(Turn turn) {
         this.save(turn);
 
-        if (!turn.isCorrectGuess() &&
+        if (turn.isCorrectGuess()) {
+            this.roundService.createNewRound(turn.getRound().getGame());
+        } else if (!turn.isCorrectGuess() &&
                 turn.getRound().getTurns()
-                .stream()
-                .filter(t -> t.getGuessedWord() != null)
-                .count() == 5) {
+                        .stream()
+                        .filter(t -> t.getGuessedWord() != null)
+                        .count() == 5) {
             Game game = turn.getRound().getGame();
             Map<String, Object> feedback = new HashMap<>();
 
@@ -53,10 +55,6 @@ public class TurnServiceImpl implements TurnService {
             feedback.put("code", 5001);
             feedback.put("status", GameFeedback.GAME_OVER);
             turn.setFeedback(feedback);
-        }
-
-        if (turn.isCorrectGuess()) {
-            this.roundService.createNewRound(turn.getRound().getGame());
         } else {
             Turn newTurn = Turn.builder()
                     .startedAt(Instant.now())
