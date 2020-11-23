@@ -1,6 +1,6 @@
 package com.lingotrainer.api.infrastructure.persistency.jpa.entity.game;
 
-import com.lingotrainer.api.infrastructure.persistency.jpa.entity.PersistableEntity;
+import com.lingotrainer.api.domain.model.game.GameStatus;
 import com.lingotrainer.api.infrastructure.persistency.jpa.entity.game.round.RoundEntity;
 import com.lingotrainer.api.infrastructure.persistency.jpa.entity.user.UserEntity;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameEntity extends PersistableEntity {
+public class GameEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private UserEntity user;
@@ -36,9 +40,4 @@ public class GameEntity extends PersistableEntity {
     @Column(name="game_status")
     @Enumerated(EnumType.STRING)
     private GameStatus gameStatus;
-
-    public enum GameStatus {
-        ACTIVE,
-        FINISHED
-    }
 }

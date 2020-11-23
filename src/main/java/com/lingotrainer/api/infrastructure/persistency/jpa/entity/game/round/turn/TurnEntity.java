@@ -1,7 +1,6 @@
 package com.lingotrainer.api.infrastructure.persistency.jpa.entity.game.round.turn;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lingotrainer.api.infrastructure.persistency.jpa.entity.PersistableEntity;
 import com.lingotrainer.api.infrastructure.persistency.jpa.entity.game.round.RoundEntity;
 import lombok.*;
 
@@ -16,7 +15,12 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class TurnEntity extends PersistableEntity {
+public class TurnEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
     @Column(name="guessed_word")
     private String guessedWord;
 

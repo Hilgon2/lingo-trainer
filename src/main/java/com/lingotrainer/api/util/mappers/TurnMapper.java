@@ -1,0 +1,52 @@
+package com.lingotrainer.api.util.mappers;
+
+import com.lingotrainer.api.domain.model.game.round.RoundId;
+import com.lingotrainer.api.domain.model.game.round.turn.Turn;
+import com.lingotrainer.api.infrastructure.persistency.jpa.entity.game.round.RoundEntity;
+import com.lingotrainer.api.infrastructure.persistency.jpa.entity.game.round.turn.TurnEntity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TurnMapper implements EntityMapper<Turn, TurnEntity> {
+
+    public Turn convertToDomainEntity(TurnEntity turnEntity) {
+        return Turn.builder()
+                .startedAt(turnEntity.getStartedAt())
+                .roundId(new RoundId(turnEntity.getRound().getId()))
+                .guessedWord(turnEntity.getGuessedWord())
+                .build();
+    }
+
+    public TurnEntity convertToPersistableEntity(Turn turn) {
+        return TurnEntity.builder()
+                .startedAt(turn.getStartedAt())
+                .round(RoundEntity.builder().id(turn.getRoundId()).build())
+                .guessedWord(turn.getGuessedWord())
+                .build();
+    }
+
+    public List<TurnEntity> convertToPersistableEntities(List<Turn> turns) {
+        List<TurnEntity> turnEntities = new ArrayList<>();
+
+        turns.forEach(turn -> TurnEntity.builder()
+                .guessedWord(turn.getGuessedWord())
+                .startedAt(turn.getStartedAt())
+                .round(RoundEntity.builder().id(turn.getRoundId()).build())
+                .build());
+
+        return turnEntities;
+    }
+
+    public List<Turn> convertToDomainEntities(List<TurnEntity> turnEntities) {
+        List <Turn> turns = new ArrayList<>();
+
+        turnEntities.forEach(turn -> turns.add(Turn.builder()
+                .guessedWord(turn.getGuessedWord())
+                .startedAt(turn.getStartedAt())
+                .roundId(new RoundId(turn.getRound().getId()))
+                .build()));
+
+        return turns;
+    }
+}

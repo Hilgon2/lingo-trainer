@@ -1,8 +1,13 @@
 package com.lingotrainer.api.infrastructure.web.controllers;
 
 import com.lingotrainer.api.domain.model.game.Game;
+import com.lingotrainer.api.domain.model.game.GameId;
+import com.lingotrainer.api.domain.model.game.GameStatus;
 import com.lingotrainer.api.domain.model.game.round.Round;
 import com.lingotrainer.api.application.game.GameService;
+import com.lingotrainer.api.domain.model.game.round.RoundId;
+import com.lingotrainer.api.domain.model.user.User;
+import com.lingotrainer.api.domain.model.user.UserId;
 import com.lingotrainer.api.util.annotation.Authenticated;
 import com.lingotrainer.api.util.exception.NotFoundException;
 import com.lingotrainer.api.application.authentication.AuthenticationService;
@@ -36,17 +41,16 @@ public class GameController {
         if (!new File(String.format("src/main/resources/dictionary/%s.json", languageCode)).exists()) {
             throw new NotFoundException(String.format("Language code '%s' not found.", languageCode));
         }
+        User user = this.authenticationService.getUser();
 
         Game game = Game.builder()
-                .user(authenticationService.getUser())
+                .userId(new UserId(user.getUserId()))
                 .language(languageCode)
-                .gameStatus(Game.GameStatus.ACTIVE)
+                .gameStatus(GameStatus.ACTIVE)
                 .build();
 
-        System.out.println(game);
-
         int newGameId = gameService.createNewGame(game);
-
+        game.setGameId(new GameId(this.gameService.findActiveGame(user.getUserId()).orElseThrow(() -> new NotFoundException(String.format("User ID %d not found", user.getUserId()))).getGameId()));
         this.roundService.createNewRound(game);
 
         return ok(newGameId);
@@ -60,7 +64,7 @@ public class GameController {
         Turn currentTurn = this.roundService.findCurrentTurn(currentRound).orElseThrow(() -> new NotFoundException("Current turn could not be found."));
         currentTurn.setGuessedWord(guessedWord);
 
-        currentTurn.validateTurn();
+        currentTurn.validateTurn(currentRound.getWord());
 
         if (Integer.parseInt(currentTurn.getFeedback().get("code").toString()) != -9999) {
             this.roundService.finishTurn(currentTurn);
@@ -73,7 +77,7 @@ public class GameController {
                 .guessedWord(currentTurn.getGuessedWord())
                 .correctGuess(correctGuess)
                 .startedAt(Instant.now())
-                .round(currentRound)
+                .roundId(new RoundId(currentRound.getRoundId()))
                 .build();
 
         if (correctGuess) {

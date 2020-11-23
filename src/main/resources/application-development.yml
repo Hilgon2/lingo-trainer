@@ -15,7 +15,7 @@ spring:
     hibernate:
       ddl-auto: update
     generate-ddl: true
-    show-sql: true
+    show-sql: false
 
   datasource:
     driver-class-name: com.mysql.jdbc.Driver

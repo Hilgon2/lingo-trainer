@@ -2,7 +2,10 @@ package com.lingotrainer.api.application.game.round.base;
 
 import com.lingotrainer.api.application.game.round.RoundService;
 import com.lingotrainer.api.domain.model.game.GameFeedback;
+import com.lingotrainer.api.domain.model.game.GameId;
+import com.lingotrainer.api.domain.model.game.GameStatus;
 import com.lingotrainer.api.domain.model.game.round.Round;
+import com.lingotrainer.api.domain.model.game.round.RoundId;
 import com.lingotrainer.api.domain.repository.GameRepository;
 import com.lingotrainer.api.domain.repository.RoundRepository;
 import com.lingotrainer.api.domain.repository.TurnRepository;
@@ -15,7 +18,6 @@ import com.lingotrainer.api.application.authentication.AuthenticationService;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -37,10 +39,11 @@ public class BaseRoundService implements RoundService {
 
     @Override
     public Round save(Round round) {
-        if (!gameRepository.hasActiveGame(round.getGame().getUser())) {
+        Game game = this.gameRepository.findById(round.getGameId()).orElseThrow(() -> new NotFoundException(String.format("Game ID %d not found", round.getGameId())));
+        if (!gameRepository.hasActiveGame(game.getUserId())) {
             throw new NotFoundException("User has no active games");
         }
-        if (round.getGame().getUser().getId() != authenticationService.getUser().getId()) {
+        if (game.getUserId() != authenticationService.getUser().getUserId()) {
             throw new ForbiddenException("This game is not linked to the current user");
         }
 
@@ -65,36 +68,39 @@ public class BaseRoundService implements RoundService {
 
         Round round = Round.builder()
                 .word(randomWord)
-                .game(game)
-                .turns(Collections.singletonList(Turn.builder()
-                        .startedAt(Instant.now())
-                        .build()))
+                .gameId(new GameId(game.getGameId()))
+                .active(true)
                 .build();
 
         round = this.save(round);
-//        Turn newTurn = round.getTurns().get(0);
-//        newTurn.setRound(round);
+        Turn newTurn = Turn.builder()
+                .startedAt(Instant.now())
+                .build();
+        round.addTurnId(newTurn.getTurnId());
+        newTurn.setRoundId(new RoundId(round.getRoundId()));
         this.roundRepository.save(round);
+        this.turnRepository.save(newTurn);
     }
 
     @Override
     public Optional<Turn> findCurrentTurn(Round round) {
-        return turnRepository.findCurrentTurn(round.getId());
+        return turnRepository.findCurrentTurn(round.getRoundId());
     }
 
     @Override
     public void finishTurn(Turn turn) {
         this.turnRepository.save(turn);
+        Round round = this.roundRepository.findById(turn.getRoundId()).orElseThrow(() -> new NotFoundException(String.format("Round ID %d not found", turn.getRoundId())));
 
         if (!turn.isCorrectGuess() &&
-                turn.getRound().getTurns()
+                round.getTurnIds()
                         .stream()
-                        .filter(t -> t.getGuessedWord() != null)
+                        .filter(t -> this.turnRepository.findById(t.getId()).orElseThrow(() -> new NotFoundException(String.format("Turn ID %d not found", t.getId()))).getGuessedWord() != null)
                         .count() == 5) {
-            Game game = turn.getRound().getGame();
+            Game game = this.gameRepository.findById(round.getGameId()).orElseThrow(() -> new NotFoundException(String.format("Game ID %d not found", round.getGameId())));
             Map<String, Object> feedback = new HashMap<>();
 
-            game.setGameStatus(Game.GameStatus.FINISHED);
+            game.setGameStatus(GameStatus.FINISHED);
             this.gameRepository.save(game);
 
             feedback.put("code", 5001);
@@ -103,7 +109,7 @@ public class BaseRoundService implements RoundService {
         } else {
             Turn newTurn = Turn.builder()
                     .startedAt(Instant.now())
-                    .round(turn.getRound())
+                    .roundId(new RoundId(round.getRoundId()))
                     .build();
 
             this.turnRepository.save(newTurn);

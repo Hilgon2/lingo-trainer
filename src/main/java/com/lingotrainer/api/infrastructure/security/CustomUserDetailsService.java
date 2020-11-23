@@ -1,5 +1,6 @@
 package com.lingotrainer.api.infrastructure.security;
 
+import com.lingotrainer.api.domain.repository.UserRepository;
 import com.lingotrainer.api.infrastructure.persistency.jpa.repository.UserJpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,15 +10,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private UserJpaRepository users;
+    private UserRepository userRepository;
 
-    public CustomUserDetailsService(UserJpaRepository users) {
-        this.users = users;
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        return this.users.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found"));
+        return this.userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException(String.format("Username: %s not found", username)));
     }
 }

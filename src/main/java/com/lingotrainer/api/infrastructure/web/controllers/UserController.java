@@ -1,5 +1,6 @@
 package com.lingotrainer.api.infrastructure.web.controllers;
 
+import com.lingotrainer.api.util.mappers.UserMapper;
 import com.lingotrainer.api.infrastructure.web.request.CreateUserRequest;
 import com.lingotrainer.api.domain.model.user.User;
 import com.lingotrainer.api.application.user.UserService;
@@ -8,7 +9,6 @@ import com.lingotrainer.api.util.exception.DuplicateException;
 import com.lingotrainer.api.util.exception.ForbiddenException;
 import com.lingotrainer.api.domain.model.user.Role;
 import com.lingotrainer.api.application.authentication.AuthenticationService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +27,12 @@ public class UserController {
 
     private UserService userService;
     private final AuthenticationService authenticationService;
-    private final ModelMapper modelMapper;
+    private UserMapper userMapper;
 
-    public UserController(UserService userService, AuthenticationService authenticationService, ModelMapper modelMapper) {
+    public UserController(UserService userService, AuthenticationService authenticationService, UserMapper userMapper) {
         this.userService = userService;
         this.authenticationService = authenticationService;
-        this.modelMapper = modelMapper;
+        this.userMapper = userMapper;
     }
 
     @PostMapping
@@ -46,7 +46,9 @@ public class UserController {
         if (user.getRole() == Role.ADMIN && (authenticationService.getUser() == null || authenticationService.getUser().getRole() != Role.ADMIN)) {
             throw new ForbiddenException("Only administrators are permitted to create another administrator account");
         }
-        User newUser = modelMapper.map(user, User.class);
+
+        User newUser = this.userMapper.convertFormToDomainEntity(user);
+        newUser.setActive(1);
         return ResponseEntity.ok(userService.save(newUser));
     }
 

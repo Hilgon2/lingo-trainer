@@ -8,6 +8,7 @@ public interface GameService {
     Optional<Game> findById(int id);
 
     int createNewGame(Game game);
+    Optional<Game> findActiveGame(int userId);
 
     int save(Game game);
 }

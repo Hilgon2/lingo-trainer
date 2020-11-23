@@ -1,33 +1,36 @@
 package com.lingotrainer.api.infrastructure.persistency.jpa.repository.base;
 
+import com.lingotrainer.api.util.mappers.GameMapper;
 import com.lingotrainer.api.domain.model.game.Game;
-import com.lingotrainer.api.domain.model.user.User;
 import com.lingotrainer.api.domain.repository.GameRepository;
-import com.lingotrainer.api.infrastructure.persistency.jpa.entity.game.GameEntity;
 import com.lingotrainer.api.infrastructure.persistency.jpa.repository.GameJpaRepository;
-import org.modelmapper.ModelMapper;
+import com.lingotrainer.api.util.exception.NotFoundException;
 
 import java.util.Optional;
 
 public class BaseGameJpaRepository implements GameRepository {
     private GameJpaRepository gameJpaRepository;
-    private final ModelMapper modelMapper;
+    private GameMapper gameMapper;
 
-    public BaseGameJpaRepository(GameJpaRepository gameJpaRepository, ModelMapper modelMapper) {
+    public BaseGameJpaRepository(GameJpaRepository gameJpaRepository, GameMapper gameMapper) {
         this.gameJpaRepository = gameJpaRepository;
-        this.modelMapper = modelMapper;
+        this.gameMapper = gameMapper;
     }
 
     @Override
     public Optional<Game> findById(int id) {
-        return Optional.ofNullable(this.modelMapper.map(this.gameJpaRepository.findById(id), Game.class));
+        return Optional.ofNullable(this.gameMapper.convertToDomainEntity(this.gameJpaRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Game ID %d could not be found", id)))));
     }
 
-    public boolean hasActiveGame(User user) {
-        return gameJpaRepository.hasActiveGame(user);
+    public boolean hasActiveGame(int userId) {
+        return gameJpaRepository.hasActiveGame(userId);
+    }
+
+    public Optional<Game> findActiveGame(int userId) {
+        return Optional.ofNullable(this.gameMapper.convertToDomainEntity(gameJpaRepository.findActiveGame(userId)));
     }
 
     public int save(Game game) {
-        return this.gameJpaRepository.save(this.modelMapper.map(game, GameEntity.class)).getId();
+        return this.gameJpaRepository.save(this.gameMapper.convertToPersistableEntity(game)).getId();
     }
 }

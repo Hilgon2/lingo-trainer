@@ -3,7 +3,6 @@ package com.lingotrainer.api.infrastructure.persistency.jpa.entity.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.lingotrainer.api.infrastructure.persistency.jpa.entity.PersistableEntity;
 import com.lingotrainer.api.infrastructure.persistency.jpa.entity.game.GameEntity;
 import com.lingotrainer.api.domain.model.user.Role;
 import com.lingotrainer.api.infrastructure.security.json.MyJsonView;
@@ -26,7 +25,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity extends PersistableEntity implements UserDetails {
+public class UserEntity implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
 
     @NotEmpty(message = "Gebruikersnaam mag niet leeg zijn")
     @Pattern(regexp="^([a-z]|[A-Z]|[-]|[0-9])*$", message = "Gebruikersnaam mag enkel letters en cijfers bevatten")

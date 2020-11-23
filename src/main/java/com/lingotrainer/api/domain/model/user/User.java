@@ -2,8 +2,7 @@ package com.lingotrainer.api.domain.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lingotrainer.api.domain.DomainEntity;
-import com.lingotrainer.api.domain.model.game.Game;
+import com.lingotrainer.api.domain.model.game.GameId;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,12 +10,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends DomainEntity implements UserDetails {
+public class User implements UserDetails {
+    private UserId userId;
+
     private String username;
 
     @ToString.Exclude
@@ -31,7 +31,14 @@ public class User extends DomainEntity implements UserDetails {
 
     @ToString.Exclude
     @JsonIgnore
-    private List<Game> games = new ArrayList<>();
+    private List<GameId> gameIds = new ArrayList<>();
+
+    public int getUserId() {
+        if (this.userId == null) {
+            return 0;
+        }
+        return this.userId.getId();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

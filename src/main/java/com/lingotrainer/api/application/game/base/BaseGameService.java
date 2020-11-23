@@ -7,7 +7,6 @@ import com.lingotrainer.api.util.exception.DuplicateException;
 import com.lingotrainer.api.util.exception.ForbiddenException;
 import com.lingotrainer.api.util.exception.NotFoundException;
 import com.lingotrainer.api.application.authentication.AuthenticationService;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,23 +16,20 @@ public class BaseGameService implements GameService {
 
     private final AuthenticationService authenticationService;
     private GameRepository gameRepository;
-    private final ModelMapper modelMapper;
 
-    public BaseGameService(AuthenticationService authenticationService, GameRepository gameRepository, ModelMapper modelMapper) {
+    public BaseGameService(AuthenticationService authenticationService, GameRepository gameRepository) {
         this.authenticationService = authenticationService;
         this.gameRepository = gameRepository;
-        this.modelMapper = modelMapper;
     }
 
     @Override
     public Optional<Game> findById(int id) {
-        Optional<Game> game = Optional.ofNullable(this.modelMapper.map(gameRepository.findById(id), Game.class));
-        return game;
+        return gameRepository.findById(id);
     }
 
     @Override
     public int createNewGame(Game game) {
-        if (gameRepository.hasActiveGame(authenticationService.getUser())) {
+        if (this.gameRepository.hasActiveGame(authenticationService.getUser().getUserId())) {
             throw new DuplicateException("An active game by the user already exists");
         }
 
@@ -41,15 +37,16 @@ public class BaseGameService implements GameService {
     }
 
     @Override
-    public int save(Game game) {
-        if (!gameRepository.hasActiveGame(game.getUser())) {
-            throw new NotFoundException("User has no active games");
-        }
+    public Optional<Game> findActiveGame(int userId) {
+        return this.gameRepository.findActiveGame(userId);
+    }
 
-        if (game.getUser().getId() != authenticationService.getUser().getId()) {
+    @Override
+    public int save(Game game) {
+        if (game.getUserId() != authenticationService.getUser().getUserId()) {
             throw new ForbiddenException("This game is not linked to the current user");
         }
 
-        return gameRepository.save(game);
+        return this.gameRepository.save(game);
     }
 }

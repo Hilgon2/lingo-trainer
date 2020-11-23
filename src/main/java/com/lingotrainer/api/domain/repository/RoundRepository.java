@@ -8,4 +8,5 @@ public interface RoundRepository {
     Optional<Round> findCurrentRound(int gameId);
 
     Round save (Round round);
+    Optional<Round> findById(int roundId);
 }
