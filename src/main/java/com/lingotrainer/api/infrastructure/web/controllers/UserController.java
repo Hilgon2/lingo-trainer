@@ -6,7 +6,7 @@ import com.lingotrainer.api.application.user.UserService;
 import com.lingotrainer.api.util.annotation.Public;
 import com.lingotrainer.api.util.exception.DuplicateException;
 import com.lingotrainer.api.util.exception.ForbiddenException;
-import com.lingotrainer.api.infrastructure.security.Role;
+import com.lingotrainer.api.domain.model.user.Role;
 import com.lingotrainer.api.application.authentication.AuthenticationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

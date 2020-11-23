@@ -1,7 +1,7 @@
 package com.lingotrainer.api.application;
 
 import com.lingotrainer.api.domain.repository.*;
-import com.lingotrainer.api.infrastructure.persistency.file.dictionary.DictionaryFileRepository;
+import com.lingotrainer.api.infrastructure.persistency.file.dictionary.DictionaryPersistanceRepository;
 import com.lingotrainer.api.infrastructure.persistency.file.dictionary.base.BaseDictionaryFileRepository;
 import com.lingotrainer.api.infrastructure.persistency.jpa.repository.GameJpaRepository;
 import com.lingotrainer.api.infrastructure.persistency.jpa.repository.RoundJpaRepository;
@@ -23,6 +23,11 @@ public class ApplicationAutowireService {
 
     public ApplicationAutowireService(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+    }
+
+    @Bean
+    public DictionaryRepository dictionaryRepository() {
+        return new BaseDictionaryFileRepository();
     }
 
     @Bean

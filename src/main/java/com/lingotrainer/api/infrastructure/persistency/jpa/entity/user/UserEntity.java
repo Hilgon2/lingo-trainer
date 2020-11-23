@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.lingotrainer.api.infrastructure.persistency.jpa.entity.PersistableEntity;
 import com.lingotrainer.api.infrastructure.persistency.jpa.entity.game.GameEntity;
-import com.lingotrainer.api.infrastructure.security.Role;
+import com.lingotrainer.api.domain.model.user.Role;
 import com.lingotrainer.api.infrastructure.security.json.MyJsonView;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

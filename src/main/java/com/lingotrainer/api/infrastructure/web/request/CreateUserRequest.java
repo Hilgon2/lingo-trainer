@@ -1,6 +1,6 @@
 package com.lingotrainer.api.infrastructure.web.request;
 
-import com.lingotrainer.api.infrastructure.security.Role;
+import com.lingotrainer.api.domain.model.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

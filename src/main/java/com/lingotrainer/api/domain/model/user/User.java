@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lingotrainer.api.domain.DomainEntity;
 import com.lingotrainer.api.domain.model.game.Game;
-import com.lingotrainer.api.infrastructure.security.Role;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

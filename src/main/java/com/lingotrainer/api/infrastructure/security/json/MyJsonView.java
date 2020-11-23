@@ -1,6 +1,6 @@
 package com.lingotrainer.api.infrastructure.security.json;
 
-import com.lingotrainer.api.infrastructure.security.Role;
+import com.lingotrainer.api.domain.model.user.Role;
 
 import java.util.HashMap;
 import java.util.Map;

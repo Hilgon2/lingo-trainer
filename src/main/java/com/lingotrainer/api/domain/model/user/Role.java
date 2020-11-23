@@ -1,4 +1,4 @@
-package com.lingotrainer.api.infrastructure.security;
+package com.lingotrainer.api.domain.model.user;
 
 import lombok.Getter;
 

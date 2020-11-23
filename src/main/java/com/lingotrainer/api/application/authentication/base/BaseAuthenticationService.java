@@ -1,9 +1,10 @@
 package com.lingotrainer.api.application.authentication.base;
 
 import com.lingotrainer.api.application.authentication.AuthenticationService;
+import com.lingotrainer.api.domain.repository.UserRepository;
+import com.lingotrainer.api.util.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import com.lingotrainer.api.domain.model.user.User;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,10 +13,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class BaseAuthenticationService implements AuthenticationService {
-    private final ModelMapper modelMapper;
+    private UserRepository userRepository;
 
-    public BaseAuthenticationService(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
+    public BaseAuthenticationService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -27,8 +28,7 @@ public class BaseAuthenticationService implements AuthenticationService {
     public User getUser() {
         Authentication authentication = getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            User user = this.modelMapper.map(authentication.getPrincipal(), User.class);
-            return user;
+            return this.userRepository.findByPrincipal(authentication.getPrincipal()).orElseThrow(() -> new NotFoundException("Username not found"));
         }
 
         return null;

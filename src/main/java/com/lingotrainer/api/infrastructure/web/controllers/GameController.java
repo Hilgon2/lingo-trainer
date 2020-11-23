@@ -37,13 +37,13 @@ public class GameController {
             throw new NotFoundException(String.format("Language code '%s' not found.", languageCode));
         }
 
-        System.out.println(authenticationService.getUser());
-
         Game game = Game.builder()
                 .user(authenticationService.getUser())
                 .language(languageCode)
                 .gameStatus(Game.GameStatus.ACTIVE)
                 .build();
+
+        System.out.println(game);
 
         int newGameId = gameService.createNewGame(game);
 

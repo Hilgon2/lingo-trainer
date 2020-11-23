@@ -1,6 +1,6 @@
 package com.lingotrainer.api.infrastructure.security.json;
 
-import com.lingotrainer.api.infrastructure.security.Role;
+import com.lingotrainer.api.domain.model.user.Role;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
