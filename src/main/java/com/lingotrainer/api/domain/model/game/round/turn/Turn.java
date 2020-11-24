@@ -24,14 +24,14 @@ public class Turn {
 
     private boolean correctGuess;
 
-    private Map<String, Object> feedback = new HashMap<>();
+    private Map<String, Object> feedback;
 
     private Instant startedAt;
 
     @ToString.Exclude
     private RoundId roundId;
 
-    public List<GuessedLetter> getGuessedLetters(String answer) {
+    public void setGuessedLetters(String answer) {
         int index = 0;
         this.guessedLetters = new ArrayList<>();
 
@@ -52,12 +52,11 @@ public class Turn {
                 index++;
             }
         }
-
-        return this.guessedLetters;
     }
 
     public void validateTurn(String answer) {
-        // feedback code -999 means there is no feedback, meaning there is no error.
+        this.feedback = new HashMap<>();
+        // feedback code -9999 means there is no feedback, meaning there is no error.
         int feedbackCode = -9999;
         GameFeedback status = null;
 
@@ -81,6 +80,7 @@ public class Turn {
             status = GameFeedback.TURN_OVER;
         }
 
+        this.correctGuess = this.guessedWord.equalsIgnoreCase(answer);
         this.feedback.put("code", feedbackCode);
         this.feedback.put("status", status);
     }

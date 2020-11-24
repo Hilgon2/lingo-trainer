@@ -30,7 +30,7 @@ public class RoundEntity {
 
     private boolean active;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     @ToString.Exclude
     private GameEntity game;

@@ -37,28 +37,24 @@ public class BaseTurnService implements TurnService {
     }
 
     @Override
-    public Turn finishTurn(int turnId, String guessedWord) {
-        Turn turn = this.turnRepository.findById(turnId).orElseThrow(() -> new NotFoundException(String.format("Turn ID % not found", turnId)));
-        turn.setGuessedWord(guessedWord);
+    public Turn finishTurn(int roundId, String guessedWord) {
+        Turn currentTurn = this.turnRepository.findCurrentTurn(roundId).orElseThrow(() -> new NotFoundException(String.format("Active turn of round ID % not found", roundId)));
+        Round round = this.roundRepository.findById(currentTurn.getRoundId()).orElseThrow(() -> new NotFoundException(String.format("Round ID %d not found", currentTurn.getRoundId())));
+        currentTurn.setGuessedWord(guessedWord);
+        currentTurn.validateTurn(round.getWord());
 
-        turn.validateTurn(guessedWord);
-        this.turnRepository.save(turn);
+        this.turnRepository.save(currentTurn);
 
-        Turn finalTurn = turn;
-        Round round = this.roundRepository.findById(turn.getRoundId()).orElseThrow(() -> new NotFoundException(String.format("Round ID %d not found", finalTurn.getRoundId())));
         Game game = this.gameRepository.findById(round.getGameId()).orElseThrow(() -> new NotFoundException(String.format("Game ID %d not found", round.getGameId())));
 
-        boolean correctGuess = turn.getGuessedWord().equalsIgnoreCase(guessedWord);
-
-        if (correctGuess) {
+        if (currentTurn.isCorrectGuess()) {
             game.setScore(game.getScore() + 1);
-            this.roundRepository.createNewRound(game.getGameId());
             this.gameRepository.save(game);
-        } else if (!turn.isCorrectGuess() &&
+        } else if (!currentTurn.isCorrectGuess() &&
                 round.getTurnIds()
                         .stream()
                         .filter(t -> this.turnRepository.findById(t.getId()).orElseThrow(() -> new NotFoundException(String.format("Turn ID %d not found", t.getId()))).getGuessedWord() != null)
-                        .count() == 5) {
+                        .count() >= 5) {
             Map<String, Object> feedback = new HashMap<>();
 
             game.setGameStatus(GameStatus.FINISHED);
@@ -66,17 +62,21 @@ public class BaseTurnService implements TurnService {
 
             feedback.put("code", 5001);
             feedback.put("status", GameFeedback.GAME_OVER);
-            turn.setFeedback(feedback);
+            currentTurn.setFeedback(feedback);
         } else {
-            turn = Turn.builder()
+            Turn newTurn = Turn.builder()
                     .startedAt(Instant.now())
                     .roundId(new RoundId(round.getRoundId()))
                     .build();
 
-            this.turnRepository.save(turn);
+            this.turnRepository.save(newTurn);
         }
 
-        return turn;
+        if (Integer.parseInt(currentTurn.getFeedback().get("code").toString()) == -9999) {
+            currentTurn.setGuessedLetters(round.getWord());
+        }
+
+        return currentTurn;
     }
 
     @Override

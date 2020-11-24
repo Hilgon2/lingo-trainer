@@ -54,39 +54,4 @@ public class GameController {
 
         return ok(newGameId);
     }
-
-/*    @PutMapping(path = "/{id}")
-    @Authenticated
-    public ResponseEntity<?> playTurn(@PathVariable("id") int gameId, @RequestParam("guessedWord") String guessedWord) {
-        Game game = this.gameService.findById(gameId).orElseThrow(() -> new NotFoundException(String.format("Game ID %d could not be found.", gameId)));
-        Round currentRound = this.roundService.findCurrentRound(gameId).orElseThrow(() -> new NotFoundException(String.format("Current round by game ID %d could not be found.", gameId)));
-        Turn currentTurn = this.roundService.findCurrentTurn(currentRound).orElseThrow(() -> new NotFoundException("Current turn could not be found."));
-        currentTurn.setGuessedWord(guessedWord);
-
-        currentTurn.validateTurn(currentRound.getWord());
-
-        if (Integer.parseInt(currentTurn.getFeedback().get("code").toString()) != -9999) {
-            this.roundService.finishTurn(currentTurn);
-            return ok(currentTurn);
-        }
-
-        boolean correctGuess = currentTurn.getGuessedWord().equalsIgnoreCase(currentRound.getWord());
-
-        Turn newTurn = Turn.builder()
-                .guessedWord(currentTurn.getGuessedWord())
-                .correctGuess(correctGuess)
-                .startedAt(Instant.now())
-                .roundId(new RoundId(currentRound.getRoundId()))
-                .build();
-
-        if (correctGuess) {
-            game.setScore(game.getScore() + 1);
-            this.roundService.createNewRound(game);
-            this.gameService.save(game);
-        } else {
-            this.roundService.finishTurn(currentTurn);
-        }
-
-        return ok(newTurn);
-    }*/
 }

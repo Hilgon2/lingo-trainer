@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface TurnService {
     Optional<Turn> findCurrentTurn(int roundId);
 
-    Turn finishTurn(int turnId, String guessedWord);
+    Turn finishTurn(int roundId, String guessedWord);
 
     Optional<Turn> findById(int turnId);
 }

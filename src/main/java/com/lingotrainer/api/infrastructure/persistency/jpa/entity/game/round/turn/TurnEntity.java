@@ -27,7 +27,7 @@ public class TurnEntity {
     @Column(name="started_at")
     private Instant startedAt;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     @ToString.Exclude
     private RoundEntity round;
