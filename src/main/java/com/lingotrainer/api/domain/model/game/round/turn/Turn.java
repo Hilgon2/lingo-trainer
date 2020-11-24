@@ -61,11 +61,16 @@ public class Turn {
         int feedbackCode = -9999;
         GameFeedback status = null;
 
-         if (this.guessedWord == null) {
+        if (this.guessedWord == null) {
             feedbackCode = 5200;
             this.setGuessedWord("-");
             status = GameFeedback.GUESSED_WORD_IS_NULL;
-        } else if (answer.length() != this.getGuessedWord().length()) {
+        }
+
+        // Trim and capitalize the guessed word. Do this after the null check, because a null does not have a trim or toUpperCase method. This could otherwise possibly cause an error.
+        this.guessedWord = guessedWord.toUpperCase().trim();
+
+        if (answer.length() != this.getGuessedWord().length()) {
             feedbackCode = 5205;
             status = GameFeedback.GUESSED_WORD_DIFF_LENGTH;
         } else if (!this.getGuessedWord().chars().allMatch(Character::isLetter)) {
@@ -75,11 +80,17 @@ public class Turn {
             feedbackCode = 5215;
             status = GameFeedback.TURN_OVER;
         }
-        // Trim and capitalize the guessed word. A null does not have a trim or toUpperCase method. This could otherwise possibly cause an error.
-        this.guessedWord = guessedWord.toUpperCase().trim();
 
         this.feedback.put("code", feedbackCode);
         this.feedback.put("status", status);
+    }
+
+    public int getTurnId() {
+        if (this.turnId == null) {
+            return 0;
+        }
+
+        return this.turnId.getId();
     }
 
     public int getRoundId() {

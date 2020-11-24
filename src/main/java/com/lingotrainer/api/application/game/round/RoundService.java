@@ -7,13 +7,11 @@ import com.lingotrainer.api.domain.model.game.round.turn.Turn;
 import java.util.Optional;
 
 public interface RoundService {
-    Round save(Round round);
+    int save(Round round);
 
     Optional<Round> findCurrentRound(int gameId);
 
-    void createNewRound(Game game);
+    int createNewRound(int gameId);
 
-    Optional<Turn> findCurrentTurn(Round round);
-
-    void finishTurn(Turn turn);
+    Optional<Round> findById(int roundId);
 }

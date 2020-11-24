@@ -1,7 +1,6 @@
 package com.lingotrainer.api.domain.model.game;
 
 import com.lingotrainer.api.domain.model.game.round.RoundId;
-import com.lingotrainer.api.domain.model.user.User;
 import com.lingotrainer.api.domain.model.user.UserId;
 import lombok.*;
 

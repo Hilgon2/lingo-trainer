@@ -1,9 +1,5 @@
 package com.lingotrainer.api.infrastructure.persistency.jpa.repository.base;
 
-import com.lingotrainer.api.domain.model.game.Game;
-import com.lingotrainer.api.domain.model.game.GameId;
-import com.lingotrainer.api.infrastructure.persistency.jpa.entity.game.round.RoundEntity;
-import com.lingotrainer.api.infrastructure.persistency.jpa.repository.GameJpaRepository;
 import com.lingotrainer.api.util.mappers.RoundMapper;
 import com.lingotrainer.api.domain.model.game.round.Round;
 import com.lingotrainer.api.domain.repository.RoundRepository;
@@ -26,8 +22,8 @@ public class BaseRoundJpaRepository implements RoundRepository {
     }
 
     @Override
-    public Round save(Round round) {
-        return this.roundMapper.convertToDomainEntity(this.roundJpaRepository.save(this.roundMapper.convertToPersistableEntity(round)));
+    public int save(Round round) {
+        return this.roundMapper.convertToDomainEntity(this.roundJpaRepository.save(this.roundMapper.convertToPersistableEntity(round))).getRoundId();
     }
 
     @Override

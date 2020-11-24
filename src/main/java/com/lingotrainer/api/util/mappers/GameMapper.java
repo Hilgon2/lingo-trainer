@@ -28,6 +28,8 @@ public class GameMapper implements EntityMapper<Game, GameEntity> {
             game.setRoundIds(gameEntity.getRounds().stream().map(round -> new RoundId(round.getId())).collect(Collectors.toList()));
         }
 
+        System.out.println(game);
+
         return game;
     }
 

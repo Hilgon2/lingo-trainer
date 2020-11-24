@@ -2,6 +2,7 @@ package com.lingotrainer.api.util.mappers;
 
 import com.lingotrainer.api.domain.model.game.round.RoundId;
 import com.lingotrainer.api.domain.model.game.round.turn.Turn;
+import com.lingotrainer.api.domain.model.game.round.turn.TurnId;
 import com.lingotrainer.api.infrastructure.persistency.jpa.entity.game.round.RoundEntity;
 import com.lingotrainer.api.infrastructure.persistency.jpa.entity.game.round.turn.TurnEntity;
 
@@ -12,6 +13,7 @@ public class TurnMapper implements EntityMapper<Turn, TurnEntity> {
 
     public Turn convertToDomainEntity(TurnEntity turnEntity) {
         return Turn.builder()
+                .turnId(new TurnId(turnEntity.getId()))
                 .startedAt(turnEntity.getStartedAt())
                 .roundId(new RoundId(turnEntity.getRound().getId()))
                 .guessedWord(turnEntity.getGuessedWord())
@@ -20,6 +22,7 @@ public class TurnMapper implements EntityMapper<Turn, TurnEntity> {
 
     public TurnEntity convertToPersistableEntity(Turn turn) {
         return TurnEntity.builder()
+                .id(turn.getTurnId())
                 .startedAt(turn.getStartedAt())
                 .round(RoundEntity.builder().id(turn.getRoundId()).build())
                 .guessedWord(turn.getGuessedWord())
@@ -30,6 +33,7 @@ public class TurnMapper implements EntityMapper<Turn, TurnEntity> {
         List<TurnEntity> turnEntities = new ArrayList<>();
 
         turns.forEach(turn -> TurnEntity.builder()
+                .id(turn.getTurnId())
                 .guessedWord(turn.getGuessedWord())
                 .startedAt(turn.getStartedAt())
                 .round(RoundEntity.builder().id(turn.getRoundId()).build())
@@ -41,10 +45,11 @@ public class TurnMapper implements EntityMapper<Turn, TurnEntity> {
     public List<Turn> convertToDomainEntities(List<TurnEntity> turnEntities) {
         List <Turn> turns = new ArrayList<>();
 
-        turnEntities.forEach(turn -> turns.add(Turn.builder()
-                .guessedWord(turn.getGuessedWord())
-                .startedAt(turn.getStartedAt())
-                .roundId(new RoundId(turn.getRound().getId()))
+        turnEntities.forEach(turnEntity -> turns.add(Turn.builder()
+                .turnId(new TurnId(turnEntity.getId()))
+                .guessedWord(turnEntity.getGuessedWord())
+                .startedAt(turnEntity.getStartedAt())
+                .roundId(new RoundId(turnEntity.getRound().getId()))
                 .build()));
 
         return turns;

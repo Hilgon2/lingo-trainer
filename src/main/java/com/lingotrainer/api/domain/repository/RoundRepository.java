@@ -7,6 +7,6 @@ import java.util.Optional;
 public interface RoundRepository {
     Optional<Round> findCurrentRound(int gameId);
 
-    Round save (Round round);
+    int save (Round round);
     Optional<Round> findById(int roundId);
 }

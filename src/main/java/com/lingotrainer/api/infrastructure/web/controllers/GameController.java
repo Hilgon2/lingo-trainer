@@ -41,6 +41,7 @@ public class GameController {
         if (!new File(String.format("src/main/resources/dictionary/%s.json", languageCode)).exists()) {
             throw new NotFoundException(String.format("Language code '%s' not found.", languageCode));
         }
+
         User user = this.authenticationService.getUser();
 
         Game game = Game.builder()
@@ -50,13 +51,11 @@ public class GameController {
                 .build();
 
         int newGameId = gameService.createNewGame(game);
-        game.setGameId(new GameId(this.gameService.findActiveGame(user.getUserId()).orElseThrow(() -> new NotFoundException(String.format("User ID %d not found", user.getUserId()))).getGameId()));
-        this.roundService.createNewRound(game);
 
         return ok(newGameId);
     }
 
-    @PutMapping(path = "/{id}")
+/*    @PutMapping(path = "/{id}")
     @Authenticated
     public ResponseEntity<?> playTurn(@PathVariable("id") int gameId, @RequestParam("guessedWord") String guessedWord) {
         Game game = this.gameService.findById(gameId).orElseThrow(() -> new NotFoundException(String.format("Game ID %d could not be found.", gameId)));
@@ -89,5 +88,5 @@ public class GameController {
         }
 
         return ok(newTurn);
-    }
+    }*/
 }

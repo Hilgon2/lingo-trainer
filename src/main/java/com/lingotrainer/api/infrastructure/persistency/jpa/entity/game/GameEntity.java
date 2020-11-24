@@ -24,13 +24,11 @@ public class GameEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private UserEntity user;
 
     private int score;
 
-    @NotNull
     private String language;
 
     @OneToMany(mappedBy = "game")

@@ -22,7 +22,6 @@ public class RoundEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @NotNull
     private String word;
 
     @OneToMany(mappedBy = "round")
@@ -31,7 +30,6 @@ public class RoundEntity {
 
     private boolean active;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JsonIgnore
     @ToString.Exclude
