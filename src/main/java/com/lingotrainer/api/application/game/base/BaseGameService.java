@@ -2,6 +2,9 @@ package com.lingotrainer.api.application.game.base;
 
 import com.lingotrainer.api.application.game.GameService;
 import com.lingotrainer.api.domain.model.game.Game;
+import com.lingotrainer.api.domain.model.game.GameStatus;
+import com.lingotrainer.api.domain.model.user.User;
+import com.lingotrainer.api.domain.model.user.UserId;
 import com.lingotrainer.api.domain.repository.GameRepository;
 import com.lingotrainer.api.util.exception.DuplicateException;
 import com.lingotrainer.api.util.exception.ForbiddenException;
@@ -9,6 +12,7 @@ import com.lingotrainer.api.util.exception.NotFoundException;
 import com.lingotrainer.api.application.authentication.AuthenticationService;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.Optional;
 
 @Service
@@ -28,10 +32,22 @@ public class BaseGameService implements GameService {
     }
 
     @Override
-    public int createNewGame(Game game) {
+    public int createNewGame(String languageCode) {
         if (this.gameRepository.hasActiveGame(authenticationService.getUser().getUserId())) {
             throw new DuplicateException("An active game by the user already exists");
         }
+
+        if (!new File(String.format("src/main/resources/dictionary/%s.json", languageCode)).exists()) {
+            throw new NotFoundException(String.format("Language code '%s' not found.", languageCode));
+        }
+
+        User user = this.authenticationService.getUser();
+
+        Game game = Game.builder()
+                .userId(new UserId(user.getUserId()))
+                .language(languageCode)
+                .gameStatus(GameStatus.ACTIVE)
+                .build();
 
         return this.save(game);
     }

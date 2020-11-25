@@ -1,4 +1,4 @@
-package com.lingotrainer.api.util.mappers;
+package com.lingotrainer.api.util.mapper;
 
 import com.lingotrainer.api.domain.model.game.round.RoundId;
 import com.lingotrainer.api.domain.model.game.round.turn.Turn;

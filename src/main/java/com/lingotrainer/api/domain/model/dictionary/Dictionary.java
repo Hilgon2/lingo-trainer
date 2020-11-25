@@ -1,15 +1,11 @@
 package com.lingotrainer.api.domain.model.dictionary;
 
-import com.google.gson.Gson;
-import com.lingotrainer.api.util.exception.NotFoundException;
+import com.lingotrainer.api.domain.model.WordLength;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -23,16 +19,12 @@ public class Dictionary {
     List<String> words = new ArrayList<>();
     String language;
 
-    public String getRandomWord() {
+    public String getRandomWord(WordLength wordLength) {
         String randomWord;
-        try {
-            Gson gson = new Gson();
-            String targetFileReader = new String(Files.readAllBytes(Paths.get(String.format("src/main/resources/dictionary/%s.json", this.language))));
-            this.words = gson.fromJson(targetFileReader, Dictionary.class).getWords();
+        randomWord = this.words.get(new Random().nextInt(this.words.size()));
 
-            randomWord = this.words.get(new Random().nextInt(this.words.size()));
-        } catch (IOException e) {
-            throw new NotFoundException("Someting went wrong trying to read the language file. The file might not exist.");
+        if (randomWord.length() != wordLength.getLength()) {
+            randomWord = getRandomWord(wordLength);
         }
 
         return randomWord;

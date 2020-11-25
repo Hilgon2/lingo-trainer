@@ -1,19 +1,15 @@
 package com.lingotrainer.api.infrastructure.web.controllers;
 
 import com.lingotrainer.api.application.dictionary.DictionaryService;
-import com.lingotrainer.api.domain.model.dictionary.Dictionary;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping(path = "/dictionary")
@@ -26,13 +22,8 @@ public class DictionaryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestParam("wordsFile") MultipartFile file, @RequestParam("languageCode") String languageCode) {
-            Dictionary dictionary = Dictionary.builder()
-                    .language(languageCode)
-                    .build();
-
-            dictionaryService.save(dictionary, file);
-
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<String> save(@RequestParam("wordsFile") MultipartFile file, @RequestParam("languageCode") String languageCode) {
+        return ok(dictionaryService.save(file, languageCode));
     }
 }

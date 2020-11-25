@@ -4,7 +4,7 @@ import com.lingotrainer.api.domain.model.game.round.turn.Turn;
 import com.lingotrainer.api.domain.repository.TurnRepository;
 import com.lingotrainer.api.infrastructure.persistency.jpa.entity.game.round.turn.TurnEntity;
 import com.lingotrainer.api.infrastructure.persistency.jpa.repository.TurnJpaRepository;
-import com.lingotrainer.api.util.mappers.TurnMapper;
+import com.lingotrainer.api.util.mapper.TurnMapper;
 
 import java.util.Optional;
 

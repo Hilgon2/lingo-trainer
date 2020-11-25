@@ -1,6 +1,6 @@
 package com.lingotrainer.api.infrastructure.persistency.jpa.repository.base;
 
-import com.lingotrainer.api.util.mappers.RoundMapper;
+import com.lingotrainer.api.util.mapper.RoundMapper;
 import com.lingotrainer.api.domain.model.game.round.Round;
 import com.lingotrainer.api.domain.repository.RoundRepository;
 import com.lingotrainer.api.infrastructure.persistency.jpa.repository.RoundJpaRepository;
@@ -18,12 +18,16 @@ public class BaseRoundJpaRepository implements RoundRepository {
 
     @Override
     public Optional<Round> findCurrentRound(int gameId) {
+        if (this.roundJpaRepository.findCurrentRound(gameId) == null) {
+            return Optional.empty();
+        }
+
         return Optional.ofNullable(this.roundMapper.convertToDomainEntity(this.roundJpaRepository.findCurrentRound(gameId)));
     }
 
     @Override
-    public int save(Round round) {
-        return this.roundMapper.convertToDomainEntity(this.roundJpaRepository.save(this.roundMapper.convertToPersistableEntity(round))).getRoundId();
+    public Round save(Round round) {
+        return this.roundMapper.convertToDomainEntity(this.roundJpaRepository.save(this.roundMapper.convertToPersistableEntity(round)));
     }
 
     @Override

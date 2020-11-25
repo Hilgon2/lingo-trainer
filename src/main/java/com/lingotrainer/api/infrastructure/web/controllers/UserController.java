@@ -1,14 +1,10 @@
 package com.lingotrainer.api.infrastructure.web.controllers;
 
-import com.lingotrainer.api.util.mappers.UserMapper;
+import com.lingotrainer.api.infrastructure.web.mapper.UserFormMapper;
 import com.lingotrainer.api.infrastructure.web.request.CreateUserRequest;
 import com.lingotrainer.api.domain.model.user.User;
 import com.lingotrainer.api.application.user.UserService;
 import com.lingotrainer.api.util.annotation.Public;
-import com.lingotrainer.api.util.exception.DuplicateException;
-import com.lingotrainer.api.util.exception.ForbiddenException;
-import com.lingotrainer.api.domain.model.user.Role;
-import com.lingotrainer.api.application.authentication.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -26,28 +22,17 @@ public class UserController {
     PasswordEncoder passwordEncoder;
 
     private UserService userService;
-    private final AuthenticationService authenticationService;
-    private UserMapper userMapper;
+    private UserFormMapper userFormMapper;
 
-    public UserController(UserService userService, AuthenticationService authenticationService, UserMapper userMapper) {
+    public UserController(UserService userService, UserFormMapper userFormMapper) {
         this.userService = userService;
-        this.authenticationService = authenticationService;
-        this.userMapper = userMapper;
+        this.userFormMapper = userFormMapper;
     }
 
     @PostMapping
     @Public
     public ResponseEntity<User> save(@Param("user") @RequestBody CreateUserRequest user) {
-        if (userService.existsByUsername(user.getUsername())) {
-            throw new DuplicateException(user.getUsername());
-        }
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (user.getRole() == Role.ADMIN && (authenticationService.getUser() == null || authenticationService.getUser().getRole() != Role.ADMIN)) {
-            throw new ForbiddenException("Only administrators are permitted to create another administrator account");
-        }
-
-        User newUser = this.userMapper.convertFormToDomainEntity(user);
+        User newUser = this.userFormMapper.convertToDomainEntity(user);
         newUser.setActive(1);
         return ResponseEntity.ok(userService.save(newUser));
     }

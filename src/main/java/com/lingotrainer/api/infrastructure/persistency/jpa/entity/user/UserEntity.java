@@ -12,8 +12,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,13 +29,9 @@ public class UserEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @NotEmpty(message = "Gebruikersnaam mag niet leeg zijn")
-    @Pattern(regexp="^([a-z]|[A-Z]|[-]|[0-9])*$", message = "Gebruikersnaam mag enkel letters en cijfers bevatten")
     @Column(unique=true)
     private String username;
 
-    @NotEmpty(message = "Wachtwoord mag niet leeg zijn")
-    @Pattern(regexp="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", message = "Wachtwoord moet minimaal 8 tekens, een kleine letter, een hoofdletter, een getal en een speciaal teken bevatten")
     @ToString.Exclude
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;

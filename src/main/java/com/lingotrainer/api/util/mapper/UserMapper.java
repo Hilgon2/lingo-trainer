@@ -1,4 +1,4 @@
-package com.lingotrainer.api.util.mappers;
+package com.lingotrainer.api.util.mapper;
 
 import com.lingotrainer.api.domain.model.user.User;
 import com.lingotrainer.api.domain.model.user.UserId;
@@ -8,7 +8,7 @@ import com.lingotrainer.api.infrastructure.web.request.CreateUserRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserMapper implements EntityMapper<User, UserEntity>, UserEntityMapper {
+public class UserMapper implements EntityMapper<User, UserEntity> {
 
     @Override
     public User convertToDomainEntity(UserEntity userEntity) {
@@ -19,15 +19,6 @@ public class UserMapper implements EntityMapper<User, UserEntity>, UserEntityMap
                 .active(userEntity.getActive())
                 .highscore(userEntity.getHighscore())
                 .password(userEntity.getPassword())
-                .build();
-    }
-
-    @Override
-    public User convertFormToDomainEntity(CreateUserRequest userRequest) {
-        return User.builder()
-                .username(userRequest.getUsername())
-                .role(userRequest.getRole())
-                .password(userRequest.getPassword())
                 .build();
     }
 

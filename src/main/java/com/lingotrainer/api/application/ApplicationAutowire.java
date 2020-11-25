@@ -1,9 +1,9 @@
 package com.lingotrainer.api.application;
 
-import com.lingotrainer.api.util.mappers.GameMapper;
-import com.lingotrainer.api.util.mappers.RoundMapper;
-import com.lingotrainer.api.util.mappers.TurnMapper;
-import com.lingotrainer.api.util.mappers.UserMapper;
+import com.lingotrainer.api.util.mapper.GameMapper;
+import com.lingotrainer.api.util.mapper.RoundMapper;
+import com.lingotrainer.api.util.mapper.TurnMapper;
+import com.lingotrainer.api.util.mapper.UserMapper;
 import com.lingotrainer.api.domain.repository.*;
 import com.lingotrainer.api.infrastructure.persistency.file.dictionary.base.BaseDictionaryFileRepository;
 import com.lingotrainer.api.infrastructure.persistency.jpa.repository.GameJpaRepository;
@@ -16,14 +16,14 @@ import com.lingotrainer.api.infrastructure.persistency.jpa.repository.base.BaseT
 import com.lingotrainer.api.infrastructure.persistency.jpa.repository.base.BaseUserJpaRepository;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Configuration;
 
-@Service
-public class ApplicationAutowireService {
+@Configuration
+public class ApplicationAutowire {
 
     private final ApplicationContext applicationContext;
 
-    public ApplicationAutowireService(ApplicationContext applicationContext) {
+    public ApplicationAutowire(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 

@@ -1,4 +1,4 @@
-package com.lingotrainer.api.util.mappers;
+package com.lingotrainer.api.util.mapper;
 
 import java.util.List;
 

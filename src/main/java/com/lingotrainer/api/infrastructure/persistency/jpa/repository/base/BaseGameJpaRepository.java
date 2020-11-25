@@ -1,6 +1,6 @@
 package com.lingotrainer.api.infrastructure.persistency.jpa.repository.base;
 
-import com.lingotrainer.api.util.mappers.GameMapper;
+import com.lingotrainer.api.util.mapper.GameMapper;
 import com.lingotrainer.api.domain.model.game.Game;
 import com.lingotrainer.api.domain.repository.GameRepository;
 import com.lingotrainer.api.infrastructure.persistency.jpa.repository.GameJpaRepository;
