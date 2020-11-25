@@ -22,7 +22,7 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       env:
-        DB_URL: ${{ secrets.DB_URL }}
-        DB_USERNAME: ${{ secrets.DB_USERNAME }} 
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_URL: ${{ secrets.DB_URL_DEV }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME_DEV }} 
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD_DEV }}
       run: mvn -B package --file pom.xml -Dspring.profiles.active=development
