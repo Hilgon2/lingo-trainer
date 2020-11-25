@@ -50,7 +50,8 @@ public class UserEntity implements UserDetails {
     @ToString.Exclude
     @Getter(value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)
-    private List<GameEntity> games = new ArrayList<>();
+    @Transient
+    private transient List<GameEntity> games = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

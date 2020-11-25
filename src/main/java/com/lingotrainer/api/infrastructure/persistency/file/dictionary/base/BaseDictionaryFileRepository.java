@@ -19,10 +19,8 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
 
     @Override
     public String save(Dictionary dictionary) {
-        try {
-            FileWriter targetFileWriter = new FileWriter(String.format("src/main/resources/dictionary/%s.json", dictionary.getLanguage()));
+        try (FileWriter targetFileWriter = new FileWriter(String.format("src/main/resources/dictionary/%s.json", dictionary.getLanguage()))) {
             targetFileWriter.write(this.gson.toJson(dictionary.getWords()));
-            targetFileWriter.close();
         } catch (IOException e) {
             throw new GeneralException(String.format("Unknown error trying to open the %s language file", dictionary.getLanguage()));
         }

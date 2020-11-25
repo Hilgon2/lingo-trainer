@@ -1,7 +1,6 @@
 package com.lingotrainer.api.infrastructure.security;
 
 import com.lingotrainer.api.domain.repository.UserRepository;
-import com.lingotrainer.api.infrastructure.persistency.jpa.repository.UserJpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

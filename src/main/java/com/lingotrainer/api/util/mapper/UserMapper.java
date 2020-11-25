@@ -3,7 +3,6 @@ package com.lingotrainer.api.util.mapper;
 import com.lingotrainer.api.domain.model.user.User;
 import com.lingotrainer.api.domain.model.user.UserId;
 import com.lingotrainer.api.infrastructure.persistency.jpa.entity.user.UserEntity;
-import com.lingotrainer.api.infrastructure.web.request.CreateUserRequest;
 
 import java.util.ArrayList;
 import java.util.List;

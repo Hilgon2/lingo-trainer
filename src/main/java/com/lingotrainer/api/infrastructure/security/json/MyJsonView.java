@@ -23,5 +23,4 @@ public class MyJsonView {
     public interface Trainee extends Anonymous {}
 
     public interface Admin extends Trainee {}
-
 }

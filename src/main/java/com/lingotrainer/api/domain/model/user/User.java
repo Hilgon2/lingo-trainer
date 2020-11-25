@@ -15,7 +15,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
-    private UserId userId;
+    private transient UserId userId;
 
     private String username;
 
@@ -31,7 +31,7 @@ public class User implements UserDetails {
 
     @ToString.Exclude
     @JsonIgnore
-    private List<GameId> gameIds = new ArrayList<>();
+    private transient List<GameId> gameIds = new ArrayList<>();
 
     public int getUserId() {
         if (this.userId == null) {

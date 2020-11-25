@@ -2,9 +2,9 @@ package com.lingotrainer.api.util.mapper;
 
 import java.util.List;
 
-public interface EntityMapper<Domain, Persistable> {
-    Domain convertToDomainEntity(Persistable p);
-    Persistable convertToPersistableEntity (Domain d);
-    List<Persistable> convertToPersistableEntities(List<Domain> d);
-    List<Domain> convertToDomainEntities(List<Persistable> d);
+public interface EntityMapper<D, P> {
+    D convertToDomainEntity(P p);
+    P convertToPersistableEntity (D d);
+    List<P> convertToPersistableEntities(List<D> d);
+    List<D> convertToDomainEntities(List<P> d);
 }

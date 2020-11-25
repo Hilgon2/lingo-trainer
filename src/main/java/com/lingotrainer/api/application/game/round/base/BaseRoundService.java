@@ -4,7 +4,6 @@ import com.lingotrainer.api.application.game.round.RoundService;
 import com.lingotrainer.api.domain.model.game.GameId;
 import com.lingotrainer.api.domain.model.game.round.Round;
 import com.lingotrainer.api.domain.model.game.round.RoundId;
-import com.lingotrainer.api.domain.model.WordLength;
 import com.lingotrainer.api.domain.model.game.round.turn.Turn;
 import com.lingotrainer.api.domain.repository.DictionaryRepository;
 import com.lingotrainer.api.domain.repository.GameRepository;
@@ -19,9 +18,7 @@ import com.lingotrainer.api.application.authentication.AuthenticationService;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BaseRoundService implements RoundService {

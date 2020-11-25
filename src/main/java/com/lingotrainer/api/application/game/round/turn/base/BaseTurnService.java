@@ -43,6 +43,7 @@ public class BaseTurnService implements TurnService {
 
     @Override
     public Turn finishTurn(int roundId, String guessedWord) {
+        String feedbackStatusLiteral = "status";
         Turn currentTurn = this.turnRepository.findCurrentTurn(roundId).orElseThrow(() -> new NotFoundException(String.format("Active turn of round ID %d not found", roundId)));
         Round round = this.roundRepository.findById(currentTurn.getRoundId()).orElseThrow(() -> new NotFoundException(String.format("Round ID %d not found", currentTurn.getRoundId())));
 
@@ -56,7 +57,6 @@ public class BaseTurnService implements TurnService {
         currentTurn.validateTurn(round.getWord(), dictionary);
 
         this.turnRepository.save(currentTurn);
-
 
         if (currentTurn.isCorrectGuess()) {
             round.setActive(false);
@@ -78,7 +78,7 @@ public class BaseTurnService implements TurnService {
             this.gameRepository.save(game);
 
             feedback.put("code", 5001);
-            feedback.put("status", GameFeedback.GAME_OVER);
+            feedback.put(feedbackStatusLiteral, GameFeedback.GAME_OVER);
             currentTurn.setFeedback(feedback);
         } else {
             Turn newTurn = Turn.builder()
@@ -89,8 +89,7 @@ public class BaseTurnService implements TurnService {
             this.turnRepository.save(newTurn);
         }
 
-
-        if (currentTurn.getFeedback().get("status") == null || currentTurn.getFeedback().get("status") == GameFeedback.GAME_OVER) {
+        if (currentTurn.getFeedback().get(feedbackStatusLiteral) == null || currentTurn.getFeedback().get(feedbackStatusLiteral) == GameFeedback.GAME_OVER) {
             currentTurn.setGuessedLetters(round.getWord());
         }
 
