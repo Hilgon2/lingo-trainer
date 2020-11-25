@@ -19,17 +19,30 @@ public class BaseTurnJpaRepository implements TurnRepository {
 
     @Override
     public Optional<Turn> findCurrentTurn(int roundId) {
-        return Optional.ofNullable(this.turnMapper.convertToDomainEntity((this.turnJpaRepository.findCurrentTurn(roundId))));
+        TurnEntity turnEntity = this.turnJpaRepository.findCurrentTurn(roundId);
+
+        if (turnEntity == null) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(this.turnMapper.convertToDomainEntity((turnEntity)));
     }
 
     @Override
     public Turn save(Turn turn) {
         TurnEntity turnEntity = this.turnJpaRepository.save(this.turnMapper.convertToPersistableEntity(turn));
+
         return this.turnMapper.convertToDomainEntity(turnEntity);
     }
 
     @Override
     public Optional<Turn> findById(int turnId) {
+        TurnEntity turnEntity = this.turnJpaRepository.findById(turnId);
+
+        if (turnEntity == null) {
+            return Optional.empty();
+        }
+
         return Optional.ofNullable(this.turnMapper.convertToDomainEntity(this.turnJpaRepository.findById(turnId)));
     }
 }

@@ -9,7 +9,7 @@ public class RoundFormMapper {
         return NewRoundResponse.builder()
                 .roundId(round.getRoundId())
                 .firstLetter(round.getWord().charAt(0))
-                .lettersAmount(round.getWordLength().getLength())
+                .lettersAmount(round.getWord().length())
                 .build();
     }
 }

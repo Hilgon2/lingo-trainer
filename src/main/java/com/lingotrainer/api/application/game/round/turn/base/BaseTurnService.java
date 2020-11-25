@@ -10,6 +10,7 @@ import com.lingotrainer.api.domain.model.game.round.turn.Turn;
 import com.lingotrainer.api.domain.repository.GameRepository;
 import com.lingotrainer.api.domain.repository.RoundRepository;
 import com.lingotrainer.api.domain.repository.TurnRepository;
+import com.lingotrainer.api.util.exception.GameException;
 import com.lingotrainer.api.util.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -38,8 +39,13 @@ public class BaseTurnService implements TurnService {
 
     @Override
     public Turn finishTurn(int roundId, String guessedWord) {
-        Turn currentTurn = this.turnRepository.findCurrentTurn(roundId).orElseThrow(() -> new NotFoundException(String.format("Active turn of round ID % not found", roundId)));
+        Turn currentTurn = this.turnRepository.findCurrentTurn(roundId).orElseThrow(() -> new NotFoundException(String.format("Active turn of round ID %d not found", roundId)));
         Round round = this.roundRepository.findById(currentTurn.getRoundId()).orElseThrow(() -> new NotFoundException(String.format("Round ID %d not found", currentTurn.getRoundId())));
+
+        if (!round.isActive()) {
+            throw new GameException(String.format("Round ID %d is not active. Please create a new round", round.getRoundId()));
+        }
+
         currentTurn.setGuessedWord(guessedWord);
         currentTurn.validateTurn(round.getWord());
 
@@ -48,6 +54,9 @@ public class BaseTurnService implements TurnService {
         Game game = this.gameRepository.findById(round.getGameId()).orElseThrow(() -> new NotFoundException(String.format("Game ID %d not found", round.getGameId())));
 
         if (currentTurn.isCorrectGuess()) {
+            round.setActive(false);
+            this.roundRepository.save(round);
+
             game.setScore(game.getScore() + 1);
             this.gameRepository.save(game);
         } else if (!currentTurn.isCorrectGuess() &&
@@ -56,6 +65,9 @@ public class BaseTurnService implements TurnService {
                         .filter(t -> this.turnRepository.findById(t.getId()).orElseThrow(() -> new NotFoundException(String.format("Turn ID %d not found", t.getId()))).getGuessedWord() != null)
                         .count() >= 5) {
             Map<String, Object> feedback = new HashMap<>();
+
+            round.setActive(false);
+            this.roundRepository.save(round);
 
             game.setGameStatus(GameStatus.FINISHED);
             this.gameRepository.save(game);
@@ -72,7 +84,8 @@ public class BaseTurnService implements TurnService {
             this.turnRepository.save(newTurn);
         }
 
-        if (Integer.parseInt(currentTurn.getFeedback().get("code").toString()) == -9999) {
+
+        if (currentTurn.getFeedback().get("status") == null || currentTurn.getFeedback().get("status") == GameFeedback.GAME_OVER) {
             currentTurn.setGuessedLetters(round.getWord());
         }
 

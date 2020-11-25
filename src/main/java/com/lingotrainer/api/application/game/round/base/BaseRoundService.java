@@ -11,6 +11,7 @@ import com.lingotrainer.api.domain.repository.GameRepository;
 import com.lingotrainer.api.domain.repository.RoundRepository;
 import com.lingotrainer.api.domain.repository.TurnRepository;
 import com.lingotrainer.api.util.exception.ForbiddenException;
+import com.lingotrainer.api.util.exception.GameException;
 import com.lingotrainer.api.util.exception.NotFoundException;
 import com.lingotrainer.api.domain.model.dictionary.Dictionary;
 import com.lingotrainer.api.domain.model.game.Game;
@@ -18,7 +19,9 @@ import com.lingotrainer.api.application.authentication.AuthenticationService;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BaseRoundService implements RoundService {
@@ -61,34 +64,28 @@ public class BaseRoundService implements RoundService {
             throw new NotFoundException("No active games could be found");
         }
 
-        Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException(String.format("Game ID %d not found", gameId)));
         Round currentRound = this.roundRepository.findCurrentRound(gameId).orElse(null);
 
-        WordLength wordLength = WordLength.FIVE;
         if (currentRound != null) {
-            switch (currentRound.getWordLength()) {
-                case FIVE:
-                    wordLength = WordLength.FIVE;
-                    break;
-                case SIX:
-                    wordLength = WordLength.SIX;
-                    break;
-                case SEVEN:
-                    wordLength = WordLength.SEVEN;
-                    break;
+            if (currentRound.getTurnIds()
+                    .stream()
+                    .filter(turnId -> this.turnRepository.findById(turnId.getId()).orElseThrow(() -> new NotFoundException(String.format("Turn ID %d could not be found", turnId.getId()))).getGuessedWord() != null)
+                    .count() < 5) {
+                throw new GameException("There are still turns left on the current round. Please finish them before creating a new round.");
             }
-
             currentRound.setActive(false);
             this.roundRepository.save(currentRound);
         }
 
+        Round lastRound = this.roundRepository.findLastRound(gameId).orElse(null);
+        Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException(String.format("Game ID %d not found", gameId)));
         Dictionary dictionary = this.dictionaryRepository.findByLanguage(game.getLanguage()).orElseThrow(() -> new NotFoundException(String.format("Dictionary language %s not found", game.getLanguage())));
 
         Round newRoundBuilder = Round.builder()
-                .word(dictionary.getRandomWord(wordLength))
                 .gameId(new GameId(gameId))
                 .active(true)
                 .build();
+        newRoundBuilder.nextWord(lastRound, dictionary);
 
         Round newRound = this.roundRepository.save(newRoundBuilder);
 

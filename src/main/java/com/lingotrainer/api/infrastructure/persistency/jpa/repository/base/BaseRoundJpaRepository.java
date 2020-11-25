@@ -1,5 +1,6 @@
 package com.lingotrainer.api.infrastructure.persistency.jpa.repository.base;
 
+import com.lingotrainer.api.infrastructure.persistency.jpa.entity.game.round.RoundEntity;
 import com.lingotrainer.api.util.mapper.RoundMapper;
 import com.lingotrainer.api.domain.model.game.round.Round;
 import com.lingotrainer.api.domain.repository.RoundRepository;
@@ -18,11 +19,22 @@ public class BaseRoundJpaRepository implements RoundRepository {
 
     @Override
     public Optional<Round> findCurrentRound(int gameId) {
-        if (this.roundJpaRepository.findCurrentRound(gameId) == null) {
+        RoundEntity roundEntity = this.roundJpaRepository.findCurrentRound(gameId);
+        if (roundEntity == null) {
             return Optional.empty();
         }
 
-        return Optional.ofNullable(this.roundMapper.convertToDomainEntity(this.roundJpaRepository.findCurrentRound(gameId)));
+        return Optional.ofNullable(this.roundMapper.convertToDomainEntity(roundEntity));
+    }
+
+    @Override
+    public Optional<Round> findLastRound(int gameId) {
+        RoundEntity roundEntity = this.roundJpaRepository.findLastRound(gameId);
+        if (roundEntity == null) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(this.roundMapper.convertToDomainEntity(roundEntity));
     }
 
     @Override
@@ -32,6 +44,12 @@ public class BaseRoundJpaRepository implements RoundRepository {
 
     @Override
     public Optional<Round> findById(int roundId) {
-        return Optional.ofNullable(this.roundMapper.convertToDomainEntity(this.roundJpaRepository.findById(roundId)));
+        RoundEntity roundEntity = this.roundJpaRepository.findById(roundId);
+
+        if (roundEntity == null) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(this.roundMapper.convertToDomainEntity(roundEntity));
     }
 }

@@ -1,6 +1,7 @@
 package com.lingotrainer.api.domain.model.game.round;
 
 import com.lingotrainer.api.domain.model.WordLength;
+import com.lingotrainer.api.domain.model.dictionary.Dictionary;
 import com.lingotrainer.api.domain.model.game.GameId;
 import com.lingotrainer.api.domain.model.game.round.turn.TurnId;
 import lombok.*;
@@ -63,5 +64,25 @@ public class Round {
             default:
                 return WordLength.FIVE;
         }
+    }
+
+    public void nextWord(Round lastRound, Dictionary dictionary) {
+        if (lastRound != null) {
+            switch (lastRound.getWordLength()) {
+                case SIX:
+                    this.wordLength = WordLength.SIX;
+                    break;
+                case SEVEN:
+                    this.wordLength = WordLength.SEVEN;
+                    break;
+                default:
+                    this.wordLength = WordLength.FIVE;
+                    break;
+            }
+        } else {
+            this.wordLength = WordLength.FIVE;
+        }
+
+        this.word = dictionary.getRandomWord(this.wordLength);
     }
 }
