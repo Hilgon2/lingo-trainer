@@ -1,5 +1,6 @@
 package com.lingotrainer.api.domain.model.game.round.turn;
 
+import com.lingotrainer.api.domain.model.dictionary.Dictionary;
 import com.lingotrainer.api.domain.model.game.GameFeedback;
 import com.lingotrainer.api.domain.model.game.round.RoundId;
 import lombok.*;
@@ -54,7 +55,7 @@ public class Turn {
         }
     }
 
-    public void validateTurn(String answer) {
+    public void validateTurn(String answer, Dictionary dictionary) {
         this.feedback = new HashMap<>();
         // feedback code -9999 means there is no feedback, meaning there is no error.
         int feedbackCode = -9999;
@@ -69,7 +70,10 @@ public class Turn {
         // Trim and capitalize the guessed word. Do this after the null check, because a null does not have a trim or toUpperCase method. This could otherwise possibly cause an error.
         this.guessedWord = guessedWord.toUpperCase().trim();
 
-        if (answer.length() != this.getGuessedWord().length()) {
+        if (!dictionary.getWords().contains(this.getGuessedWord())) {
+            feedbackCode = 5200;
+            status = GameFeedback.GUESSED_WORD_NOT_FOUND;
+        } else if (answer.length() != this.getGuessedWord().length()) {
             feedbackCode = 5205;
             status = GameFeedback.GUESSED_WORD_DIFF_LENGTH;
         } else if (!this.getGuessedWord().chars().allMatch(Character::isLetter)) {
@@ -80,10 +84,10 @@ public class Turn {
             status = GameFeedback.TURN_OVER;
         }
 
-        this.correctGuess = this.guessedWord.equalsIgnoreCase(answer);
-        this.feedback.put("code", feedbackCode);
-        this.feedback.put("status", status);
-    }
+        this.correctGuess =this.guessedWord.equalsIgnoreCase(answer);
+        this.feedback.put("code",feedbackCode);
+        this.feedback.put("status",status);
+}
 
     public int getTurnId() {
         if (this.turnId == null) {
