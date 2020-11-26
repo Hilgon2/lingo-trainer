@@ -59,6 +59,7 @@
     <module name="FileLength"/>
     <module name="LineLength">
         <property name="fileExtensions" value="java"/>
+        <property name="max" value="120" />
     </module>
 
     <!-- Checks for whitespace                               -->
@@ -155,7 +156,6 @@
         <!-- Checks for class design                         -->
         <!-- See https://checkstyle.org/config_design.html -->
         <module name="FinalClass"/>
-        <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
         <module name="VisibilityModifier"/>
 
