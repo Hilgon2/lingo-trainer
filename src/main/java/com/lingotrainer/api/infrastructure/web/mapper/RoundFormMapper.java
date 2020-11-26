@@ -5,7 +5,7 @@ import com.lingotrainer.api.infrastructure.web.response.NewRoundResponse;
 
 public class RoundFormMapper {
 
-    public NewRoundResponse convertToForm(Round round) {
+    public NewRoundResponse convertToResponse(Round round) {
         return NewRoundResponse.builder()
                 .roundId(round.getRoundId())
                 .firstLetter(round.getWord().charAt(0))

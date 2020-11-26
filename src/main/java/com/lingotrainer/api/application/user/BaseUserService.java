@@ -30,6 +30,8 @@ public class BaseUserService implements UserService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // only an admin can create another admin
         if (user.getRole() == Role.ADMIN && (authenticationService.getUser() == null || authenticationService.getUser().getRole() != Role.ADMIN)) {
             throw new ForbiddenException("Only administrators are permitted to create another administrator account");
         }

@@ -62,6 +62,7 @@ public class BaseRoundService implements RoundService {
 
         Round currentRound = this.roundRepository.findCurrentRound(gameId).orElse(null);
 
+        // if there is an active round, check if there are still turns left. If not, set the current round on inactive.
         if (currentRound != null) {
             if (currentRound.getTurnIds()
                     .stream()
@@ -73,6 +74,7 @@ public class BaseRoundService implements RoundService {
             this.roundRepository.save(currentRound);
         }
 
+        // retrieve last round to retrieve the amount of letters the next word needs (5, 6 or 7)
         Round lastRound = this.roundRepository.findLastRound(gameId).orElse(null);
         Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException(String.format("Game ID %d not found", gameId)));
         Dictionary dictionary = this.dictionaryRepository.findByLanguage(game.getLanguage()).orElseThrow(() -> new NotFoundException(String.format("Dictionary language %s not found", game.getLanguage())));

@@ -38,18 +38,16 @@ public class BaseDictionaryService implements DictionaryService {
                 dictionary.setWords(new ArrayList<>());
             }
 
-            List<String> additionalWords = new ArrayList<>();
-
+            // add new words to words list
             try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     if (line.length() >= 5 && line.length() <= 7 && line.chars().allMatch(Character::isLetter) && !dictionary.getWords().contains(line)) {
-                        additionalWords.add(line.toUpperCase());
+                        dictionary.getWords().add(line.toUpperCase());
                     }
                 }
             }
 
-            dictionary.getWords().addAll(additionalWords);
             return this.dictionaryRepository.save(dictionary);
         } catch (IOException e) {
             throw new GeneralException(String.format("Unknown error trying to open the %s language file", dictionary.getLanguage()));

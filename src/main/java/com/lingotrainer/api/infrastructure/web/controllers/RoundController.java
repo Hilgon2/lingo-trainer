@@ -24,7 +24,7 @@ public class RoundController {
     @PostMapping(produces = "application/json")
     @Authenticated
     public ResponseEntity<NewRoundResponse> createNewRound(@PathVariable("gameId") int gameId) {
-        NewRoundResponse newRoundResponse = this.roundFormMapper.convertToForm(roundService.createNewRound(gameId));
+        NewRoundResponse newRoundResponse = this.roundFormMapper.convertToResponse(roundService.createNewRound(gameId));
         return ok(newRoundResponse);
     }
 }
