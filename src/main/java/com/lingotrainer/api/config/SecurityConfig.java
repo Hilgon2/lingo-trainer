@@ -21,6 +21,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private FilterChainExceptionHandler filterChainExceptionHandler;
 
+    /**
+     * Retrieve the Authentication manager bean
+     * @return the AuthenticationManagerBean
+     * @throws Exception if AuthenticationManagerBean failed for some reason
+     */
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -28,7 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Boilerplate passive security protocol. Use annotations to secure a specified resource like:
+     * Boilerplate passive security protocol.
+     * Use annotations to secure a specified resource like:
      *  - @Secured("SOME_ROLE")
      *  - @Authenticated
      *
@@ -39,16 +45,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * @throws Exception Any exception that might occur
      */
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(final HttpSecurity http) throws Exception {
         http
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .csrf().disable()
                 .httpBasic()
                 .and()
                 .authorizeRequests().anyRequest().permitAll()
                 .and()
-                .addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
+                .addFilterBefore(
+                        filterChainExceptionHandler, LogoutFilter.class)
                 .apply(new JwtSecurityConfigurer(jwtTokenProvider));
     }
 

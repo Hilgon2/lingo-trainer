@@ -22,18 +22,31 @@ import java.io.IOException;
 @Slf4j
 public class FilterChainExceptionHandler extends OncePerRequestFilter {
 
-    @Autowired
-    @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver resolver;
 
+    public FilterChainExceptionHandler(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
+        this.resolver = resolver;
+    }
+
+    /**
+     * Catch exceptions which happen outside a controller and/or service.
+     * @param request the HttpServletRequest
+     * @param response the HttpServletResponse
+     * @param filterChain the FilterChain
+     * @throws ServletException servlet has an exception
+     * @throws IOException an I/O exception occured
+     */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(final HttpServletRequest request,
+                                    final HttpServletResponse response,
+                                    final FilterChain filterChain)
             throws ServletException, IOException {
 
         try {
             filterChain.doFilter(request, response);
         } catch (InvalidJwtAuthenticationException e) {
-            response.setStatus(500);
+            int statusCode = 500;
+            response.setStatus(statusCode);
             resolver.resolveException(request, response, null, e);
         }
     }

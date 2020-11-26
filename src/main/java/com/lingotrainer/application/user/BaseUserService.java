@@ -1,6 +1,7 @@
 package com.lingotrainer.application.user;
 
 import com.lingotrainer.application.authentication.AuthenticationService;
+import com.lingotrainer.application.exception.NotFoundException;
 import com.lingotrainer.domain.model.user.Role;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.repository.UserRepository;
@@ -49,7 +50,7 @@ public class BaseUserService implements UserService {
      * @return true or false
      */
     @Override
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException(String.format("User with username %s not found", username)));
     }
 }
