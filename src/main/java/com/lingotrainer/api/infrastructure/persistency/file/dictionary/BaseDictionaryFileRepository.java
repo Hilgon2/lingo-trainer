@@ -1,4 +1,4 @@
-package com.lingotrainer.api.infrastructure.persistency.file.dictionary.base;
+package com.lingotrainer.api.infrastructure.persistency.file.dictionary;
 
 import com.google.gson.Gson;
 import com.lingotrainer.api.domain.model.dictionary.Dictionary;

@@ -104,4 +104,11 @@ public class Turn {
 
         return this.roundId.getId();
     }
+
+    public void finishGame() {
+        Map<String, Object> feedback = new HashMap<>();
+        feedback.put("code", 5001);
+        feedback.put("status", GameFeedback.GAME_OVER);
+        this.feedback = feedback;
+    }
 }

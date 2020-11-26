@@ -1,6 +1,5 @@
 package com.lingotrainer.api.application.game;
 
-import com.lingotrainer.api.application.game.GameService;
 import com.lingotrainer.api.domain.model.game.Game;
 import com.lingotrainer.api.domain.model.game.GameStatus;
 import com.lingotrainer.api.domain.model.user.User;

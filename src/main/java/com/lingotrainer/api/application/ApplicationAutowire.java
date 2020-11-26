@@ -5,7 +5,7 @@ import com.lingotrainer.api.util.mapper.RoundMapper;
 import com.lingotrainer.api.util.mapper.TurnMapper;
 import com.lingotrainer.api.util.mapper.UserMapper;
 import com.lingotrainer.api.domain.repository.*;
-import com.lingotrainer.api.infrastructure.persistency.file.dictionary.base.BaseDictionaryFileRepository;
+import com.lingotrainer.api.infrastructure.persistency.file.dictionary.BaseDictionaryFileRepository;
 import com.lingotrainer.api.infrastructure.persistency.jpa.repository.GameJpaRepository;
 import com.lingotrainer.api.infrastructure.persistency.jpa.repository.RoundJpaRepository;
 import com.lingotrainer.api.infrastructure.persistency.jpa.repository.TurnJpaRepository;
