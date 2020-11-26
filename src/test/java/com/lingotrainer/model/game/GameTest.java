@@ -61,10 +61,10 @@ public class GameTest {
                 .gameStatus(GameStatus.ACTIVE)
                 .build());
 
-        assertFalse(
+        assertTrue(
                 this.games.stream().
                 filter(game -> game.getGameStatus() == GameStatus.ACTIVE && game.getUserId() == this.defaultUserId.getId())
-                .count() <= 1
+                .count() > 1
         );
     }
 }
