@@ -22,6 +22,11 @@ public class BaseUserService implements UserService {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * Create or update a user, depending on if the user already exists or not
+     * @param user the user to be saved
+     * @return user information of the saved user
+     */
     @Override
     public User save(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
@@ -38,6 +43,11 @@ public class BaseUserService implements UserService {
         return this.userRepository.save(user);
     }
 
+    /**
+     * Check if a username already exists or not
+     * @param username username to be checked
+     * @return true or false
+     */
     @Override
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);

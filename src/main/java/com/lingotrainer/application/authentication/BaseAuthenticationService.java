@@ -28,11 +28,19 @@ public class BaseAuthenticationService implements AuthenticationService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    /**
+     * Gets the authentication based on logged in user
+     * @return Authentication object
+     */
     @Override
     public Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
+    /**
+     * Gets the user based on the logged in user
+     * @return user principal
+     */
     @Override
     public User getUser() {
         Authentication authentication = getAuthentication();
@@ -43,6 +51,11 @@ public class BaseAuthenticationService implements AuthenticationService {
         return null;
     }
 
+    /**
+     * Login to the application
+     * @param data the data needed to make an authentication request
+     * @return the JWT token of the request
+     */
     @Override
     public Map<Object, Object> login(AuthenticationRequest data) {
         try {

@@ -25,11 +25,21 @@ public class BaseGameService implements GameService {
         this.gameRepository = gameRepository;
     }
 
+    /**
+     * Get the game information
+     * @param id the id of the game to be found
+     * @return game object, containing game information
+     */
     @Override
     public Optional<Game> findById(int id) {
         return gameRepository.findById(id);
     }
 
+    /**
+     * Create new game for the logged in user, based on the language code
+     * @param languageCode language of the dictionary
+     * @return game ID of the newly created game
+     */
     @Override
     public int createNewGame(String languageCode) {
         if (this.gameRepository.hasActiveGame(authenticationService.getUser().getUserId())) {
@@ -51,11 +61,22 @@ public class BaseGameService implements GameService {
         return this.save(game);
     }
 
+    /**
+     * Get the active game of a user
+     * @param userId the ID of the user
+     * @return game object, containing game information
+     */
     @Override
     public Optional<Game> findActiveGame(int userId) {
         return this.gameRepository.findActiveGame(userId);
     }
 
+
+    /**
+     * Create or update a game, depending on if the game already exists or not
+     * @param game game object to be saved
+     * @return ID of the game which was saved
+     */
     @Override
     public int save(Game game) {
         if (game.getUserId() != authenticationService.getUser().getUserId()) {
