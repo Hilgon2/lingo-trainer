@@ -6,9 +6,6 @@ import org.springframework.security.core.Authentication;
 
 import java.util.Map;
 
-/**
- * Facade for dealing with Spring authentication inside the controller
- */
 public interface AuthenticationService {
     Authentication getAuthentication();
 

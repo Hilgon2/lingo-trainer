@@ -41,6 +41,7 @@ public class BaseRoundService implements RoundService {
 
     /**
      * Create or update a round, depending on if the round already exists or not.
+     *
      * @param round the round to be saved
      * @return ID of the saved round
      */
@@ -60,6 +61,7 @@ public class BaseRoundService implements RoundService {
 
     /**
      * Find the current active round of the game id.
+     *
      * @param gameId ID of the game
      * @return round information by game ID
      */
@@ -72,6 +74,7 @@ public class BaseRoundService implements RoundService {
     /**
      * Create a new round. There can only be one active round at a time.
      * There must also be an active game before starting a round.
+     *
      * @param gameId the game ID to create the round
      * @return round information of the created round
      */
@@ -88,10 +91,14 @@ public class BaseRoundService implements RoundService {
             if (currentRound.getTurnIds()
                     .stream()
                     .filter(turnId -> this.turnRepository.findById(turnId.getId()).orElseThrow(() ->
-                            new NotFoundException(String.format("Turn ID %d could not be found", turnId.getId()))).getGuessedWord() != null)
+                            new NotFoundException(
+                                    String.format("Turn ID %d could not be found", turnId.getId())))
+                            .getGuessedWord() != null)
                     .count() < 5) {
                 throw new GameException(
-                        "There are still turns left on the current round. Please finish them before creating a new round.");
+                        "There are still turns left on the current round. " +
+                                "Please finish them before creating a new round."
+                );
             }
             currentRound.setActive(false);
             this.roundRepository.save(currentRound);
@@ -124,6 +131,7 @@ public class BaseRoundService implements RoundService {
 
     /**
      * Retrieve the round information.
+     *
      * @param roundId ID of the round
      * @return round information based on the given ID
      */

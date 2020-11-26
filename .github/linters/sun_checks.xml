@@ -105,7 +105,7 @@
         <!-- Checks for imports                              -->
         <!-- See https://checkstyle.org/config_imports.html -->
         <module name="AvoidStarImport">
-            <property name="excludes" value="io.jsonwebtoken,com.lingotrainer.domain.repository,lombok,javax.persistence"/>
+            <property name="excludes" value="io.jsonwebtoken,com.lingotrainer.domain.repository,lombok,javax.persistence,org.springframework.web.bind.annotation"/>
         </module>
         <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
         <module name="RedundantImport"/>
@@ -164,7 +164,6 @@
         <!-- Miscellaneous other checks.                   -->
         <!-- See https://checkstyle.org/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <module name="TodoComment"/>
         <module name="UpperEll"/>
 
         <!-- https://checkstyle.org/config_filters.html#SuppressionXpathFilter -->

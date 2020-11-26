@@ -42,8 +42,8 @@ public class BaseDictionaryService implements DictionaryService {
         try {
             // if file exists, get words list. Otherwise create empty word list.
             if (new File(String.format("src/main/resources/dictionary/%s.json", dictionary.getLanguage())).exists()) {
-                String targetFileReader = new String(Files.readAllBytes(Paths.get(String.format("src/main/resources/dictionary/%s.json",
-                        dictionary.getLanguage()))));
+                String targetFileReader = new String(Files.readAllBytes(Paths.get(
+                        String.format("src/main/resources/dictionary/%s.json", dictionary.getLanguage()))));
                 dictionary.setWords(gson.fromJson(targetFileReader, List.class));
             } else {
                 dictionary.setWords(new ArrayList<>());
@@ -53,10 +53,10 @@ public class BaseDictionaryService implements DictionaryService {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    if (line.length() >= 5 &&
-                            line.length() <= 7 &&
-                            line.chars().allMatch(Character::isLetter) &&
-                            !dictionary.getWords().contains(line)) {
+                    if (line.length() >= 5
+                            && line.length() <= 7
+                            && line.chars().allMatch(Character::isLetter)
+                            && !dictionary.getWords().contains(line)) {
                         dictionary.getWords().add(line.toUpperCase());
                     }
                 }
@@ -64,7 +64,8 @@ public class BaseDictionaryService implements DictionaryService {
 
             return this.dictionaryRepository.save(dictionary);
         } catch (IOException e) {
-            throw new GeneralException(String.format("Unknown error trying to open the %s language file", dictionary.getLanguage()));
+            throw new GeneralException(String.format("Unknown error trying to open the %s language file",
+                    dictionary.getLanguage()));
         }
     }
 }

@@ -35,8 +35,8 @@ public class Turn {
     private String feedbackStatusLiteral = "status";
 
     public void setGuessedLetters(String answer) {
-        if (this.getFeedback().get(this.feedbackStatusLiteral) == null ||
-                this.getFeedback().get(this.feedbackStatusLiteral) == GameFeedback.GAME_OVER) {
+        if (this.getFeedback().get(this.feedbackStatusLiteral) == null
+                || this.getFeedback().get(this.feedbackStatusLiteral) == GameFeedback.GAME_OVER) {
             int index = 0;
             this.guessedLetters = new ArrayList<>();
 

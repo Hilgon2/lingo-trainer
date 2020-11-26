@@ -84,7 +84,8 @@ public class BaseTurnService implements TurnService {
                 && round.getTurnIds()
                         .stream()
                         .filter(t -> this.turnRepository.findById(t.getId()).orElseThrow(() ->
-                                new NotFoundException(String.format("Turn ID %d not found", t.getId()))).getGuessedWord() != null)
+                                new NotFoundException(String.format("Turn ID %d not found", t.getId())))
+                                .getGuessedWord() != null)
                         .count() >= 5) {
             game.setGameStatus(GameStatus.FINISHED);
             this.gameRepository.save(game);

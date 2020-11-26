@@ -2,7 +2,7 @@
 ## Linter GitHub Actions ##
 ###########################
 
-name: Lint Code Base
+name: Super linter
 
 #
 # Documentation:

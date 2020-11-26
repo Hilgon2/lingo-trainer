@@ -33,8 +33,8 @@ class JsonViewFilter extends AbstractMappingJacksonResponseBodyAdvice {
 
         Class<?> viewClass = MyJsonView.Anonymous.class;
 
-        if (SecurityContextHolder.getContext().getAuthentication() != null &&
-                SecurityContextHolder.getContext().getAuthentication().getAuthorities() != null) {
+        if (SecurityContextHolder.getContext().getAuthentication() != null
+                && SecurityContextHolder.getContext().getAuthentication().getAuthorities() != null) {
             Collection<? extends GrantedAuthority> authorities =
                     SecurityContextHolder.getContext().getAuthentication().getAuthorities();
 
