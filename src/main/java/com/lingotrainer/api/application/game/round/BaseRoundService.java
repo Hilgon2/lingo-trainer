@@ -1,4 +1,4 @@
-package com.lingotrainer.api.application.game.round.base;
+package com.lingotrainer.api.application.game.round;
 
 import com.lingotrainer.api.application.game.round.RoundService;
 import com.lingotrainer.api.domain.model.game.GameId;

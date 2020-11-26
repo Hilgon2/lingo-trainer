@@ -1,4 +1,4 @@
-package com.lingotrainer.api.application.game.base;
+package com.lingotrainer.api.application.game;
 
 import com.lingotrainer.api.application.game.GameService;
 import com.lingotrainer.api.domain.model.game.Game;

@@ -1,4 +1,4 @@
-package com.lingotrainer.api.application.game.round.turn.base;
+package com.lingotrainer.api.application.game.round.turn;
 
 import com.lingotrainer.api.application.game.round.turn.TurnService;
 import com.lingotrainer.api.domain.model.dictionary.Dictionary;

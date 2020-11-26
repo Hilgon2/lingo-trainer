@@ -1,4 +1,4 @@
-package com.lingotrainer.api.application.user.base;
+package com.lingotrainer.api.application.user;
 
 import com.lingotrainer.api.application.authentication.AuthenticationService;
 import com.lingotrainer.api.application.user.UserService;
