@@ -24,7 +24,7 @@ public class BaseUserService implements UserService {
     }
 
     /**
-     * Create or update a user, depending on if the user already exists or not
+     * Create or update a user, depending on if the user already exists or not.
      * @param user the user to be saved
      * @return user information of the saved user
      */
@@ -45,7 +45,7 @@ public class BaseUserService implements UserService {
     }
 
     /**
-     * Check if a username already exists or not
+     * Check if a username already exists or not.
      * @param username username to be checked
      * @return true or false
      */

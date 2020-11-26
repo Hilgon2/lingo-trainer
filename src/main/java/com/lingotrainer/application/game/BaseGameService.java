@@ -26,7 +26,7 @@ public class BaseGameService implements GameService {
     }
 
     /**
-     * Get the game information
+     * Get the game information.
      * @param id the id of the game to be found
      * @return game object, containing game information
      */
@@ -36,7 +36,7 @@ public class BaseGameService implements GameService {
     }
 
     /**
-     * Create new game for the logged in user, based on the language code
+     * Create new game for the logged in user, based on the language code.
      * @param languageCode language of the dictionary
      * @return game ID of the newly created game
      */
@@ -62,7 +62,7 @@ public class BaseGameService implements GameService {
     }
 
     /**
-     * Get the active game of a user
+     * Get the active game of a user.
      * @param userId the ID of the user
      * @return game object, containing game information
      */
@@ -73,7 +73,7 @@ public class BaseGameService implements GameService {
 
 
     /**
-     * Create or update a game, depending on if the game already exists or not
+     * Create or update a game, depending on if the game already exists or not.
      * @param game game object to be saved
      * @return ID of the game which was saved
      */

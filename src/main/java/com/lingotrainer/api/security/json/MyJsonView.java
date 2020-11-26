@@ -18,9 +18,9 @@ public class MyJsonView {
         MAPPING.put(Role.ADMIN, Admin.class);
     }
 
-    public interface Anonymous {}
+    public interface Anonymous {  }
 
-    public interface Trainee extends Anonymous {}
+    public interface Trainee extends Anonymous {  }
 
-    public interface Admin extends Trainee {}
+    public interface Admin extends Trainee {  }
 }

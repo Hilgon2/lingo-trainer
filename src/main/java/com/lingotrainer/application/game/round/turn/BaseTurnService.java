@@ -15,7 +15,6 @@ import com.lingotrainer.application.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Optional;
 
 @Service
 public class BaseTurnService implements TurnService {
@@ -32,11 +31,22 @@ public class BaseTurnService implements TurnService {
         this.dictionaryRepository = dictionaryRepository;
     }
 
+    /**
+     * Find the current turn based on round ID.
+     * @param roundId the round ID to look for
+     * @return current turn information by round ID
+     */
     @Override
-    public Optional<Turn> findCurrentTurn(int roundId) {
-        return turnRepository.findCurrentTurn(roundId);
+    public Turn findCurrentTurn(int roundId) {
+        return turnRepository.findCurrentTurn(roundId).orElseThrow(() -> new NotFoundException(String.format("Active turn with round ID %d could not be found", roundId)));
     }
 
+    /**
+     * Take a guess and play the turn. If the user has guessed the word wrong for 5 turns, the game ends.
+     * @param roundId the round ID to play the turn
+     * @param guessedWord the guessed word
+     * @return turn information with given feedback on the guess
+     */
     @Override
     public Turn playTurn(int roundId, String guessedWord) {
         Turn currentTurn = this.turnRepository.findCurrentTurn(roundId).orElseThrow(() -> new NotFoundException(String.format("Active turn of round ID %d not found", roundId)));
@@ -91,8 +101,13 @@ public class BaseTurnService implements TurnService {
         return currentTurn;
     }
 
+    /**
+     * Retrieve the turn information.
+     * @param turnId ID of the turn
+     * @return turn information based on the given ID
+     */
     @Override
-    public Optional<Turn> findById(int turnId) {
-        return this.turnRepository.findById(turnId);
+    public Turn findById(int turnId) {
+        return this.turnRepository.findById(turnId).orElseThrow(() -> new NotFoundException(String.format("Turn ID %d could not be found", turnId)));
     }
 }

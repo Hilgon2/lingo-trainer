@@ -23,7 +23,7 @@ public class BaseDictionaryService implements DictionaryService {
     }
 
     /**
-     * Create or update a dictionary, depending on if the language already exists or not
+     * Create or update a dictionary, depending on if the language already exists or not.
      * @param file the file which contains the new words
      * @param languageCode the language of the dictionary
      * @return the language code

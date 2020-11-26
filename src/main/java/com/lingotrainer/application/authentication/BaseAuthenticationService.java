@@ -29,7 +29,7 @@ public class BaseAuthenticationService implements AuthenticationService {
     }
 
     /**
-     * Gets the authentication based on logged in user
+     * Gets the authentication based on logged in user.
      * @return Authentication object
      */
     @Override
@@ -38,7 +38,7 @@ public class BaseAuthenticationService implements AuthenticationService {
     }
 
     /**
-     * Gets the user based on the logged in user
+     * Gets the user based on the logged in user.
      * @return user principal
      */
     @Override
@@ -52,7 +52,7 @@ public class BaseAuthenticationService implements AuthenticationService {
     }
 
     /**
-     * Login to the application
+     * Login to the application.
      * @param data the data needed to make an authentication request
      * @return the JWT token of the request
      */

@@ -17,7 +17,6 @@ import com.lingotrainer.application.authentication.AuthenticationService;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Optional;
 
 @Service
 public class BaseRoundService implements RoundService {
@@ -36,6 +35,11 @@ public class BaseRoundService implements RoundService {
         this.dictionaryRepository = dictionaryRepository;
     }
 
+    /**
+     * Create or update a round, depending on if the round already exists or not.
+     * @param round the round to be saved
+     * @return ID of the saved round
+     */
     @Override
     public int save(Round round) {
         Game game = this.gameRepository.findById(round.getGameId()).orElseThrow(() -> new NotFoundException(String.format("Game ID %d not found", round.getGameId())));
@@ -49,11 +53,21 @@ public class BaseRoundService implements RoundService {
         return roundRepository.save(round).getRoundId();
     }
 
+    /**
+     * Find the current active round of the game id
+     * @param gameId ID of the game
+     * @return round information by game ID
+     */
     @Override
-    public Optional<Round> findCurrentRound(int gameId) {
-        return roundRepository.findCurrentRound(gameId);
+    public Round findCurrentRound(int gameId) {
+        return roundRepository.findCurrentRound(gameId).orElseThrow(() -> new NotFoundException(String.format("Round ID %d could not be found", gameId)));
     }
 
+    /**
+     * Create a new round. There can only be one active round at a time. There must also be an active game before starting a round.
+     * @param gameId the game ID to create the round
+     * @return round information of the created round
+     */
     @Override
     public Round createNewRound(int gameId) {
         if (!this.gameRepository.hasActiveGame(this.authenticationService.getUser().getUserId())) {
@@ -97,8 +111,13 @@ public class BaseRoundService implements RoundService {
         return newRound;
     }
 
+    /**
+     * Retrieve the round information.
+     * @param roundId ID of the round
+     * @return round information based on the given ID
+     */
     @Override
-    public Optional<Round> findById(int roundId) {
-        return this.roundRepository.findById(roundId);
+    public Round findById(int roundId) {
+        return this.roundRepository.findById(roundId).orElseThrow(() -> new NotFoundException(String.format("Round ID %d could not be found", roundId)));
     }
 }

@@ -14,7 +14,7 @@ public class Application {
     }
 
     /**
-     * This makes it possible to BCrypt our passwords
+     * Encrypt password using BCrypt.
      * @return PasswordEncoder
      */
     @Bean
