@@ -2,7 +2,6 @@ package com.lingotrainer.application.game.round.turn;
 
 import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.domain.model.game.Game;
-import com.lingotrainer.domain.model.game.GameFeedback;
 import com.lingotrainer.domain.model.game.GameStatus;
 import com.lingotrainer.domain.model.game.round.Round;
 import com.lingotrainer.domain.model.game.round.RoundId;

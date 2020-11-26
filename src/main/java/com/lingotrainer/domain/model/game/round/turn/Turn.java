@@ -32,9 +32,10 @@ public class Turn {
     @ToString.Exclude
     private RoundId roundId;
 
+    private String feedbackStatusLiteral = "status";
+
     public void setGuessedLetters(String answer) {
-        String feedbackStatusLiteral = "status";
-        if (this.getFeedback().get(feedbackStatusLiteral) == null || this.getFeedback().get(feedbackStatusLiteral) == GameFeedback.GAME_OVER) {
+        if (this.getFeedback().get(this.feedbackStatusLiteral) == null || this.getFeedback().get(this.feedbackStatusLiteral) == GameFeedback.GAME_OVER) {
             int index = 0;
             this.guessedLetters = new ArrayList<>();
 
@@ -89,7 +90,7 @@ public class Turn {
 
         this.correctGuess = this.guessedWord.equalsIgnoreCase(answer);
         this.feedback.put("code", feedbackCode);
-        this.feedback.put("status", status);
+        this.feedback.put(this.feedbackStatusLiteral, status);
     }
 
     public int getTurnId() {
@@ -109,9 +110,9 @@ public class Turn {
     }
 
     public void finishGame() {
-        Map<String, Object> feedback = new HashMap<>();
+        Map<String, Object> newFeedback = new HashMap<>();
         feedback.put("code", 5001);
-        feedback.put("status", GameFeedback.GAME_OVER);
-        this.feedback = feedback;
+        feedback.put(this.feedbackStatusLiteral, GameFeedback.GAME_OVER);
+        this.feedback = newFeedback;
     }
 }
