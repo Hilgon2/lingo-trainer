@@ -19,10 +19,12 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
 
     @Override
     public String save(Dictionary dictionary) {
-        try (FileWriter targetFileWriter = new FileWriter(String.format("src/main/resources/dictionary/%s.json", dictionary.getLanguage()))) {
+        try (FileWriter targetFileWriter = new FileWriter(String.format("src/main/resources/dictionary/%s.json",
+                dictionary.getLanguage()))) {
             targetFileWriter.write(this.gson.toJson(dictionary.getWords()));
         } catch (IOException e) {
-            throw new GeneralException(String.format("Unknown error trying to open the %s language file", dictionary.getLanguage()));
+            throw new GeneralException(String.format("Unknown error trying to open the %s language file",
+                    dictionary.getLanguage()));
         }
 
         return dictionary.getLanguage();
@@ -31,7 +33,9 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
     @Override
     public Optional<Dictionary> findByLanguage(String languageCode) {
         try {
-            String targetFileReader = new String(Files.readAllBytes(Paths.get(String.format("src/main/resources/dictionary/%s.json", languageCode))));
+            String targetFileReader = new String(Files.readAllBytes(Paths.get(
+                    String.format("src/main/resources/dictionary/%s.json", languageCode)
+            )));
             List<String> words = gson.fromJson(targetFileReader, List.class);
 
             return Optional.of(Dictionary.builder()
@@ -39,7 +43,9 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
                     .words(words)
                     .build());
         } catch (IOException e) {
-            throw new NotFoundException("Someting went wrong trying to read the language file. The file might not exist.");
+            throw new NotFoundException(
+                    "Someting went wrong trying to read the language file. The file might not exist."
+            );
         }
     }
 }

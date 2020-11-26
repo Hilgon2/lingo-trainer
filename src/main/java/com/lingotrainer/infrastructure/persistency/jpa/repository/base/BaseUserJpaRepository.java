@@ -19,7 +19,9 @@ public class BaseUserJpaRepository implements UserRepository {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return Optional.ofNullable(this.userMapper.convertToDomainEntity(this.userJpaRepository.findByUsername(username)));
+        return Optional.ofNullable(this.userMapper.convertToDomainEntity(
+                this.userJpaRepository.findByUsername(username))
+        );
     }
 
     @Override
@@ -29,6 +31,8 @@ public class BaseUserJpaRepository implements UserRepository {
 
     @Override
     public User save(User user) {
-        return this.userMapper.convertToDomainEntity(this.userJpaRepository.save(this.userMapper.convertToPersistableEntity(user)));
+        return this.userMapper.convertToDomainEntity(
+                this.userJpaRepository.save(this.userMapper.convertToPersistableEntity(user))
+        );
     }
 }

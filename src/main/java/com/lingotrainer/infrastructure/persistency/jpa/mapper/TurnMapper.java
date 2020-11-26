@@ -43,7 +43,7 @@ public class TurnMapper implements EntityMapper<Turn, TurnEntity> {
     }
 
     public List<Turn> convertToDomainEntities(List<TurnEntity> turnEntities) {
-        List <Turn> turns = new ArrayList<>();
+        List<Turn> turns = new ArrayList<>();
 
         turnEntities.forEach(turnEntity -> turns.add(Turn.builder()
                 .turnId(new TurnId(turnEntity.getId()))

@@ -28,12 +28,15 @@ class JsonViewFilter extends AbstractMappingJacksonResponseBodyAdvice {
 
     @Override
     protected void beforeBodyWriteInternal(MappingJacksonValue bodyContainer, MediaType contentType,
-                                           MethodParameter returnType, ServerHttpRequest request, ServerHttpResponse response) {
+                                           MethodParameter returnType, ServerHttpRequest request,
+                                           ServerHttpResponse response) {
 
         Class<?> viewClass = MyJsonView.Anonymous.class;
 
-        if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().getAuthorities() != null) {
-            Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        if (SecurityContextHolder.getContext().getAuthentication() != null &&
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities() != null) {
+            Collection<? extends GrantedAuthority> authorities =
+                    SecurityContextHolder.getContext().getAuthentication().getAuthorities();
 
             if (authorities.stream().anyMatch(o -> o.getAuthority().equals(Role.TRAINEE.getValue()))) {
                 viewClass = MyJsonView.Trainee.class;

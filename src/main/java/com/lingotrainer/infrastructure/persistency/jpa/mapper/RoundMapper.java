@@ -23,7 +23,8 @@ public class RoundMapper implements EntityMapper<Round, RoundEntity> {
                 .build();
 
         if (roundEntity.getTurns() != null) {
-            newRound.setTurnIds(roundEntity.getTurns().stream().map(turn -> new TurnId(turn.getId())).collect(Collectors.toList()));
+            newRound.setTurnIds(roundEntity.getTurns().stream().map(turn ->
+                    new TurnId(turn.getId())).collect(Collectors.toList()));
         }
 
         return newRound;
@@ -37,7 +38,12 @@ public class RoundMapper implements EntityMapper<Round, RoundEntity> {
                 .build();
 
         if (round.getTurnIds() != null) {
-            newRound.setTurns(round.getTurnIds().stream().map(turnId -> TurnEntity.builder().id(turnId.getId()).build()).collect(Collectors.toList()));
+            newRound.setTurns(round.getTurnIds()
+                    .stream()
+                    .map(turnId -> TurnEntity.builder()
+                            .id(turnId.getId())
+                            .build())
+                    .collect(Collectors.toList()));
         }
 
         if (round.getGameId() != 0) {
@@ -59,7 +65,12 @@ public class RoundMapper implements EntityMapper<Round, RoundEntity> {
                     .build();
 
             if (round.getTurnIds() != null) {
-                newRound.setTurns(round.getTurnIds().stream().map(turnId -> TurnEntity.builder().id(turnId.getId()).build()).collect(Collectors.toList()));
+                newRound.setTurns(round.getTurnIds()
+                        .stream()
+                        .map(turnId -> TurnEntity.builder()
+                                .id(turnId.getId())
+                                .build())
+                        .collect(Collectors.toList()));
             }
 
             roundEntities.add(newRound);
@@ -81,7 +92,8 @@ public class RoundMapper implements EntityMapper<Round, RoundEntity> {
                     .build();
 
             if (roundEntity.getTurns() != null) {
-                newRound.setTurnIds(roundEntity.getTurns().stream().map(turn -> new TurnId(turn.getId())).collect(Collectors.toList()));
+                newRound.setTurnIds(roundEntity.getTurns().stream().map(turn ->
+                        new TurnId(turn.getId())).collect(Collectors.toList()));
             }
 
             rounds.add(newRound);

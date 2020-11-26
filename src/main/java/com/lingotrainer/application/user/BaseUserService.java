@@ -17,7 +17,9 @@ public class BaseUserService implements UserService {
     private PasswordEncoder passwordEncoder;
     private AuthenticationService authenticationService;
 
-    public BaseUserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationService authenticationService) {
+    public BaseUserService(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           AuthenticationService authenticationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationService = authenticationService;
@@ -37,7 +39,8 @@ public class BaseUserService implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         // only an admin can create another admin
-        if (user.getRole() == Role.ADMIN && (authenticationService.getUser() == null || authenticationService.getUser().getRole() != Role.ADMIN)) {
+        if (user.getRole() == Role.ADMIN && (authenticationService.getUser() == null ||
+                authenticationService.getUser().getRole() != Role.ADMIN)) {
             throw new ForbiddenException("Only administrators are permitted to create another administrator account");
         }
 
@@ -51,6 +54,7 @@ public class BaseUserService implements UserService {
      */
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException(String.format("User with username %s could not be found", username)));
+        return userRepository.findByUsername(username).orElseThrow(() ->
+                new NotFoundException(String.format("User with username %s could not be found", username)));
     }
 }

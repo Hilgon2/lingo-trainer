@@ -29,7 +29,7 @@ public class UserEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(unique=true)
+    @Column(unique = true)
     private String username;
 
     @ToString.Exclude

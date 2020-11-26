@@ -34,7 +34,7 @@ public class GameEntity {
     @Builder.Default
     private List<RoundEntity> rounds = new ArrayList<>();
 
-    @Column(name="game_status")
+    @Column(name = "game_status")
     @Enumerated(EnumType.STRING)
     private GameStatus gameStatus;
 }

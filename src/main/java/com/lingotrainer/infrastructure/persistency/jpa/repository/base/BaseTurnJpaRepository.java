@@ -9,8 +9,8 @@ import com.lingotrainer.infrastructure.persistency.jpa.mapper.TurnMapper;
 import java.util.Optional;
 
 public class BaseTurnJpaRepository implements TurnRepository {
-    TurnJpaRepository turnJpaRepository;
-    TurnMapper turnMapper;
+    private TurnJpaRepository turnJpaRepository;
+    private TurnMapper turnMapper;
 
     public BaseTurnJpaRepository(TurnJpaRepository turnJpaRepository, TurnMapper turnMapper) {
         this.turnJpaRepository = turnJpaRepository;

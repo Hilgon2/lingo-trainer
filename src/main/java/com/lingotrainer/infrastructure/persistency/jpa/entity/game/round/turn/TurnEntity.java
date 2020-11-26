@@ -20,10 +20,10 @@ public class TurnEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(name="guessed_word")
+    @Column(name = "guessed_word")
     private String guessedWord;
 
-    @Column(name="started_at")
+    @Column(name = "started_at")
     private Instant startedAt;
 
     @ManyToOne(fetch = FetchType.EAGER)

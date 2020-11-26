@@ -39,7 +39,9 @@ public class BaseRoundJpaRepository implements RoundRepository {
 
     @Override
     public Round save(Round round) {
-        return this.roundMapper.convertToDomainEntity(this.roundJpaRepository.save(this.roundMapper.convertToPersistableEntity(round)));
+        return this.roundMapper.convertToDomainEntity(
+                this.roundJpaRepository.save(this.roundMapper.convertToPersistableEntity(round))
+        );
     }
 
     @Override

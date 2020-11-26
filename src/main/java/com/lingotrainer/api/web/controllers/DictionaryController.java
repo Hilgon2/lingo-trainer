@@ -23,7 +23,8 @@ public class DictionaryController {
 
     @PostMapping
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<String> save(@RequestParam("wordsFile") MultipartFile file, @RequestParam("languageCode") String languageCode) {
+    public ResponseEntity<String> save(@RequestParam("wordsFile") MultipartFile file,
+                                       @RequestParam("languageCode") String languageCode) {
         return ok(dictionaryService.save(file, languageCode));
     }
 }

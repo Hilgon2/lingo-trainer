@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 public class GameTest {
@@ -48,7 +48,8 @@ public class GameTest {
     void singleActiveGame() {
         assertTrue(
                 this.games.stream()
-                        .filter(game -> game.getGameStatus() == GameStatus.ACTIVE && game.getUserId() == this.defaultUserId.getId())
+                        .filter(game -> game.getGameStatus() == GameStatus.ACTIVE &&
+                                game.getUserId() == this.defaultUserId.getId())
                         .count() <= 1
         );
     }
@@ -63,7 +64,8 @@ public class GameTest {
 
         assertTrue(
                 this.games.stream().
-                filter(game -> game.getGameStatus() == GameStatus.ACTIVE && game.getUserId() == this.defaultUserId.getId())
+                filter(game -> game.getGameStatus() == GameStatus.ACTIVE &&
+                        game.getUserId() == this.defaultUserId.getId())
                 .count() > 1
         );
     }

@@ -20,7 +20,8 @@ public class BaseGameJpaRepository implements GameRepository {
 
     @Override
     public Optional<Game> findById(int id) {
-        GameEntity gameEntity = this.gameJpaRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Game ID %d could not be found", id)));
+        GameEntity gameEntity = this.gameJpaRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(String.format("Game ID %d could not be found", id)));
         if (gameEntity == null) {
             return Optional.empty();
         }

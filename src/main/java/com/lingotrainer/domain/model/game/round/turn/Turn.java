@@ -35,7 +35,8 @@ public class Turn {
     private String feedbackStatusLiteral = "status";
 
     public void setGuessedLetters(String answer) {
-        if (this.getFeedback().get(this.feedbackStatusLiteral) == null || this.getFeedback().get(this.feedbackStatusLiteral) == GameFeedback.GAME_OVER) {
+        if (this.getFeedback().get(this.feedbackStatusLiteral) == null ||
+                this.getFeedback().get(this.feedbackStatusLiteral) == GameFeedback.GAME_OVER) {
             int index = 0;
             this.guessedLetters = new ArrayList<>();
 
@@ -71,7 +72,9 @@ public class Turn {
             status = GameFeedback.GUESSED_WORD_IS_NULL;
         }
 
-        // Trim and capitalize the guessed word. Do this after the null check, because a null does not have a trim or toUpperCase method. This could otherwise possibly cause an error.
+        // Trim and capitalize the guessed word.
+        // Do this after the null check, because a null does not have a trim or toUpperCase method.
+        // This could otherwise possibly cause an error.
         this.guessedWord = guessedWord.toUpperCase().trim();
 
         if (!dictionary.getWords().contains(this.getGuessedWord())) {
@@ -83,7 +86,8 @@ public class Turn {
         } else if (!this.getGuessedWord().chars().allMatch(Character::isLetter)) {
             feedbackCode = 5210;
             status = GameFeedback.GUESSED_WORD_INVALID_CHAR;
-        } else if (Duration.between(this.getStartedAt(), Instant.now()).getSeconds() > 1500) { // TODO: change 1500 to 10 (seconds)
+            // TODO: change 1500 to 10 (seconds)
+        } else if (Duration.between(this.getStartedAt(), Instant.now()).getSeconds() > 1500) {
             feedbackCode = 5215;
             status = GameFeedback.TURN_OVER;
         }

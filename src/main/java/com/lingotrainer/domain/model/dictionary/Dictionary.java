@@ -16,8 +16,8 @@ import java.util.Random;
 @AllArgsConstructor
 
 public class Dictionary {
-    List<String> words = new ArrayList<>();
-    String language;
+    private List<String> words = new ArrayList<>();
+    private String language;
 
     public String getRandomWord(WordLength wordLength) {
         String randomWord;

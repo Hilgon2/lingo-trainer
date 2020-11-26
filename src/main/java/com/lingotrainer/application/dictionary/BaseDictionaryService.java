@@ -7,7 +7,10 @@ import com.lingotrainer.application.exception.GeneralException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -24,7 +27,8 @@ public class BaseDictionaryService implements DictionaryService {
 
     /**
      * Create or update a dictionary, depending on if the language already exists or not.
-     * @param file the file which contains the new words
+     *
+     * @param file         the file which contains the new words
      * @param languageCode the language of the dictionary
      * @return the language code
      */
@@ -38,7 +42,8 @@ public class BaseDictionaryService implements DictionaryService {
         try {
             // if file exists, get words list. Otherwise create empty word list.
             if (new File(String.format("src/main/resources/dictionary/%s.json", dictionary.getLanguage())).exists()) {
-                String targetFileReader = new String(Files.readAllBytes(Paths.get(String.format("src/main/resources/dictionary/%s.json", dictionary.getLanguage()))));
+                String targetFileReader = new String(Files.readAllBytes(Paths.get(String.format("src/main/resources/dictionary/%s.json",
+                        dictionary.getLanguage()))));
                 dictionary.setWords(gson.fromJson(targetFileReader, List.class));
             } else {
                 dictionary.setWords(new ArrayList<>());
@@ -48,7 +53,10 @@ public class BaseDictionaryService implements DictionaryService {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    if (line.length() >= 5 && line.length() <= 7 && line.chars().allMatch(Character::isLetter) && !dictionary.getWords().contains(line)) {
+                    if (line.length() >= 5 &&
+                            line.length() <= 7 &&
+                            line.chars().allMatch(Character::isLetter) &&
+                            !dictionary.getWords().contains(line)) {
                         dictionary.getWords().add(line.toUpperCase());
                     }
                 }

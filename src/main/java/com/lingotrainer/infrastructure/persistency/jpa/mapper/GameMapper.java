@@ -25,7 +25,8 @@ public class GameMapper implements EntityMapper<Game, GameEntity> {
                 .build();
 
         if (gameEntity.getRounds() != null) {
-            game.setRoundIds(gameEntity.getRounds().stream().map(round -> new RoundId(round.getId())).collect(Collectors.toList()));
+            game.setRoundIds(gameEntity.getRounds().stream().map(round ->
+                    new RoundId(round.getId())).collect(Collectors.toList()));
         }
 
         return game;
@@ -42,7 +43,12 @@ public class GameMapper implements EntityMapper<Game, GameEntity> {
                 .build();
 
         if (game.getRoundIds() != null) {
-            gameEntity.setRounds(game.getRoundIds().stream().map(roundId -> RoundEntity.builder().id(roundId.getId()).build()).collect(Collectors.toList()));
+            gameEntity.setRounds(game.getRoundIds()
+                    .stream()
+                    .map(roundId -> RoundEntity.builder().
+                            id(roundId.getId()).
+                            build())
+                    .collect(Collectors.toList()));
         }
 
         return gameEntity;
@@ -61,7 +67,12 @@ public class GameMapper implements EntityMapper<Game, GameEntity> {
                     .score(game.getScore())
                     .build();
             if (game.getRoundIds() != null) {
-                newGame.setRounds(game.getRoundIds().stream().map(roundId -> RoundEntity.builder().id(roundId.getId()).build()).collect(Collectors.toList()));
+                newGame.setRounds(game.getRoundIds()
+                        .stream()
+                        .map(roundId -> RoundEntity.builder()
+                                .id(roundId.getId())
+                                .build())
+                        .collect(Collectors.toList()));
             }
             gameEntities.add(newGame);
         }
@@ -83,7 +94,8 @@ public class GameMapper implements EntityMapper<Game, GameEntity> {
                     .build();
 
             if (gameEntity.getRounds() != null) {
-                newGame.setRoundIds(gameEntity.getRounds().stream().map(roundId -> new RoundId(roundId.getId())).collect(Collectors.toList()));
+                newGame.setRoundIds(gameEntity.getRounds().stream().map(roundId ->
+                        new RoundId(roundId.getId())).collect(Collectors.toList()));
             }
 
             games.add(newGame);

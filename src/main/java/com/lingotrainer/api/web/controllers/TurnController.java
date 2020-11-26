@@ -20,7 +20,9 @@ public class TurnController {
 
     @PutMapping
     @Authenticated
-    public ResponseEntity<Turn> playTurn(@PathVariable int gameId, @PathVariable int roundId, @RequestParam String guessedWord) {
+    public ResponseEntity<Turn> playTurn(@PathVariable int gameId,
+                                         @PathVariable int roundId,
+                                         @RequestParam String guessedWord) {
         return ok(this.turnService.playTurn(roundId, guessedWord));
     }
 }
