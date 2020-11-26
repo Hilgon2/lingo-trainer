@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class BaseDictionaryService implements DictionaryService {
@@ -44,11 +46,13 @@ public class BaseDictionaryService implements DictionaryService {
                 dictionary.setWords(new ArrayList<>());
             }
 
+            Pattern lowercasePattern = Pattern.compile("^[a-z]+$");
+
             // add new words to words list
             try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    if (line.length() >= 5 && line.length() <= 7 && line.chars().allMatch(Character::isLetter) && !dictionary.getWords().contains(line)) {
+                    if (line.length() >= 5 && line.length() <= 7 && line.chars().allMatch(Character::isLetter) && !dictionary.getWords().contains(line) && lowercasePattern.matcher(line).matches()) {
                         dictionary.getWords().add(line.toUpperCase());
                     }
                 }
