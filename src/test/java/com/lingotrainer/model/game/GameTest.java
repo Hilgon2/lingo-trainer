@@ -1,11 +1,11 @@
-package com.lingotrainer.unit.game;
+package com.lingotrainer.model.game;
 
 import com.lingotrainer.domain.model.game.Game;
 import com.lingotrainer.domain.model.game.GameId;
 import com.lingotrainer.domain.model.game.GameStatus;
 import com.lingotrainer.domain.model.user.UserId;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -16,11 +16,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 public class GameTest {
 
-    private static List<Game> games = new ArrayList<>();
-    private static UserId defaultUserId = new UserId(3);
+    private List<Game> games;
+    private UserId defaultUserId = new UserId(3);
 
-    @BeforeAll
-    static void setupTest() {
+    @BeforeEach
+    void setupTest() {
+        this.games = new ArrayList<>();
         games.add(Game.builder()
                 .gameId(new GameId(2))
                 .gameStatus(GameStatus.FINISHED)
@@ -45,26 +46,24 @@ public class GameTest {
 
     @Test
     void singleActiveGame() {
-        games.stream().forEach(game -> log.debug(game.toString()));
         assertTrue(
-                games.stream()
-                        .filter(game -> game.getGameStatus() == GameStatus.ACTIVE && game.getUserId() == defaultUserId.getId())
+                this.games.stream()
+                        .filter(game -> game.getGameStatus() == GameStatus.ACTIVE && game.getUserId() == this.defaultUserId.getId())
                         .count() <= 1
         );
     }
 
     @Test
     void multipleActiveGames() {
-        List<Game> tempGames = games;
-        tempGames.add(Game.builder()
+        this.games.add(Game.builder()
                 .gameId(new GameId(32))
                 .userId(defaultUserId)
                 .gameStatus(GameStatus.ACTIVE)
                 .build());
 
         assertFalse(
-                tempGames.stream().
-                filter(game -> game.getGameStatus() == GameStatus.ACTIVE && game.getUserId() == defaultUserId.getId())
+                this.games.stream().
+                filter(game -> game.getGameStatus() == GameStatus.ACTIVE && game.getUserId() == this.defaultUserId.getId())
                 .count() <= 1
         );
     }
