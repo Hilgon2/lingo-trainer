@@ -55,10 +55,12 @@ public class BaseTurnService implements TurnService {
 
         this.turnRepository.save(currentTurn);
 
-        boolean roundActive = false;
+        boolean roundActive = true;
         if (currentTurn.isCorrectGuess()) {
             game.setScore(game.getScore() + 1);
+
             this.gameRepository.save(game);
+            roundActive = false;
         } else if (!currentTurn.isCorrectGuess() &&
                 round.getTurnIds()
                         .stream()
@@ -68,8 +70,8 @@ public class BaseTurnService implements TurnService {
             this.gameRepository.save(game);
 
             currentTurn.finishGame();
+            roundActive = false;
         } else {
-            roundActive = true;
             Turn newTurn = Turn.builder()
                     .startedAt(Instant.now())
                     .roundId(new RoundId(round.getRoundId()))
@@ -78,8 +80,11 @@ public class BaseTurnService implements TurnService {
             this.turnRepository.save(newTurn);
         }
 
-        round.setActive(roundActive);
-        this.roundRepository.save(round);
+        if (!roundActive) {
+            round.setActive(false);
+            this.roundRepository.save(round);
+        }
+
 
         currentTurn.setGuessedLetters(round.getWord());
 
