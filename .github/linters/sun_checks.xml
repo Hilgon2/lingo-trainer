@@ -46,11 +46,9 @@
 
     <!-- Checks that a package-info.java file exists for each package.     -->
     <!-- See https://checkstyle.org/config_javadoc.html#JavadocPackage -->
-    <module name="JavadocPackage"/>
-
-    <!-- Checks whether files end with a new line.                        -->
-    <!-- See https://checkstyle.org/config_misc.html#NewlineAtEndOfFile -->
-    <module name="NewlineAtEndOfFile"/>
+    <module name="JavadocPackage">
+        <property name="severity" value="ignore"/>
+    </module>
 
     <!-- Checks that property files contain the same keys.         -->
     <!-- See https://checkstyle.org/config_misc.html#Translation -->
@@ -88,9 +86,13 @@
         <!-- Checks for Javadoc comments.                     -->
         <!-- See https://checkstyle.org/config_javadoc.html -->
         <module name="InvalidJavadocPosition"/>
-        <module name="JavadocMethod"/>
+        <module name="JavadocMethod">
+            <property name="severity" value="ignore"/>
+        </module>
         <module name="JavadocType"/>
-        <module name="JavadocVariable"/>
+        <module name="JavadocVariable">
+            <property name="severity" value="ignore"/>
+        </module>
         <module name="JavadocStyle"/>
         <module name="MissingJavadocMethod">
             <property name="severity" value="ignore"/>
@@ -161,7 +163,6 @@
 
         <!-- Checks for class design                         -->
         <!-- See https://checkstyle.org/config_design.html -->
-        <module name="DesignForExtension"/>
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
