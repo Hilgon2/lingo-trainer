@@ -2,6 +2,7 @@ package com.lingotrainer.api.security.jwt;
 
 import com.lingotrainer.application.user.UserService;
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,18 +16,13 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
+    @Autowired
     JwtProperties jwtProperties;
 
+    @Autowired
     private UserService userService;
 
-    public JwtTokenProvider(JwtProperties jwtProperties, UserService userService) {
-        this.jwtProperties = jwtProperties;
-        this.userService = userService;
-    }
-
     private String secretKey;
-
-
 
     @PostConstruct
     protected void init() {
