@@ -48,8 +48,8 @@ public class GameTest {
     void singleActiveGame() {
         assertTrue(
                 this.games.stream()
-                        .filter(game -> game.getGameStatus() == GameStatus.ACTIVE &&
-                                game.getUserId() == this.defaultUserId.getId())
+                        .filter(game -> game.getGameStatus() == GameStatus.ACTIVE
+                                && game.getUserId() == this.defaultUserId.getId())
                         .count() <= 1
         );
     }
@@ -64,8 +64,8 @@ public class GameTest {
 
         assertTrue(
                 this.games.stream().
-                filter(game -> game.getGameStatus() == GameStatus.ACTIVE &&
-                        game.getUserId() == this.defaultUserId.getId())
+                filter(game -> game.getGameStatus() == GameStatus.ACTIVE
+                        && game.getUserId() == this.defaultUserId.getId())
                 .count() > 1
         );
     }

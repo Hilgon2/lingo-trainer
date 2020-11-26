@@ -96,8 +96,8 @@ public class BaseRoundService implements RoundService {
                             .getGuessedWord() != null)
                     .count() < 5) {
                 throw new GameException(
-                        "There are still turns left on the current round. " +
-                                "Please finish them before creating a new round."
+                        "There are still turns left on the current round. "
+                                + "Please finish them before creating a new round."
                 );
             }
             currentRound.setActive(false);
