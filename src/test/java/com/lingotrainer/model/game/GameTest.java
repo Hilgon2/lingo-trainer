@@ -38,7 +38,7 @@ public class GameTest {
                 .gameStatus(GameStatus.FINISHED)
                 .build());
         games.add(Game.builder()
-                .gameId(new GameId(12))
+                .gameId(new GameId(11))
                 .userId(defaultUserId)
                 .gameStatus(GameStatus.FINISHED)
                 .build());
