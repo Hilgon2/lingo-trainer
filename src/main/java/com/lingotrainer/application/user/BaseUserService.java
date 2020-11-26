@@ -51,6 +51,6 @@ public class BaseUserService implements UserService {
      */
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException(String.format("User with username %s not found", username)));
+        return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException(String.format("User with username %s could not be found", username)));
     }
 }

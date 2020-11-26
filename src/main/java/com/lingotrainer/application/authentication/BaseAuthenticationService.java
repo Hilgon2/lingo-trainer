@@ -21,7 +21,6 @@ import java.util.Map;
 public class BaseAuthenticationService implements AuthenticationService {
 
     private AuthenticationManager authenticationManager;
-
     private JwtTokenProvider jwtTokenProvider;
 
     public BaseAuthenticationService(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
