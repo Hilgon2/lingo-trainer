@@ -8,8 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A compact annotation to make life easy. The annotation means this:
- * Allows everyone to access a specified resource.
+ * An annotation to allow authenticated user access to the annotated resource
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

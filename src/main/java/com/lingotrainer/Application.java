@@ -9,12 +9,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class Application {
 
-    public static void main(String[] args) {
+    /**
+     * Default method to run Spring application.
+     * @param args default arguments to run Spring application
+     */
+    public static void main(final String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
     /**
-     * This makes it possible to BCrypt our passwords
+     * This makes it possible to BCrypt our passwords.
      * @return PasswordEncoder
      */
     @Bean
