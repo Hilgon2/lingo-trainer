@@ -1,6 +1,5 @@
-package com.lingotrainer.api.application.authentication.base;
+package com.lingotrainer.api.application.authentication;
 
-import com.lingotrainer.api.application.authentication.AuthenticationService;
 import com.lingotrainer.api.infrastructure.security.jwt.JwtTokenProvider;
 import com.lingotrainer.api.infrastructure.web.request.AuthenticationRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.springframework.http.ResponseEntity.ok;
 
 @Component
 @Slf4j

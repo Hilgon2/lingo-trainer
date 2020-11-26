@@ -1,7 +1,6 @@
-package com.lingotrainer.api.application.dictionary.base;
+package com.lingotrainer.api.application.dictionary;
 
 import com.google.gson.Gson;
-import com.lingotrainer.api.application.dictionary.DictionaryService;
 import com.lingotrainer.api.domain.model.dictionary.Dictionary;
 import com.lingotrainer.api.domain.repository.DictionaryRepository;
 import com.lingotrainer.api.util.exception.GeneralException;
