@@ -23,7 +23,11 @@ public class BaseTurnService implements TurnService {
     private DictionaryRepository dictionaryRepository;
     private UserRepository userRepository;
 
-    public BaseTurnService(TurnRepository turnRepository, RoundRepository roundRepository, GameRepository gameRepository, DictionaryRepository dictionaryRepository, UserRepository userRepository) {
+    public BaseTurnService(TurnRepository turnRepository,
+                           RoundRepository roundRepository,
+                           GameRepository gameRepository,
+                           DictionaryRepository dictionaryRepository,
+                           UserRepository userRepository) {
         this.turnRepository = turnRepository;
         this.roundRepository = roundRepository;
         this.gameRepository = gameRepository;
@@ -87,7 +91,8 @@ public class BaseTurnService implements TurnService {
             game.setGameStatus(GameStatus.FINISHED);
             this.gameRepository.save(game);
 
-            User user = this.userRepository.findById(game.getUserId()).orElseThrow(() -> new NotFoundException(String.format("User ID %d not found", game.getUserId())));
+            User user = this.userRepository.findById(game.getUserId()).orElseThrow(() ->
+                    new NotFoundException(String.format("User ID %d not found", game.getUserId())));
             user.setHighscore(game.getScore());
             this.userRepository.save(user);
 
