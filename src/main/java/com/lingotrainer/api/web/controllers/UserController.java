@@ -28,7 +28,7 @@ public class UserController {
     @Public
     public ResponseEntity<User> save(@Param("user") @RequestBody CreateUserRequest user) {
         User newUser = this.userFormMapper.convertToDomainEntity(user);
-        newUser.setActive(1);
+        newUser.setActive(true);
         return ResponseEntity.ok(userService.save(newUser));
     }
 

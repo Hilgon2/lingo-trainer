@@ -34,15 +34,15 @@ public class BaseUserService implements UserService, UserDetailsService {
      */
     @Override
     public User save(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
+        if (this.userRepository.existsByUsername(user.getUsername())) {
             throw new DuplicateException(String.format("%s bestaat al", user.getUsername()));
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
         // only an admin can create another admin
-        if (user.getRole() == Role.ADMIN && (authenticationService.getUser() == null
-                || authenticationService.getUser().getRole() != Role.ADMIN)) {
+        if (user.getRole() == Role.ADMIN && (this.authenticationService.getUser() == null
+                || this.authenticationService.getUser().getRole() != Role.ADMIN)) {
             throw new ForbiddenException("Only administrators are permitted to create another administrator account");
         }
 
@@ -57,7 +57,7 @@ public class BaseUserService implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() ->
+        return this.userRepository.findByUsername(username).orElseThrow(() ->
                 new NotFoundException(String.format("User with username %s could not be found", username)));
     }
 }

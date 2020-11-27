@@ -42,7 +42,7 @@ public class UserEntity implements UserDetails {
     @JsonView(MyJsonView.Admin.class)
     private Role role;
 
-    private int active = 1;
+    private boolean active = true;
 
     @OneToMany(mappedBy = "user")
     @Builder.Default
@@ -70,21 +70,21 @@ public class UserEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.active == 1;
+        return this.active;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.active == 1;
+        return this.active;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return this.active == 1;
+        return this.active;
     }
 
     @Override
     public boolean isEnabled() {
-        return this.active == 1;
+        return this.active;
     }
 }
