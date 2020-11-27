@@ -9,7 +9,6 @@ import com.lingotrainer.application.exception.DuplicateException;
 import com.lingotrainer.application.exception.ForbiddenException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +50,7 @@ public class BaseUserService implements UserService, UserDetailsService {
     }
 
     /**
-     *  Get user information by username
+     *  Get user information by username/
      * @param username username to look for
      * @return returns user information
      */
