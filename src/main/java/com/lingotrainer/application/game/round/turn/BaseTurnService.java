@@ -106,7 +106,6 @@ public class BaseTurnService implements TurnService {
             this.roundRepository.save(round);
         }
 
-
         currentTurn.setGuessedLetters(round.getWord());
 
         return currentTurn;

@@ -7,11 +7,14 @@ import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.repository.UserRepository;
 import com.lingotrainer.application.exception.DuplicateException;
 import com.lingotrainer.application.exception.ForbiddenException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BaseUserService implements UserService {
+public class BaseUserService implements UserService, UserDetailsService {
 
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
@@ -48,12 +51,13 @@ public class BaseUserService implements UserService {
     }
 
     /**
-     * Check if a username already exists or not.
-     * @param username username to be checked
-     * @return true or false
+     *  Get user information by username
+     * @param username username to look for
+     * @return returns user information
      */
+
     @Override
-    public User findByUsername(String username) {
+    public UserDetails loadUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() ->
                 new NotFoundException(String.format("User with username %s could not be found", username)));
     }
