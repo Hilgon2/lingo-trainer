@@ -6,10 +6,8 @@ import com.lingotrainer.domain.model.game.GameStatus;
 import com.lingotrainer.domain.model.game.round.Round;
 import com.lingotrainer.domain.model.game.round.RoundId;
 import com.lingotrainer.domain.model.game.round.turn.Turn;
-import com.lingotrainer.domain.repository.DictionaryRepository;
-import com.lingotrainer.domain.repository.GameRepository;
-import com.lingotrainer.domain.repository.RoundRepository;
-import com.lingotrainer.domain.repository.TurnRepository;
+import com.lingotrainer.domain.model.user.User;
+import com.lingotrainer.domain.repository.*;
 import com.lingotrainer.application.exception.GameException;
 import com.lingotrainer.application.exception.NotFoundException;
 import org.springframework.stereotype.Service;
@@ -23,15 +21,14 @@ public class BaseTurnService implements TurnService {
     private RoundRepository roundRepository;
     private GameRepository gameRepository;
     private DictionaryRepository dictionaryRepository;
+    private UserRepository userRepository;
 
-    public BaseTurnService(TurnRepository turnRepository,
-                           RoundRepository roundRepository,
-                           GameRepository gameRepository,
-                           DictionaryRepository dictionaryRepository) {
+    public BaseTurnService(TurnRepository turnRepository, RoundRepository roundRepository, GameRepository gameRepository, DictionaryRepository dictionaryRepository, UserRepository userRepository) {
         this.turnRepository = turnRepository;
         this.roundRepository = roundRepository;
         this.gameRepository = gameRepository;
         this.dictionaryRepository = dictionaryRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -89,6 +86,10 @@ public class BaseTurnService implements TurnService {
                         .count() >= 5) {
             game.setGameStatus(GameStatus.FINISHED);
             this.gameRepository.save(game);
+
+            User user = this.userRepository.findById(game.getUserId()).orElseThrow(() -> new NotFoundException(String.format("User ID %d not found", game.getUserId())));
+            user.setHighscore(game.getScore());
+            this.userRepository.save(user);
 
             currentTurn.finishGame();
             roundActive = false;
