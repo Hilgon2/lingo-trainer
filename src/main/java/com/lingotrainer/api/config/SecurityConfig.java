@@ -28,7 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Boilerplate passive security protocol. Use annotations to secure a specified resource like:
+     * Boilerplate passive security protocol.
+     * Use annotations to secure a specified resource like:
      *  - @Secured("SOME_ROLE")
      *  - @Authenticated
      *

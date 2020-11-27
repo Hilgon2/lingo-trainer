@@ -1,6 +1,6 @@
 package com.lingotrainer.api.security.json;
 
-import com.lingotrainer.api.security.Role;
+import com.lingotrainer.domain.model.user.Role;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,10 +18,9 @@ public class MyJsonView {
         MAPPING.put(Role.ADMIN, Admin.class);
     }
 
-    public interface Anonymous {}
+    public interface Anonymous {  }
 
-    public interface Trainee extends Anonymous {}
+    public interface Trainee extends Anonymous {  }
 
-    public interface Admin extends Trainee {}
-
+    public interface Admin extends Trainee {  }
 }
