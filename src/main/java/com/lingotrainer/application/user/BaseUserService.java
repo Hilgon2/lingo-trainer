@@ -50,7 +50,7 @@ public class BaseUserService implements UserService, UserDetailsService {
     }
 
     /**
-     *  Get user information by username/
+     *  Get user information by username.
      * @param username username to look for
      * @return returns user information
      */
