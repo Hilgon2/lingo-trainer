@@ -5,7 +5,6 @@ import com.lingotrainer.api.web.request.CreateUserRequest;
 import com.lingotrainer.api.web.response.CreateUserResponse;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.application.user.UserService;
-import com.lingotrainer.api.annotation.Public;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +25,6 @@ public class UserController {
     }
 
     @PostMapping
-    @Public
     public ResponseEntity<CreateUserResponse> save(@Param("user") @RequestBody CreateUserRequest user) {
         User newUser = this.userFormMapper.convertToDomainEntity(user);
         newUser.setActive(true);

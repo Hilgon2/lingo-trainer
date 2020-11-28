@@ -1,5 +1,6 @@
 package com.lingotrainer.api.web.controllers;
 
+import com.lingotrainer.api.annotation.Authenticated;
 import com.lingotrainer.api.web.mapper.LoginFormMapper;
 import com.lingotrainer.api.web.response.LoginResponse;
 import com.lingotrainer.application.authentication.AuthenticationService;
@@ -31,8 +32,8 @@ public class AuthenticationController {
     }
 
     @PostMapping(path = "/logged-in")
-    public ResponseEntity<Void>  checkLoggedIn() {
-        this.authenticationService.checkLoggedIn();
+    @Authenticated
+    public ResponseEntity<Void> checkLoggedIn() {
         return noContent().build();
     }
 }

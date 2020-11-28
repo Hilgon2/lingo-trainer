@@ -12,5 +12,4 @@ public interface AuthenticationService {
     User getUser();
 
     Map<Object, Object> login(AuthenticationRequest data);
-    void checkLoggedIn();
 }

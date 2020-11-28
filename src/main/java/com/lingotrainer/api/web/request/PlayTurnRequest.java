@@ -9,7 +9,6 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationRequest implements Serializable {
-    private String username;
-    private String password;
+public class PlayTurnRequest implements Serializable {
+    String guessedWord;
 }

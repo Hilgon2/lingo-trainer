@@ -76,7 +76,4 @@ public class BaseAuthenticationService implements AuthenticationService {
             throw new BadCredentialsException("Invalid username/password");
         }
     }
-
-    @Authenticated
-    public void checkLoggedIn() { }
 }

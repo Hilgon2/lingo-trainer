@@ -1,6 +1,7 @@
 package com.lingotrainer.api.web.controllers;
 
 import com.lingotrainer.api.web.mapper.GameFormMapper;
+import com.lingotrainer.api.web.request.CreateGameRequest;
 import com.lingotrainer.api.web.response.CreateGameResponse;
 import com.lingotrainer.application.game.GameService;
 import com.lingotrainer.api.annotation.Authenticated;
@@ -23,7 +24,7 @@ public class GameController {
 
     @PostMapping(produces = "application/json")
     @Authenticated
-    public ResponseEntity<CreateGameResponse> startNewGame(@RequestBody String languageCode) {
-        return ok(this.gameFormMapper.convertToResponse(gameService.createNewGame(languageCode)));
+    public ResponseEntity<CreateGameResponse> startNewGame(@RequestBody CreateGameRequest createGameRequest) {
+        return ok(this.gameFormMapper.convertToResponse(gameService.createNewGame(createGameRequest.getLanguageCode())));
     }
 }
