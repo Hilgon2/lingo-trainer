@@ -1,5 +1,7 @@
 package com.lingotrainer.api.web.controllers;
 
+import com.lingotrainer.api.web.mapper.TurnFormMapper;
+import com.lingotrainer.api.web.response.PlayTurnResponse;
 import com.lingotrainer.application.game.round.turn.TurnService;
 import com.lingotrainer.domain.model.game.round.turn.Turn;
 import com.lingotrainer.api.annotation.Authenticated;
@@ -13,16 +15,18 @@ import static org.springframework.http.ResponseEntity.ok;
 public class TurnController {
 
     private TurnService turnService;
+    private TurnFormMapper turnFormMapper;
 
-    public TurnController(TurnService turnService) {
+    public TurnController(TurnService turnService, TurnFormMapper turnFormMapper) {
         this.turnService = turnService;
+        this.turnFormMapper = turnFormMapper;
     }
 
     @PutMapping
     @Authenticated
-    public ResponseEntity<Turn> playTurn(@PathVariable int gameId,
-                                         @PathVariable int roundId,
-                                         @RequestParam String guessedWord) {
-        return ok(this.turnService.playTurn(roundId, guessedWord));
+    public ResponseEntity<PlayTurnResponse> playTurn(@PathVariable int gameId,
+                                                     @PathVariable int roundId,
+                                                     @RequestParam String guessedWord) {
+        return ok(this.turnFormMapper.convertToResponse(this.turnService.playTurn(roundId, guessedWord)));
     }
 }

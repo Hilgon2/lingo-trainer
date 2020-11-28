@@ -46,7 +46,7 @@ public class BaseRoundService implements RoundService {
      * @return ID of the saved round
      */
     @Override
-    public int save(Round round) {
+    public Round save(Round round) {
         Game game = this.gameRepository.findById(round.getGameId()).orElseThrow(() ->
                 new NotFoundException(String.format("Game ID %d not found", round.getGameId())));
         if (!gameRepository.hasActiveGame(game.getUserId())) {
@@ -56,7 +56,7 @@ public class BaseRoundService implements RoundService {
             throw new ForbiddenException("This game is not linked to the current user");
         }
 
-        return roundRepository.save(round).getRoundId();
+        return roundRepository.save(round);
     }
 
     /**

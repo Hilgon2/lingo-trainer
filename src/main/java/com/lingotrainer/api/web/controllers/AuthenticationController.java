@@ -1,5 +1,7 @@
 package com.lingotrainer.api.web.controllers;
 
+import com.lingotrainer.api.web.mapper.LoginFormMapper;
+import com.lingotrainer.api.web.response.LoginResponse;
 import com.lingotrainer.application.authentication.AuthenticationService;
 import com.lingotrainer.api.web.request.AuthenticationRequest;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +19,15 @@ import static org.springframework.http.ResponseEntity.ok;
 public class AuthenticationController {
 
     private AuthenticationService authenticationService;
+    private LoginFormMapper loginFormMapper;
 
-    public AuthenticationController(AuthenticationService authenticationService) {
+    public AuthenticationController(AuthenticationService authenticationService, LoginFormMapper loginFormMapper) {
         this.authenticationService = authenticationService;
+        this.loginFormMapper = loginFormMapper;
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity<Map<Object, Object>> login(@RequestBody AuthenticationRequest data) {
-        return ok(this.authenticationService.login(data));
+    public ResponseEntity<LoginResponse> login(@RequestBody AuthenticationRequest data) {
+        return ok(this.loginFormMapper.convertToResponse(this.authenticationService.login(data)));
     }
 }

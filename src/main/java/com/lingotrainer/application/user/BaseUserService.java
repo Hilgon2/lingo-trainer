@@ -35,7 +35,7 @@ public class BaseUserService implements UserService, UserDetailsService {
     @Override
     public User save(User user) {
         if (this.userRepository.existsByUsername(user.getUsername())) {
-            throw new DuplicateException(String.format("%s bestaat al", user.getUsername()));
+            throw new DuplicateException(String.format("Gebruikersnaam %s is al in gebruik.", user.getUsername()));
         }
 
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));

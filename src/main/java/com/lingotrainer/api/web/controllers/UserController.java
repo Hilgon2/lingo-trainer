@@ -2,6 +2,7 @@ package com.lingotrainer.api.web.controllers;
 
 import com.lingotrainer.api.web.mapper.UserFormMapper;
 import com.lingotrainer.api.web.request.CreateUserRequest;
+import com.lingotrainer.api.web.response.CreateUserResponse;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.application.user.UserService;
 import com.lingotrainer.api.annotation.Public;
@@ -26,10 +27,10 @@ public class UserController {
 
     @PostMapping
     @Public
-    public ResponseEntity<User> save(@Param("user") @RequestBody CreateUserRequest user) {
+    public ResponseEntity<CreateUserResponse> save(@Param("user") @RequestBody CreateUserRequest user) {
         User newUser = this.userFormMapper.convertToDomainEntity(user);
         newUser.setActive(true);
-        return ResponseEntity.ok(userService.save(newUser));
+        return ResponseEntity.ok(this.userFormMapper.convertToResponse(userService.save(newUser)));
     }
 
 }

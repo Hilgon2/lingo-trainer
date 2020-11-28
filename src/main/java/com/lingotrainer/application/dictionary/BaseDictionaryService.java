@@ -33,7 +33,7 @@ public class BaseDictionaryService implements DictionaryService {
      * @return the language code
      */
     @Override
-    public String save(MultipartFile file, String languageCode) {
+    public Dictionary save(MultipartFile file, String languageCode) {
         Gson gson = new Gson();
         Dictionary dictionary = Dictionary.builder()
                 .language(languageCode)

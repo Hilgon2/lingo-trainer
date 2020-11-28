@@ -7,8 +7,8 @@ import java.util.Optional;
 public interface GameService {
     Optional<Game> findById(int id);
 
-    int createNewGame(String languageCode);
+    Game createNewGame(String languageCode);
     Optional<Game> findActiveGame(int userId);
 
-    int save(Game game);
+    Game save(Game game);
 }

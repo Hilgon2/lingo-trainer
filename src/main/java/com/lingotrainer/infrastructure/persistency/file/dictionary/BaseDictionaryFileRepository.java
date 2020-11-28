@@ -18,7 +18,7 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
     private Gson gson = new Gson();
 
     @Override
-    public String save(Dictionary dictionary) {
+    public Dictionary save(Dictionary dictionary) {
         try (FileWriter targetFileWriter = new FileWriter(String.format("src/main/resources/dictionary/%s.json",
                 dictionary.getLanguage()))) {
             targetFileWriter.write(this.gson.toJson(dictionary.getWords()));
@@ -27,7 +27,7 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
                     dictionary.getLanguage()));
         }
 
-        return dictionary.getLanguage();
+        return dictionary;
     }
 
     @Override

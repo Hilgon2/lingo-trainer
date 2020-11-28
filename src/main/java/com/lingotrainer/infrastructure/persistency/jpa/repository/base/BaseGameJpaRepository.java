@@ -43,7 +43,7 @@ public class BaseGameJpaRepository implements GameRepository {
         return Optional.ofNullable(this.gameMapper.convertToDomainEntity(gameEntity));
     }
 
-    public int save(Game game) {
-        return this.gameJpaRepository.save(this.gameMapper.convertToPersistableEntity(game)).getId();
+    public Game save(Game game) {
+        return this.gameMapper.convertToDomainEntity(this.gameJpaRepository.save(this.gameMapper.convertToPersistableEntity(game)));
     }
 }

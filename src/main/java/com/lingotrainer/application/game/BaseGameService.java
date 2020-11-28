@@ -41,7 +41,7 @@ public class BaseGameService implements GameService {
      * @return game ID of the newly created game
      */
     @Override
-    public int createNewGame(String languageCode) {
+    public Game createNewGame(String languageCode) {
         if (this.gameRepository.hasActiveGame(authenticationService.getUser().getUserId())) {
             throw new DuplicateException("An active game by the user already exists");
         }
@@ -78,7 +78,7 @@ public class BaseGameService implements GameService {
      * @return ID of the game which was saved
      */
     @Override
-    public int save(Game game) {
+    public Game save(Game game) {
         if (game.getUserId() != authenticationService.getUser().getUserId()) {
             throw new ForbiddenException("This game is not linked to the current user");
         }

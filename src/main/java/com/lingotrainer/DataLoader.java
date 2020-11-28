@@ -20,11 +20,13 @@ public class DataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        this.userRepository.save(User.builder()
-                .username("terry")
-                .role(Role.ADMIN)
-                .password(passwordEncoder.encode("wachtwoord"))
-                .active(true)
-                .build());
+        if (!this.userRepository.existsByUsername("terry")) {
+            this.userRepository.save(User.builder()
+                    .username("terry")
+                    .role(Role.ADMIN)
+                    .password(passwordEncoder.encode("wachtwoord"))
+                    .active(true)
+                    .build());
+        }
     }
 }
