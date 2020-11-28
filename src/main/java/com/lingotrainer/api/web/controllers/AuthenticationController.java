@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
+import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -29,5 +28,11 @@ public class AuthenticationController {
     @PostMapping(path = "/login")
     public ResponseEntity<LoginResponse> login(@RequestBody AuthenticationRequest data) {
         return ok(this.loginFormMapper.convertToResponse(this.authenticationService.login(data)));
+    }
+
+    @PostMapping(path = "/logged-in")
+    public ResponseEntity<Void>  checkLoggedIn() {
+        this.authenticationService.checkLoggedIn();
+        return noContent().build();
     }
 }
