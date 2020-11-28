@@ -10,5 +10,5 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateGameRequest implements Serializable {
-    String languageCode;
+    private String languageCode;
 }

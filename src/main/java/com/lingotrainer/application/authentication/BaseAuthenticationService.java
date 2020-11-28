@@ -1,6 +1,5 @@
 package com.lingotrainer.application.authentication;
 
-import com.lingotrainer.api.annotation.Authenticated;
 import com.lingotrainer.api.security.jwt.JwtTokenProvider;
 import com.lingotrainer.api.web.request.AuthenticationRequest;
 import com.lingotrainer.domain.model.user.User;

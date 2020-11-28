@@ -10,5 +10,5 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlayTurnRequest implements Serializable {
-    String guessedWord;
+    private String guessedWord;
 }

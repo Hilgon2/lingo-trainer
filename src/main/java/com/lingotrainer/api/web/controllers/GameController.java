@@ -25,6 +25,8 @@ public class GameController {
     @PostMapping(produces = "application/json")
     @Authenticated
     public ResponseEntity<CreateGameResponse> startNewGame(@RequestBody CreateGameRequest createGameRequest) {
-        return ok(this.gameFormMapper.convertToResponse(gameService.createNewGame(createGameRequest.getLanguageCode())));
+        return ok(this.gameFormMapper.convertToResponse(
+                gameService.createNewGame(createGameRequest.getLanguageCode()))
+        );
     }
 }

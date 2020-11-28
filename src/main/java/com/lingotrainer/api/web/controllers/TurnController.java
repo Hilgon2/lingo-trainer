@@ -27,6 +27,8 @@ public class TurnController {
     public ResponseEntity<PlayTurnResponse> playTurn(@PathVariable int gameId,
                                                      @PathVariable int roundId,
                                                      @RequestBody PlayTurnRequest playTurnRequest) {
-        return ok(this.turnFormMapper.convertToResponse(this.turnService.playTurn(roundId, playTurnRequest.getGuessedWord())));
+        return ok(this.turnFormMapper.convertToResponse(
+                this.turnService.playTurn(roundId, playTurnRequest.getGuessedWord()))
+        );
     }
 }
