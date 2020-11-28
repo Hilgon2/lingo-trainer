@@ -5,10 +5,7 @@ import com.lingotrainer.api.web.response.CreateGameResponse;
 import com.lingotrainer.application.game.GameService;
 import com.lingotrainer.api.annotation.Authenticated;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -26,7 +23,7 @@ public class GameController {
 
     @PostMapping(produces = "application/json")
     @Authenticated
-    public ResponseEntity<CreateGameResponse> startNewGame(@RequestParam("languageCode") String languageCode) {
+    public ResponseEntity<CreateGameResponse> startNewGame(@RequestBody String languageCode) {
         return ok(this.gameFormMapper.convertToResponse(gameService.createNewGame(languageCode)));
     }
 }

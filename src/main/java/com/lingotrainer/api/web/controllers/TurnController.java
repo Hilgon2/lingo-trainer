@@ -3,7 +3,6 @@ package com.lingotrainer.api.web.controllers;
 import com.lingotrainer.api.web.mapper.TurnFormMapper;
 import com.lingotrainer.api.web.response.PlayTurnResponse;
 import com.lingotrainer.application.game.round.turn.TurnService;
-import com.lingotrainer.domain.model.game.round.turn.Turn;
 import com.lingotrainer.api.annotation.Authenticated;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +25,7 @@ public class TurnController {
     @Authenticated
     public ResponseEntity<PlayTurnResponse> playTurn(@PathVariable int gameId,
                                                      @PathVariable int roundId,
-                                                     @RequestParam String guessedWord) {
+                                                     @RequestBody String guessedWord) {
         return ok(this.turnFormMapper.convertToResponse(this.turnService.playTurn(roundId, guessedWord)));
     }
 }
