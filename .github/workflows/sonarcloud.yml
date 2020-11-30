@@ -1,11 +1,7 @@
-# Analyze code using SonarCloud.
-# For more information see: https://sonarcloud.io/
-
 name: SonarCloud
-
 on:
   push:
-    branches: [development, staging, master]
+    branches: [ development, staging, master ]
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
