@@ -116,8 +116,6 @@ public class Turn {
     }
 
     public void finishGame() {
-        feedback.put("code", 5001);
-        feedback.put("status", GameFeedback.GAME_OVER);
-        feedback.put("gameOver", true);
+        this.feedback.put("gameOver", true);
     }
 }

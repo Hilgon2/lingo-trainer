@@ -67,8 +67,7 @@ public class BaseRoundService implements RoundService {
      */
     @Override
     public Round findCurrentRound(int gameId) {
-        return roundRepository.findCurrentRound(gameId).orElseThrow(() ->
-                new NotFoundException(String.format("Round ID %d could not be found", gameId)));
+        return roundRepository.findCurrentRound(gameId).orElse(null);
     }
 
     /**
@@ -84,25 +83,7 @@ public class BaseRoundService implements RoundService {
             throw new NotFoundException("No active games could be found");
         }
 
-        Round currentRound = this.roundRepository.findCurrentRound(gameId).orElse(null);
-
-        // if there is an active round, check if there are still turns left. If not, set the current round on inactive.
-        if (currentRound != null) {
-            if (currentRound.getTurnIds()
-                    .stream()
-                    .filter(turnId -> this.turnRepository.findById(turnId.getId()).orElseThrow(() ->
-                            new NotFoundException(
-                                    String.format("Turn ID %d could not be found", turnId.getId())))
-                            .getGuessedWord() != null)
-                    .count() < 5) {
-                throw new GameException(
-                        "There are still turns left on the current round. "
-                                + "Please finish them before creating a new round."
-                );
-            }
-            currentRound.setActive(false);
-            this.roundRepository.save(currentRound);
-        }
+        this.checkRound(gameId);
 
         // retrieve last round to retrieve the amount of letters the next word needs (5, 6 or 7)
         Round lastRound = this.roundRepository.findLastRound(gameId).orElse(null);
@@ -139,5 +120,27 @@ public class BaseRoundService implements RoundService {
     public Round findById(int roundId) {
         return this.roundRepository.findById(roundId).orElseThrow(() ->
                 new NotFoundException(String.format("Round ID %d could not be found", roundId)));
+    }
+
+    private void checkRound(int gameId) {
+        Round currentRound = this.findCurrentRound(gameId);
+
+        // if there is an active round, check if there are still turns left. If not, set the current round on inactive.
+        if (currentRound != null) {
+            if (currentRound.getTurnIds()
+                    .stream()
+                    .filter(turnId -> this.turnRepository.findById(turnId.getId()).orElseThrow(() ->
+                            new NotFoundException(
+                                    String.format("Turn ID %d could not be found", turnId.getId())))
+                            .getGuessedWord() != null)
+                    .count() < 5) {
+                throw new GameException(
+                        "There are still turns left on the current round. "
+                                + "Please finish them before creating a new round."
+                );
+            }
+            currentRound.setActive(false);
+            this.roundRepository.save(currentRound);
+        }
     }
 }
