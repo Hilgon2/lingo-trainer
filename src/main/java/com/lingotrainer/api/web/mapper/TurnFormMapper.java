@@ -10,6 +10,7 @@ public class TurnFormMapper {
         return PlayTurnResponse.builder()
                 .feedback(this.convertToFeedbackResponse(turn.getFeedback()))
                 .guessedWord(turn.getGuessedWord())
+                .gameOver(turn.getFeedback().isGameOver())
                 .build();
     }
 

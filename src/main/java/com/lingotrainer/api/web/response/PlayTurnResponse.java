@@ -12,4 +12,5 @@ import lombok.Setter;
 public class PlayTurnResponse {
     private String guessedWord;
     private FeedbackResponse feedback;
+    private boolean gameOver;
 }

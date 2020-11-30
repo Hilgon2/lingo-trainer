@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter
 @Builder
 public class NewRoundResponse {
-    private int roundId;
     private char firstLetter;
     private int lettersAmount;
 }

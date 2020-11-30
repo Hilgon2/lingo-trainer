@@ -1,7 +1,6 @@
 package com.lingotrainer.domain.model.game.round;
 
 import com.lingotrainer.domain.model.WordLength;
-import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.domain.model.game.GameId;
 import com.lingotrainer.domain.model.game.round.turn.TurnId;
 import lombok.*;
@@ -32,6 +31,10 @@ public class Round {
     private WordLength wordLength;
 
     public int getLettersCount() {
+        if (this.word == null) {
+            return 0;
+        }
+
         return this.word.length();
     }
 
@@ -51,22 +54,28 @@ public class Round {
         return this.gameId.getId();
     }
 
-    public void addTurnId(TurnId turnId) {
-        this.turnIds.add(turnId);
-    }
-
     public WordLength getWordLength() {
-        switch (word.length()) {
+        if (this.word == null) {
+            return WordLength.FIVE;
+        }
+
+        switch (this.word.length()) {
             case 5:
                 return WordLength.SIX;
             case 6:
                 return WordLength.SEVEN;
+            case 7:
             default:
                 return WordLength.FIVE;
         }
     }
 
-    public void nextWord(Round lastRound, Dictionary dictionary) {
+    public void nextWord(Round lastRound, String word) {
+        this.nextWordLength(lastRound);
+        this.word = word;
+    }
+
+    private void nextWordLength(Round lastRound) {
         if (lastRound != null) {
             switch (lastRound.getWordLength()) {
                 case SIX:
@@ -82,7 +91,5 @@ public class Round {
         } else {
             this.wordLength = WordLength.FIVE;
         }
-
-        this.word = dictionary.getRandomWord(this.wordLength);
     }
 }

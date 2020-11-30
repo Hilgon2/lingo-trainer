@@ -1,6 +1,7 @@
 package com.lingotrainer.infrastructure.persistency.file.dictionary;
 
 import com.google.gson.Gson;
+import com.lingotrainer.domain.model.WordLength;
 import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.domain.repository.DictionaryRepository;
 import com.lingotrainer.application.exception.GeneralException;
@@ -54,5 +55,12 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
         return this.findByLanguage(languageCode).orElseThrow(() ->
                 new NotFoundException(String.format("Dictionary by language %s could not be found", languageCode)))
                 .getWords().contains(guessedWord);
+    }
+
+    @Override
+    public String retrieveRandomWord(String languageCode, WordLength wordLength) {
+        Dictionary dictionary = this.findByLanguage(languageCode).orElseThrow(() ->
+                new NotFoundException(String.format("Dictionary by language code %s could not be found", languageCode)));
+        return  dictionary.getRandomWord(wordLength);
     }
 }

@@ -89,14 +89,12 @@ public class BaseRoundService implements RoundService {
         Round lastRound = this.roundRepository.findLastRound(gameId).orElse(null);
         Game game = this.gameRepository.findById(gameId).orElseThrow(() ->
                 new NotFoundException(String.format("Game ID %d not found", gameId)));
-        Dictionary dictionary = this.dictionaryRepository.findByLanguage(game.getLanguage()).orElseThrow(() ->
-                new NotFoundException(String.format("Dictionary language %s not found", game.getLanguage())));
 
         Round newRoundBuilder = Round.builder()
                 .gameId(new GameId(gameId))
                 .active(true)
                 .build();
-        newRoundBuilder.nextWord(lastRound, dictionary);
+        newRoundBuilder.nextWord(lastRound, this.dictionaryRepository.retrieveRandomWord(game.getLanguage(), newRoundBuilder.getWordLength()));
 
         Round newRound = this.roundRepository.save(newRoundBuilder);
 

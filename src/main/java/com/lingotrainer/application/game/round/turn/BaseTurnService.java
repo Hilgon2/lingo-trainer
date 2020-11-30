@@ -48,14 +48,14 @@ public class BaseTurnService implements TurnService {
 
     /**
      * Take a guess and play the turn. If the user has guessed the word wrong for 5 turns, the game ends.
-     * @param roundId the round ID to play the turn
+     * @param gameId the round ID to play the turn
      * @param guessedWord the guessed word
      * @return turn information with given feedback on the guess
      */
     @Override
-    public Turn playTurn(int roundId, String guessedWord) {
-        Turn turn = this.turnRepository.findCurrentTurn(roundId).orElseThrow(() ->
-                new NotFoundException(String.format("Active turn of round ID %d not found", roundId)));
+    public Turn playTurn(int gameId, String guessedWord) {
+        Turn turn = this.turnRepository.findCurrentTurn(gameId).orElseThrow(() ->
+                new NotFoundException(String.format("Active turn of round ID %d not found", gameId)));
         Round round = this.roundRepository.findById(turn.getRoundId()).orElseThrow(() ->
                 new NotFoundException(String.format("Round ID %d not found", turn.getRoundId())));
 
