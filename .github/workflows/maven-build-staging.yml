@@ -5,9 +5,9 @@ name: Java Maven build
 
 on:
   push:
-    branches: [ staging ]
+    branches: staging
   pull_request:
-    branches: [ staging ]
+    branches: staging
 
 jobs:
   build:

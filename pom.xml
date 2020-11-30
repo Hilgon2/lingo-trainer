@@ -26,6 +26,9 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <sonar.projectKey>Hilgon2_lingo-trainer</sonar.projectKey>
+        <sonar.organization>terry-hilgon2</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>
@@ -162,5 +165,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>
