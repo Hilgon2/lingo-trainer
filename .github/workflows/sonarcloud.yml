@@ -1,3 +1,6 @@
+# Analyze code using SonarCloud.
+# For more information see: https://sonarcloud.io/
+
 name: SonarCloud
 
 on:
