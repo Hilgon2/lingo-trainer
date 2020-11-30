@@ -1,6 +1,5 @@
 package com.lingotrainer.application.game.round.turn;
 
-import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.domain.model.game.Game;
 import com.lingotrainer.domain.model.game.GameStatus;
 import com.lingotrainer.domain.model.game.round.Round;
@@ -69,7 +68,8 @@ public class BaseTurnService implements TurnService {
                 new NotFoundException(String.format("Game ID %d not found", round.getGameId())));
 
         turn.setGuessedWord(guessedWord);
-        turn.validate(round.getWord(), this.dictionaryRepository.existsByWord(game.getLanguage(), turn.getGuessedWord()));
+        turn.validate(round.getWord(),
+                this.dictionaryRepository.existsByWord(game.getLanguage(), turn.getGuessedWord()));
 
         this.turnRepository.save(turn);
 
