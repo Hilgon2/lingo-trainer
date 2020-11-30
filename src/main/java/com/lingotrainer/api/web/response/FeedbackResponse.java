@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Builder
 public class FeedbackResponse {
-    List<GuessedLetter> guessedLetters;
-    int code;
-    GameFeedback status;
+    private List<GuessedLetter> guessedLetters;
+    private int code;
+    private GameFeedback status;
 }

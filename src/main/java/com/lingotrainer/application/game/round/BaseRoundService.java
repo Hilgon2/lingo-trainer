@@ -11,7 +11,6 @@ import com.lingotrainer.domain.repository.TurnRepository;
 import com.lingotrainer.application.exception.ForbiddenException;
 import com.lingotrainer.application.exception.GameException;
 import com.lingotrainer.application.exception.NotFoundException;
-import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.domain.model.game.Game;
 import com.lingotrainer.application.authentication.AuthenticationService;
 import org.springframework.stereotype.Service;
@@ -94,7 +93,8 @@ public class BaseRoundService implements RoundService {
                 .gameId(new GameId(gameId))
                 .active(true)
                 .build();
-        newRoundBuilder.nextWord(lastRound, this.dictionaryRepository.retrieveRandomWord(game.getLanguage(), newRoundBuilder.getWordLength()));
+        newRoundBuilder.nextWord(lastRound,
+                this.dictionaryRepository.retrieveRandomWord(game.getLanguage(), newRoundBuilder.getWordLength()));
 
         Round newRound = this.roundRepository.save(newRoundBuilder);
 

@@ -60,7 +60,7 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
     @Override
     public String retrieveRandomWord(String languageCode, WordLength wordLength) {
         Dictionary dictionary = this.findByLanguage(languageCode).orElseThrow(() ->
-                new NotFoundException(String.format("Dictionary by language code %s could not be found", languageCode)));
+                new NotFoundException(String.format("Dictionary language %s could not be found", languageCode)));
         return  dictionary.getRandomWord(wordLength);
     }
 }
