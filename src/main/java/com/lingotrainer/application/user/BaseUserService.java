@@ -39,6 +39,9 @@ public class BaseUserService implements UserService, UserDetailsService {
         }
 
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+        if (user.getRole() == null) {
+            user.setRole(Role.TRAINEE);
+        }
 
         // only an admin can create another admin
         if (user.getRole() == Role.ADMIN && (this.authenticationService.getUser() == null

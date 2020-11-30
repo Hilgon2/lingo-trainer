@@ -10,7 +10,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Turn {
     private TurnId turnId;
     private String guessedWord;
