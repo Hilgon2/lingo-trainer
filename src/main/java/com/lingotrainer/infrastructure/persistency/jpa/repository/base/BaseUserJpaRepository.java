@@ -1,6 +1,8 @@
 package com.lingotrainer.infrastructure.persistency.jpa.repository.base;
 
 import com.lingotrainer.application.exception.NotFoundException;
+import com.lingotrainer.infrastructure.persistency.jpa.entity.user.UserEntity;
+import com.lingotrainer.infrastructure.persistency.jpa.mapper.EntityMapper;
 import com.lingotrainer.infrastructure.persistency.jpa.mapper.UserMapper;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.repository.UserRepository;
@@ -11,7 +13,7 @@ import java.util.Optional;
 public class BaseUserJpaRepository implements UserRepository {
 
     private UserJpaRepository userJpaRepository;
-    private UserMapper userMapper;
+    private EntityMapper<User, UserEntity> userMapper;
 
     public BaseUserJpaRepository(UserJpaRepository userJpaRepository, UserMapper userMapper) {
         this.userJpaRepository = userJpaRepository;

@@ -1,6 +1,7 @@
 package com.lingotrainer.infrastructure.persistency.jpa.repository.base;
 
 import com.lingotrainer.infrastructure.persistency.jpa.entity.game.GameEntity;
+import com.lingotrainer.infrastructure.persistency.jpa.mapper.EntityMapper;
 import com.lingotrainer.infrastructure.persistency.jpa.mapper.GameMapper;
 import com.lingotrainer.domain.model.game.Game;
 import com.lingotrainer.domain.repository.GameRepository;
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 public class BaseGameJpaRepository implements GameRepository {
     private GameJpaRepository gameJpaRepository;
-    private GameMapper gameMapper;
+    private EntityMapper<Game, GameEntity> gameMapper;
 
     public BaseGameJpaRepository(GameJpaRepository gameJpaRepository, GameMapper gameMapper) {
         this.gameJpaRepository = gameJpaRepository;
