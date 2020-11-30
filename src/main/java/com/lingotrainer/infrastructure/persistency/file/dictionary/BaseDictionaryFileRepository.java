@@ -38,7 +38,7 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
             )));
             List<String> words = gson.fromJson(targetFileReader, List.class);
 
-            return Optional.of(Dictionary.builder()
+            return Optional.ofNullable(Dictionary.builder()
                     .language(languageCode)
                     .words(words)
                     .build());
@@ -47,5 +47,12 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
                     "Someting went wrong trying to read the language file. The file might not exist."
             );
         }
+    }
+
+    @Override
+    public boolean existsByWord(String languageCode, String guessedWord) {
+        return this.findByLanguage(languageCode).orElseThrow(() ->
+                new NotFoundException(String.format("Dictionary by language %s could not be found", languageCode)))
+                .getWords().contains(guessedWord);
     }
 }

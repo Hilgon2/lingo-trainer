@@ -67,19 +67,13 @@ public class BaseTurnService implements TurnService {
         // get game and dictionary after active round check
         Game game = this.gameRepository.findById(round.getGameId()).orElseThrow(() ->
                 new NotFoundException(String.format("Game ID %d not found", round.getGameId())));
-        Dictionary dictionary = this.dictionaryRepository.findByLanguage(game.getLanguage()).orElseThrow(() ->
-                new NotFoundException(String.format("Dictionary language %s not found", game.getLanguage())));
 
         turn.setGuessedWord(guessedWord);
-        turn.validateTurn(round.getWord(), dictionary);
+        turn.validate(round.getWord(), this.dictionaryRepository.existsByWord(game.getLanguage(), turn.getGuessedWord()));
 
         this.turnRepository.save(turn);
 
-        Turn playedTurn = this.finishTurn(turn, game, round);
-
-        playedTurn.setGuessedLetters(round.getWord());
-
-        return playedTurn;
+        return this.finishTurn(turn, game, round);
     }
 
     /**
@@ -108,6 +102,7 @@ public class BaseTurnService implements TurnService {
                         new NotFoundException(String.format("Turn ID %d not found", t.getId())))
                         .getGuessedWord() != null)
                 .count() >= 5) {
+
             game.setGameStatus(GameStatus.FINISHED);
             this.gameRepository.save(game);
 
