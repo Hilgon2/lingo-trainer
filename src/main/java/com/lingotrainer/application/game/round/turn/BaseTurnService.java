@@ -54,10 +54,10 @@ public class BaseTurnService implements TurnService {
      */
     @Override
     public Turn playTurn(int roundId, String guessedWord) {
-        Turn currentTurn = this.turnRepository.findCurrentTurn(roundId).orElseThrow(() ->
+        Turn turn = this.turnRepository.findCurrentTurn(roundId).orElseThrow(() ->
                 new NotFoundException(String.format("Active turn of round ID %d not found", roundId)));
-        Round round = this.roundRepository.findById(currentTurn.getRoundId()).orElseThrow(() ->
-                new NotFoundException(String.format("Round ID %d not found", currentTurn.getRoundId())));
+        Round round = this.roundRepository.findById(turn.getRoundId()).orElseThrow(() ->
+                new NotFoundException(String.format("Round ID %d not found", turn.getRoundId())));
 
         if (!round.isActive()) {
             throw new GameException(String.format("Round ID %d is not active. Please create a new round",
@@ -70,24 +70,44 @@ public class BaseTurnService implements TurnService {
         Dictionary dictionary = this.dictionaryRepository.findByLanguage(game.getLanguage()).orElseThrow(() ->
                 new NotFoundException(String.format("Dictionary language %s not found", game.getLanguage())));
 
-        currentTurn.setGuessedWord(guessedWord);
-        currentTurn.validateTurn(round.getWord(), dictionary);
+        turn.setGuessedWord(guessedWord);
+        turn.validateTurn(round.getWord(), dictionary);
 
-        this.turnRepository.save(currentTurn);
+        this.turnRepository.save(turn);
 
+        Turn playedTurn = this.finishTurn(turn, game, round);
+
+        playedTurn.setGuessedLetters(round.getWord());
+
+        return playedTurn;
+    }
+
+    /**
+     * Retrieve the turn information.
+     * @param turnId ID of the turn
+     * @return turn information based on the given ID
+     */
+    @Override
+    public Turn findById(int turnId) {
+        return this.turnRepository.findById(turnId).orElseThrow(() ->
+                new NotFoundException(String.format("Turn ID %d could not be found", turnId)));
+    }
+
+    private Turn finishTurn(Turn turn, Game game, Round round) {
         boolean roundActive = true;
-        if (currentTurn.isCorrectGuess()) {
+
+        if (turn.isCorrectGuess()) {
             game.setScore(game.getScore() + 1);
 
             this.gameRepository.save(game);
             roundActive = false;
-        } else if (!currentTurn.isCorrectGuess()
+        } else if (!turn.isCorrectGuess()
                 && round.getTurnIds()
-                        .stream()
-                        .filter(t -> this.turnRepository.findById(t.getId()).orElseThrow(() ->
-                                new NotFoundException(String.format("Turn ID %d not found", t.getId())))
-                                .getGuessedWord() != null)
-                        .count() >= 5) {
+                .stream()
+                .filter(t -> this.turnRepository.findById(t.getId()).orElseThrow(() ->
+                        new NotFoundException(String.format("Turn ID %d not found", t.getId())))
+                        .getGuessedWord() != null)
+                .count() >= 5) {
             game.setGameStatus(GameStatus.FINISHED);
             this.gameRepository.save(game);
 
@@ -96,7 +116,7 @@ public class BaseTurnService implements TurnService {
             user.setHighscore(game.getScore());
             this.userRepository.save(user);
 
-            currentTurn.finishGame();
+            turn.finishGame();
             roundActive = false;
         } else {
             Turn newTurn = Turn.builder()
@@ -112,19 +132,6 @@ public class BaseTurnService implements TurnService {
             this.roundRepository.save(round);
         }
 
-        currentTurn.setGuessedLetters(round.getWord());
-
-        return currentTurn;
-    }
-
-    /**
-     * Retrieve the turn information.
-     * @param turnId ID of the turn
-     * @return turn information based on the given ID
-     */
-    @Override
-    public Turn findById(int turnId) {
-        return this.turnRepository.findById(turnId).orElseThrow(() ->
-                new NotFoundException(String.format("Turn ID %d could not be found", turnId)));
+        return turn;
     }
 }

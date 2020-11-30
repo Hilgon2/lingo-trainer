@@ -33,8 +33,11 @@ public class Turn {
     private RoundId roundId;
 
     public void setGuessedLetters(String answer) {
-        if (this.getFeedback().get("status") == null
-                || Boolean.parseBoolean(this.getFeedback().get("gameOver").toString())) {
+        if (
+                this.guessedWord.length() == answer.length()
+                && (this.getFeedback().get("status") == null
+                || Boolean.parseBoolean(this.getFeedback().get("gameOver").toString()))
+        ) {
             int index = 0;
             this.guessedLetters = new ArrayList<>();
 

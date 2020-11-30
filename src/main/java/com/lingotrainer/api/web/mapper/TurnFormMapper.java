@@ -12,12 +12,17 @@ import java.util.List;
 
 public class TurnFormMapper {
     public PlayTurnResponse convertToResponse(Turn turn) {
-        return PlayTurnResponse.builder()
+        PlayTurnResponse playTurnResponse = PlayTurnResponse.builder()
                 .correctGuess(turn.isCorrectGuess())
                 .feedback(turn.getFeedback())
-                .guessedLetters(this.convertToGuessedLettersResponse(turn.getGuessedLetters()))
                 .guessedWord(turn.getGuessedWord())
                 .build();
+
+        if (turn.getGuessedLetters() != null) {
+            playTurnResponse.setGuessedLetters(this.convertToGuessedLettersResponse(turn.getGuessedLetters()));
+        }
+
+        return playTurnResponse;
     }
 
     public List<GuessedLetterResponse> convertToGuessedLettersResponse(List<GuessedLetter> guessedLetters) {
