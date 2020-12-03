@@ -1,9 +1,10 @@
 package com.lingotrainer.domain.model.game.round.turn;
 
-import com.lingotrainer.domain.model.game.GameFeedback;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -14,12 +15,18 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class Feedback {
+    @ToString.Exclude
+    @JsonIgnore
     private String answer;
+
+    @ToString.Exclude
+    @JsonIgnore
     private String guessedWord;
+
     private List<GuessedLetter> guessedLetters;
     // feedback code -9999 means there is no feedback, meaning there is no error.
     private int code = -9999;
-    private GameFeedback status;
+    private TurnFeedback status;
     private boolean correctGuess;
     private boolean gameOver;
     private boolean wordExists;
@@ -69,7 +76,7 @@ public class Feedback {
         if (this.guessedWord == null) {
             this.code = 5200;
             this.setGuessedWord("-");
-            status = GameFeedback.GUESSED_WORD_IS_NULL;
+            status = TurnFeedback.GUESSED_WORD_IS_NULL;
         }
 
         // Trim and capitalize the guessed word.
@@ -79,17 +86,17 @@ public class Feedback {
 
         if (!wordExists) {
             this.code = 5200;
-            this.status = GameFeedback.GUESSED_WORD_NOT_FOUND;
+            this.status = TurnFeedback.GUESSED_WORD_NOT_FOUND;
         } else if (answer.length() != this.getGuessedWord().length()) {
             this.code = 5205;
-            this.status = GameFeedback.GUESSED_WORD_DIFF_LENGTH;
+            this.status = TurnFeedback.GUESSED_WORD_DIFF_LENGTH;
         } else if (!this.getGuessedWord().chars().allMatch(Character::isLetter)) {
             this.code = 5210;
-            this.status = GameFeedback.GUESSED_WORD_INVALID_CHAR;
+            this.status = TurnFeedback.GUESSED_WORD_INVALID_CHAR;
             // TODO: change 1500 to 10 (seconds)
         } else if (Duration.between(this.getStartedAt(), Instant.now()).getSeconds() > 1500) {
             this.code = 5215;
-            this.status = GameFeedback.TURN_OVER;
+            this.status = TurnFeedback.TURN_TIME_OVER;
         }
 
         this.correctGuess = this.guessedWord.equalsIgnoreCase(answer);

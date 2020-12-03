@@ -4,7 +4,6 @@ import com.lingotrainer.domain.model.game.round.RoundId;
 import lombok.*;
 
 import java.time.Instant;
-import java.util.List;
 
 @Data
 @Builder
@@ -13,10 +12,6 @@ import java.util.List;
 public class Turn {
     private TurnId turnId;
     private String guessedWord;
-
-    private List<GuessedLetter> guessedLetters;
-
-    private boolean correctGuess;
 
     private Feedback feedback;
 
@@ -45,13 +40,11 @@ public class Turn {
         return this.roundId.getId();
     }
 
-    public void finishGame() {
-        this.feedback.setGameOver(true);
-    }
-
     public void setGuessedWord(String guessedWord) {
         if (guessedWord != null) {
             this.guessedWord = guessedWord.toUpperCase();
         }
     }
+
+
 }

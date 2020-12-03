@@ -61,6 +61,6 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
     public String retrieveRandomWord(String languageCode, WordLength wordLength) {
         Dictionary dictionary = this.findByLanguage(languageCode).orElseThrow(() ->
                 new NotFoundException(String.format("Dictionary language %s could not be found", languageCode)));
-        return  dictionary.getRandomWord(wordLength);
+        return dictionary.getRandomWord(wordLength);
     }
 }

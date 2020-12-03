@@ -11,6 +11,7 @@ public class TurnFormMapper {
                 .feedback(this.convertToFeedbackResponse(turn.getFeedback()))
                 .guessedWord(turn.getGuessedWord())
                 .gameOver(turn.getFeedback().isGameOver())
+                .correctGuess(turn.getFeedback().isCorrectGuess())
                 .build();
     }
 

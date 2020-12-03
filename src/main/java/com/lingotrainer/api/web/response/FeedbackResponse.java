@@ -1,6 +1,6 @@
 package com.lingotrainer.api.web.response;
 
-import com.lingotrainer.domain.model.game.GameFeedback;
+import com.lingotrainer.domain.model.game.round.turn.TurnFeedback;
 import com.lingotrainer.domain.model.game.round.turn.GuessedLetter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,5 +16,5 @@ import java.util.List;
 public class FeedbackResponse {
     private List<GuessedLetter> guessedLetters;
     private int code;
-    private GameFeedback status;
+    private TurnFeedback status;
 }

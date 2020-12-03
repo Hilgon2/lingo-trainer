@@ -6,4 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface UserService {
     User save(User user);
     UserDetails loadUserByUsername(String username);
+    User findById(int id);
+    User findByUsername(String username);
 }

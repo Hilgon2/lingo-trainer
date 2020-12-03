@@ -1,6 +1,7 @@
 package com.lingotrainer.application.dictionary;
 
 import com.google.gson.Gson;
+import com.lingotrainer.domain.model.WordLength;
 import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.domain.repository.DictionaryRepository;
 import com.lingotrainer.application.exception.GeneralException;
@@ -67,5 +68,14 @@ public class BaseDictionaryService implements DictionaryService {
             throw new GeneralException(String.format("Unknown error trying to open the %s language file",
                     dictionary.getLanguage()));
         }
+    }
+
+    public boolean existsByWord(String languageCode, String guessedWord) {
+        return this.dictionaryRepository.existsByWord(languageCode, guessedWord);
+    }
+
+    @Override
+    public String retrieveRandomWord(String languageCode, WordLength wordLength) {
+        return this.dictionaryRepository.retrieveRandomWord(languageCode, wordLength);
     }
 }

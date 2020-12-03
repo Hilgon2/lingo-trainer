@@ -9,6 +9,7 @@ import com.lingotrainer.application.exception.DuplicateException;
 import com.lingotrainer.application.exception.ForbiddenException;
 import com.lingotrainer.application.exception.NotFoundException;
 import com.lingotrainer.application.authentication.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -17,11 +18,12 @@ import java.util.Optional;
 @Service
 public class BaseGameService implements GameService {
 
-    private final AuthenticationService authenticationService;
     private GameRepository gameRepository;
 
-    public BaseGameService(AuthenticationService authenticationService, GameRepository gameRepository) {
-        this.authenticationService = authenticationService;
+    @Autowired
+    private AuthenticationService authenticationService;
+
+    public BaseGameService(GameRepository gameRepository) {
         this.gameRepository = gameRepository;
     }
 
@@ -31,8 +33,8 @@ public class BaseGameService implements GameService {
      * @return game object, containing game information
      */
     @Override
-    public Optional<Game> findById(int id) {
-        return gameRepository.findById(id);
+    public Game findById(int id) {
+        return gameRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Game ID %d could not be found", id)));
     }
 
     /**
@@ -67,8 +69,8 @@ public class BaseGameService implements GameService {
      * @return game object, containing game information
      */
     @Override
-    public Optional<Game> findActiveGame(int userId) {
-        return this.gameRepository.findActiveGame(userId);
+    public Game findActiveGame(int userId) {
+        return this.gameRepository.findActiveGame(userId).orElse(null);
     }
 
 
@@ -84,5 +86,15 @@ public class BaseGameService implements GameService {
         }
 
         return this.gameRepository.save(game);
+    }
+
+    /**
+     * Check if user has an active game
+     * @param userId the ID of the user to be checked
+     * @return returns true or false
+     */
+    @Override
+    public boolean hasActiveGame(int userId) {
+        return this.gameRepository.hasActiveGame(userId);
     }
 }

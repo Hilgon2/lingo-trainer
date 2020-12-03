@@ -7,6 +7,7 @@ import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.repository.UserRepository;
 import com.lingotrainer.application.exception.DuplicateException;
 import com.lingotrainer.application.exception.ForbiddenException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,14 +18,14 @@ public class BaseUserService implements UserService, UserDetailsService {
 
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private AuthenticationService authenticationService;
 
     public BaseUserService(UserRepository userRepository,
-                           PasswordEncoder passwordEncoder,
-                           AuthenticationService authenticationService) {
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.authenticationService = authenticationService;
     }
 
     /**
@@ -62,5 +63,15 @@ public class BaseUserService implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         return this.userRepository.findByUsername(username).orElseThrow(() ->
                 new NotFoundException(String.format("User with username %s could not be found", username)));
+    }
+
+    @Override
+    public User findById(int id) {
+        return this.userRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("User ID %d could not be found", id)));
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return this.userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException(String.format("Username %s could not be found", username)));
     }
 }

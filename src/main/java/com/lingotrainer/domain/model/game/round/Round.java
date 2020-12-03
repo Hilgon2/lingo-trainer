@@ -55,33 +55,31 @@ public class Round {
     }
 
     public WordLength getWordLength() {
+        if (this.wordLength != null) {
+            return this.wordLength;
+        }
+
         if (this.word == null) {
             return WordLength.FIVE;
         }
 
         switch (this.word.length()) {
-            case 5:
-                return WordLength.SIX;
             case 6:
-                return WordLength.SEVEN;
+                return WordLength.SIX;
             case 7:
+                return WordLength.SEVEN;
             default:
                 return WordLength.FIVE;
         }
     }
 
-    public void nextWord(Round lastRound, String word) {
-        this.nextWordLength(lastRound);
-        this.word = word;
-    }
-
-    private void nextWordLength(Round lastRound) {
+    public void nextWordLength(Round lastRound) {
         if (lastRound != null) {
             switch (lastRound.getWordLength()) {
-                case SIX:
+                case FIVE:
                     this.wordLength = WordLength.SIX;
                     break;
-                case SEVEN:
+                case SIX:
                     this.wordLength = WordLength.SEVEN;
                     break;
                 default:
