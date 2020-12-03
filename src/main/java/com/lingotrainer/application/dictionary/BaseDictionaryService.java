@@ -71,11 +71,23 @@ public class BaseDictionaryService implements DictionaryService {
         }
     }
 
+    /**
+     * Check if word exists in dictionary.
+     * @param languageCode language of the word
+     * @param guessedWord the word itself
+     * @return true or false
+     */
     @Override
     public boolean existsByWord(String languageCode, String guessedWord) {
         return this.dictionaryRepository.existsByWord(languageCode, guessedWord);
     }
 
+    /**
+     * Get random word of dictionary.
+     * @param languageCode language of the word / dictionary
+     * @param wordLength length of the word
+     * @return new word based on length
+     */
     @Override
     public String retrieveRandomWord(String languageCode, WordLength wordLength) {
         return this.dictionaryRepository.retrieveRandomWord(languageCode, wordLength);

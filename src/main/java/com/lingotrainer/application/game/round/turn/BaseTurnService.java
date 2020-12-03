@@ -94,16 +94,36 @@ public class BaseTurnService implements TurnService {
                 new NotFoundException(String.format("Turn ID %d could not be found", turnId)));
     }
 
+    /**
+     * Find all active turns based on round ID.
+     *
+     * @param roundId round ID to look for
+     * @return a list of turns
+     */
     @Override
     public List<Turn> findActiveTurnsByRoundId(int roundId) {
         return this.turnRepository.findActiveTurnsByRoundId(roundId);
     }
 
+    /**
+     * Save the turn.
+     *
+     * @param turn turn to be saved
+     * @return returns saved turn
+     */
     @Override
     public Turn save(Turn turn) {
         return this.turnRepository.save(turn);
     }
 
+    /**
+     * Finish a turn and do an operation based on the outcome of the turn.
+     *
+     * @param turn turn of the guess
+     * @param game game of the guess
+     * @param round round of the guess
+     * @return return the turn with feedback
+     */
     private Turn finishTurn(Turn turn, Game game, Round round) {
         GameTurn gameTurn = GameTurn.builder()
                 .user(this.userService.findById(game.getUserId()))

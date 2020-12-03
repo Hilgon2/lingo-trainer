@@ -2,7 +2,6 @@ package com.lingotrainer.api.security.jwt;
 
 import com.google.gson.Gson;
 import com.lingotrainer.application.user.UserService;
-import com.lingotrainer.domain.model.user.Role;
 import com.lingotrainer.domain.model.user.User;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;

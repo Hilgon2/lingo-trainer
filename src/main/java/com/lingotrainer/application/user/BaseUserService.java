@@ -67,11 +67,13 @@ public class BaseUserService implements UserService, UserDetailsService {
 
     @Override
     public User findById(int id) {
-        return this.userRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("User ID %d could not be found", id)));
+        return this.userRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(String.format("User ID %d could not be found", id)));
     }
 
     @Override
     public User findByUsername(String username) {
-        return this.userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException(String.format("Username %s could not be found", username)));
+        return this.userRepository.findByUsername(username).orElseThrow(() ->
+                new NotFoundException(String.format("Username %s could not be found", username)));
     }
 }

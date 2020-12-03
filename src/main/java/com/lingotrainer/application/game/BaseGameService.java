@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.Optional;
 
 @Service
 public class BaseGameService implements GameService {
@@ -34,7 +33,8 @@ public class BaseGameService implements GameService {
      */
     @Override
     public Game findById(int id) {
-        return gameRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Game ID %d could not be found", id)));
+        return gameRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(String.format("Game ID %d could not be found", id)));
     }
 
     /**
@@ -89,7 +89,7 @@ public class BaseGameService implements GameService {
     }
 
     /**
-     * Check if user has an active game
+     * Check if user has an active game.
      * @param userId the ID of the user to be checked
      * @return returns true or false
      */

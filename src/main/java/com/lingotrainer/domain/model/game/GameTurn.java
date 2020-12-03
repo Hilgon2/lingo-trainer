@@ -1,6 +1,5 @@
 package com.lingotrainer.domain.model.game;
 
-import com.lingotrainer.application.exception.NotFoundException;
 import com.lingotrainer.domain.model.game.round.Round;
 import com.lingotrainer.domain.model.game.round.RoundId;
 import com.lingotrainer.domain.model.game.round.turn.Turn;

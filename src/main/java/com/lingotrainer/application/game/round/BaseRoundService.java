@@ -93,7 +93,9 @@ public class BaseRoundService implements RoundService {
                 .active(true)
                 .build();
         newRoundBuilder.nextWordLength(lastRound);
-        newRoundBuilder.setWord(this.dictionaryService.retrieveRandomWord(game.getLanguage(), newRoundBuilder.getWordLength()));
+        newRoundBuilder.setWord(
+                this.dictionaryService.retrieveRandomWord(game.getLanguage(), newRoundBuilder.getWordLength())
+        );
 
         Round newRound = this.roundRepository.save(newRoundBuilder);
 
@@ -119,6 +121,10 @@ public class BaseRoundService implements RoundService {
                 new NotFoundException(String.format("Round ID %d could not be found", roundId)));
     }
 
+    /**
+     * Check if player can create a new round.
+     * @param gameId Game ID of the round to be checked
+     */
     private void checkRound(int gameId) {
         Round currentRound = this.findCurrentRound(gameId);
 
