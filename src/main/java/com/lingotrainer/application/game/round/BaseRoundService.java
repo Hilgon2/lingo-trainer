@@ -8,7 +8,6 @@ import com.lingotrainer.domain.model.game.round.Round;
 import com.lingotrainer.domain.model.game.round.RoundId;
 import com.lingotrainer.domain.model.game.round.turn.Turn;
 import com.lingotrainer.application.exception.ForbiddenException;
-import com.lingotrainer.application.exception.GameException;
 import com.lingotrainer.application.exception.NotFoundException;
 import com.lingotrainer.domain.model.game.Game;
 import com.lingotrainer.application.authentication.AuthenticationService;
@@ -82,7 +81,12 @@ public class BaseRoundService implements RoundService {
             throw new NotFoundException("No active games could be found");
         }
 
-        this.checkRound(gameId);
+        // retrieve current round and check if it still has active turns
+        Round currentRound = this.findCurrentRound(gameId);
+
+        if (currentRound != null) {
+            currentRound.checkActiveTurns(this.turnService.findActiveTurnsByRoundId(currentRound.getRoundId()));
+        }
 
         // retrieve last round to retrieve the amount of letters the next word needs (5, 6 or 7)
         Round lastRound = this.roundRepository.findLastRound(gameId).orElse(null);
@@ -119,25 +123,5 @@ public class BaseRoundService implements RoundService {
     public Round findById(int roundId) {
         return this.roundRepository.findById(roundId).orElseThrow(() ->
                 new NotFoundException(String.format("Round ID %d could not be found", roundId)));
-    }
-
-    /**
-     * Check if player can create a new round.
-     * @param gameId Game ID of the round to be checked
-     */
-    private void checkRound(int gameId) {
-        Round currentRound = this.findCurrentRound(gameId);
-
-        // if there is an active round, check if there are still turns left. If not, set the current round on inactive.
-        if (currentRound != null) {
-            if (this.turnService.findActiveTurnsByRoundId(currentRound.getRoundId()).size() < 5) {
-                throw new GameException(
-                        "There are still turns left on the current round. "
-                                + "Please finish them before creating a new round."
-                );
-            }
-            currentRound.setActive(false);
-            this.roundRepository.save(currentRound);
-        }
     }
 }
