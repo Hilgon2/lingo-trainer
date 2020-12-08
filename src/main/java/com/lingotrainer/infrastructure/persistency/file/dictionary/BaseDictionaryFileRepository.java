@@ -7,10 +7,12 @@ import com.lingotrainer.domain.repository.DictionaryRepository;
 import com.lingotrainer.application.exception.GeneralException;
 import com.lingotrainer.application.exception.NotFoundException;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,5 +64,20 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
         Dictionary dictionary = this.findByLanguage(languageCode).orElseThrow(() ->
                 new NotFoundException(String.format("Dictionary language %s could not be found", languageCode)));
         return dictionary.getRandomWord(wordLength);
+    }
+
+    @Override
+    public List<String> findAvailableLanguages() {
+        List<String> languages = new ArrayList<>();
+        File file = new File("src/main/resources/dictionary");
+        if (file.exists() && file.list() != null) {
+            for (String dictionaryName : file.list()) {
+                if (dictionaryName.substring(dictionaryName.length() - 5).equals(".json")) {
+                    languages.add(dictionaryName.substring(0, dictionaryName.length() - 5));
+                }
+            }
+        }
+
+        return languages;
     }
 }

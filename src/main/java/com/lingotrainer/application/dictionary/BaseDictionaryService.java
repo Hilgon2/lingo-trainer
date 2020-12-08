@@ -92,4 +92,9 @@ public class BaseDictionaryService implements DictionaryService {
     public String retrieveRandomWord(String languageCode, WordLength wordLength) {
         return this.dictionaryRepository.retrieveRandomWord(languageCode, wordLength);
     }
+
+    @Override
+    public List<String> findAvailableLanguages() {
+        return this.dictionaryRepository.findAvailableLanguages();
+    }
 }
