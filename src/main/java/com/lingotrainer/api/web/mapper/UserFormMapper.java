@@ -1,6 +1,6 @@
 package com.lingotrainer.api.web.mapper;
 
-import com.lingotrainer.api.web.response.CreateUserResponse;
+import com.lingotrainer.api.web.response.UserResponse;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.api.web.request.CreateUserRequest;
 
@@ -13,9 +13,10 @@ public class UserFormMapper {
                 .build();
     }
 
-    public CreateUserResponse convertToResponse(User user) {
-        return CreateUserResponse.builder()
+    public UserResponse convertToResponse(User user) {
+        return UserResponse.builder()
                 .username(user.getUsername())
+                .highscore(user.getHighscore())
                 .build();
     }
 }

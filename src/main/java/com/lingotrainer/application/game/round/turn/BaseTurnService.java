@@ -1,5 +1,6 @@
 package com.lingotrainer.application.game.round.turn;
 
+import com.lingotrainer.application.authentication.AuthenticationService;
 import com.lingotrainer.application.dictionary.DictionaryService;
 import com.lingotrainer.application.game.GameService;
 import com.lingotrainer.application.game.round.RoundService;
@@ -35,6 +36,9 @@ public class BaseTurnService implements TurnService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
     public BaseTurnService(TurnRepository turnRepository) {
         this.turnRepository = turnRepository;
@@ -143,10 +147,12 @@ public class BaseTurnService implements TurnService {
         if (gameTurnFeedback == GameTurnFeedback.WORD_CORRECT) {
             this.gameService.save(gameTurn.getGame());
             this.roundService.save(round);
+            if (gameTurn.getUser().getHighscore() > this.userService.findById(game.getUserId()).getHighscore()) {
+                this.userService.save(gameTurn.getUser());
+            }
         } else if (gameTurnFeedback == GameTurnFeedback.WORD_WRONG_NO_TURNS_LEFT) {
             this.gameService.save(gameTurn.getGame());
             this.roundService.save(round);
-            this.userService.save(gameTurn.getUser());
         } else if (gameTurnFeedback == GameTurnFeedback.WORD_WRONG_NEW_TURN) {
             this.turnRepository.save(gameTurn.getNewTurn());
         }

@@ -6,7 +6,7 @@ import com.lingotrainer.api.web.mapper.TurnFormMapper;
 import com.lingotrainer.api.web.request.CreateGameRequest;
 import com.lingotrainer.api.web.request.PlayTurnRequest;
 import com.lingotrainer.api.web.response.GameResponse;
-import com.lingotrainer.api.web.response.NewRoundResponse;
+import com.lingotrainer.api.web.response.RoundResponse;
 import com.lingotrainer.api.web.response.PlayTurnResponse;
 import com.lingotrainer.application.authentication.AuthenticationService;
 import com.lingotrainer.application.game.GameService;
@@ -15,6 +15,8 @@ import com.lingotrainer.application.game.round.RoundService;
 import com.lingotrainer.application.game.round.turn.TurnService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -62,9 +64,16 @@ public class GameController {
 
     @PostMapping(produces = "application/json", path = "/{gameId}/rounds")
     @Authenticated
-    public ResponseEntity<NewRoundResponse> createNewRound(@PathVariable int gameId) {
-        NewRoundResponse newRoundResponse = this.roundFormMapper.convertToResponse(roundService.createNewRound(gameId));
-        return ok(newRoundResponse);
+    public ResponseEntity<RoundResponse> createNewRound(@PathVariable int gameId) {
+        RoundResponse roundResponse = this.roundFormMapper.convertToResponse(this.roundService.createNewRound(gameId));
+        return ok(roundResponse);
+    }
+
+    @GetMapping(path = "/{gameId}/rounds/active")
+    @Authenticated
+    public ResponseEntity<RoundResponse> findCurrentRound(@PathVariable int gameId) {
+        RoundResponse roundResponse = this.roundFormMapper.convertToResponse(this.roundService.findCurrentRound(gameId));
+        return ok(roundResponse);
     }
 
     @PostMapping(produces = "application/json", path = "/{gameId}/rounds/turn")
@@ -74,5 +83,11 @@ public class GameController {
         return ok(this.turnFormMapper.convertToResponse(
                 this.turnService.playTurn(gameId, playTurnRequest.getGuessedWord()))
         );
+    }
+
+    @GetMapping(path = "/{gameId}/rounds/active/turns")
+    @Authenticated
+    public ResponseEntity<List<PlayTurnResponse>> findPlayedTurns(@PathVariable int gameId) {
+        return null;
     }
 }

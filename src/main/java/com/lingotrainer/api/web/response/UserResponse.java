@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class CreateUserResponse {
+public class UserResponse {
     private String username;
+    private int highscore;
 }

@@ -27,12 +27,14 @@ public class GameTurn {
     private GameTurnFeedback gameTurnFeedback;
 
     public void performTurn() {
-        if (turn.getFeedback().isCorrectGuess()) {
-            game.setScore(game.getScore() + 1);
+        if (this.turn.getFeedback().isCorrectGuess()) {
+            this.game.setScore(game.getScore() + 1);
             this.round.setActive(false);
+            this.user.setHighscore(game.getScore());
             this.gameTurnFeedback = GameTurnFeedback.WORD_CORRECT;
         } else if (!turn.getFeedback().isCorrectGuess()
-                && activeTurns.size() >= 5) {
+                && this.activeTurns.size() >= 5) {
+            this.game.setGameStatus(GameStatus.FINISHED);
             this.turn.getFeedback().setGameOver(true);
             this.round.setActive(false);
             this.gameTurnFeedback = GameTurnFeedback.WORD_WRONG_NO_TURNS_LEFT;
