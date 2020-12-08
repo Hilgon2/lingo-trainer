@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class CreateGameResponse {
+public class GameResponse {
     private int gameId;
 }
