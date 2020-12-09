@@ -20,7 +20,7 @@ public class GameTest {
     private UserId defaultUserId = new UserId(3);
 
     @BeforeEach
-    void setupTest() {
+    void setup() {
         this.games = new ArrayList<>();
         games.add(Game.builder()
                 .gameId(new GameId(2))
@@ -45,28 +45,12 @@ public class GameTest {
     }
 
     @Test
-    void singleActiveGame() {
+    void has_zero_or_one_active_game() {
         assertTrue(
                 this.games.stream()
                         .filter(game -> game.getGameStatus() == GameStatus.ACTIVE
                                 && game.getUserId() == this.defaultUserId.getId())
                         .count() <= 1
-        );
-    }
-
-    @Test
-    void multipleActiveGames() {
-        this.games.add(Game.builder()
-                .gameId(new GameId(32))
-                .userId(defaultUserId)
-                .gameStatus(GameStatus.ACTIVE)
-                .build());
-
-        assertTrue(
-                this.games.stream().
-                filter(game -> game.getGameStatus() == GameStatus.ACTIVE
-                        && game.getUserId() == this.defaultUserId.getId())
-                .count() > 1
         );
     }
 }
