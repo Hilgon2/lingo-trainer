@@ -2,8 +2,10 @@ package com.lingotrainer.application.authentication;
 
 import com.lingotrainer.api.security.jwt.JwtTokenProvider;
 import com.lingotrainer.api.web.request.AuthenticationRequest;
+import com.lingotrainer.application.user.UserService;
 import com.lingotrainer.domain.model.user.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,6 +24,9 @@ public class BaseAuthenticationService implements AuthenticationService {
 
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private UserService userService;
 
     public BaseAuthenticationService(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
@@ -64,9 +69,10 @@ public class BaseAuthenticationService implements AuthenticationService {
         try {
             String username = data.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
+            User user = this.userService.findByUsername(username);
 
             // Create the token and maps all the roles to the Spring RoleAuthority so Spring can handle the roles
-            String token = jwtTokenProvider.createToken(username);
+            String token = jwtTokenProvider.createToken(user);
 
             Map<Object, Object> model = new HashMap<>();
             model.put("token", token);

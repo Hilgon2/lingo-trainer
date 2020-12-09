@@ -1,9 +1,11 @@
 package com.lingotrainer.application.dictionary;
 
 import com.google.gson.Gson;
+import com.lingotrainer.domain.model.WordLength;
 import com.lingotrainer.domain.model.dictionary.Dictionary;
+import com.lingotrainer.domain.model.dictionary.WordFilter;
 import com.lingotrainer.domain.repository.DictionaryRepository;
-import com.lingotrainer.application.exception.GeneralException;
+import com.lingotrainer.util.exception.GeneralException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,9 +22,11 @@ import java.util.List;
 public class BaseDictionaryService implements DictionaryService {
 
     private DictionaryRepository dictionaryRepository;
+    private WordFilter lingoWordFilter;
 
-    public BaseDictionaryService(DictionaryRepository dictionaryRepository) {
+    public BaseDictionaryService(DictionaryRepository dictionaryRepository, WordFilter lingoWordFilter) {
         this.dictionaryRepository = dictionaryRepository;
+        this.lingoWordFilter = lingoWordFilter;
     }
 
     /**
@@ -33,17 +37,18 @@ public class BaseDictionaryService implements DictionaryService {
      * @return the language code
      */
     @Override
-    public String save(MultipartFile file, String languageCode) {
+    public Dictionary save(MultipartFile file, String languageCode) {
         Gson gson = new Gson();
         Dictionary dictionary = Dictionary.builder()
                 .language(languageCode)
                 .build();
+        String dictionaryPath = "src/main/resources/dictionary/%s.json";
 
         try {
             // if file exists, get words list. Otherwise create empty word list.
-            if (new File(String.format("src/main/resources/dictionary/%s.json", dictionary.getLanguage())).exists()) {
+            if (new File(String.format(dictionaryPath, dictionary.getLanguage())).exists()) {
                 String targetFileReader = new String(Files.readAllBytes(Paths.get(
-                        String.format("src/main/resources/dictionary/%s.json", dictionary.getLanguage()))));
+                        String.format(dictionaryPath, dictionary.getLanguage()))));
                 dictionary.setWords(gson.fromJson(targetFileReader, List.class));
             } else {
                 dictionary.setWords(new ArrayList<>());
@@ -53,11 +58,8 @@ public class BaseDictionaryService implements DictionaryService {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    if (line.length() >= 5
-                            && line.length() <= 7
-                            && line.chars().allMatch(Character::isLetter)
-                            && !dictionary.getWords().contains(line)) {
-                        dictionary.getWords().add(line.toUpperCase());
+                    if (this.lingoWordFilter.verify(line, dictionary.getWords())) {
+                        dictionary.addWord(line);
                     }
                 }
             }
@@ -67,5 +69,32 @@ public class BaseDictionaryService implements DictionaryService {
             throw new GeneralException(String.format("Unknown error trying to open the %s language file",
                     dictionary.getLanguage()));
         }
+    }
+
+    /**
+     * Check if word exists in dictionary.
+     * @param languageCode language of the word
+     * @param guessedWord the word itself
+     * @return true or false
+     */
+    @Override
+    public boolean existsByWord(String languageCode, String guessedWord) {
+        return this.dictionaryRepository.existsByWord(languageCode, guessedWord);
+    }
+
+    /**
+     * Get random word of dictionary.
+     * @param languageCode language of the word / dictionary
+     * @param wordLength length of the word
+     * @return new word based on length
+     */
+    @Override
+    public String retrieveRandomWord(String languageCode, WordLength wordLength) {
+        return this.dictionaryRepository.retrieveRandomWord(languageCode, wordLength);
+    }
+
+    @Override
+    public List<String> findAvailableLanguages() {
+        return this.dictionaryRepository.findAvailableLanguages();
     }
 }

@@ -30,7 +30,7 @@ public class User implements UserDetails {
 
     private Role role;
 
-    private int active = 1;
+    private boolean active = true;
 
     @ToString.Exclude
     @JsonIgnore
@@ -60,21 +60,21 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.active == 1;
+        return this.active;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.active == 1;
+        return this.active;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return this.active == 1;
+        return this.active;
     }
 
     @Override
     public boolean isEnabled() {
-        return this.active == 1;
+        return this.active;
     }
 }

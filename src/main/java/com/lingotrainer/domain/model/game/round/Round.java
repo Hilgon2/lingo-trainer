@@ -1,8 +1,9 @@
 package com.lingotrainer.domain.model.game.round;
 
+import com.lingotrainer.application.exception.GameException;
 import com.lingotrainer.domain.model.WordLength;
-import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.domain.model.game.GameId;
+import com.lingotrainer.domain.model.game.round.turn.Turn;
 import com.lingotrainer.domain.model.game.round.turn.TurnId;
 import lombok.*;
 
@@ -32,6 +33,10 @@ public class Round {
     private WordLength wordLength;
 
     public int getLettersCount() {
+        if (this.word == null) {
+            return 0;
+        }
+
         return this.word.length();
     }
 
@@ -51,28 +56,32 @@ public class Round {
         return this.gameId.getId();
     }
 
-    public void addTurnId(TurnId turnId) {
-        this.turnIds.add(turnId);
-    }
-
     public WordLength getWordLength() {
-        switch (word.length()) {
-            case 5:
-                return WordLength.SIX;
-            case 6:
-                return WordLength.SEVEN;
-            default:
-                return WordLength.FIVE;
+        if (this.wordLength != null) {
+            return this.wordLength;
+        } else if (this.word == null) {
+            return WordLength.FIVE;
+        } else {
+            switch (this.word.length()) {
+                case 5:
+                    return WordLength.FIVE;
+                case 6:
+                    return WordLength.SIX;
+                case 7:
+                    return WordLength.SEVEN;
+                default:
+                    return null;
+            }
         }
     }
 
-    public void nextWord(Round lastRound, Dictionary dictionary) {
+    public void nextWordLength(Round lastRound) {
         if (lastRound != null) {
             switch (lastRound.getWordLength()) {
-                case SIX:
+                case FIVE:
                     this.wordLength = WordLength.SIX;
                     break;
-                case SEVEN:
+                case SIX:
                     this.wordLength = WordLength.SEVEN;
                     break;
                 default:
@@ -82,7 +91,14 @@ public class Round {
         } else {
             this.wordLength = WordLength.FIVE;
         }
+    }
 
-        this.word = dictionary.getRandomWord(this.wordLength);
+    public void checkActiveTurns(List<Turn> turns) {
+        if (turns.size() < 5) {
+            throw new GameException(
+                    "There are still turns left on the current round. "
+                            + "Please finish them before creating a new round."
+            );
+        }
     }
 }

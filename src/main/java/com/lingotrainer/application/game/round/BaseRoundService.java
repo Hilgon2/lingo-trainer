@@ -1,19 +1,18 @@
 package com.lingotrainer.application.game.round;
 
+import com.lingotrainer.application.dictionary.DictionaryService;
+import com.lingotrainer.application.game.GameService;
+import com.lingotrainer.application.game.round.turn.TurnService;
 import com.lingotrainer.domain.model.game.GameId;
 import com.lingotrainer.domain.model.game.round.Round;
 import com.lingotrainer.domain.model.game.round.RoundId;
 import com.lingotrainer.domain.model.game.round.turn.Turn;
-import com.lingotrainer.domain.repository.DictionaryRepository;
-import com.lingotrainer.domain.repository.GameRepository;
-import com.lingotrainer.domain.repository.RoundRepository;
-import com.lingotrainer.domain.repository.TurnRepository;
 import com.lingotrainer.application.exception.ForbiddenException;
-import com.lingotrainer.application.exception.GameException;
-import com.lingotrainer.application.exception.NotFoundException;
-import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.domain.model.game.Game;
 import com.lingotrainer.application.authentication.AuthenticationService;
+import com.lingotrainer.domain.repository.RoundRepository;
+import com.lingotrainer.util.exception.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -21,22 +20,22 @@ import java.time.Instant;
 @Service
 public class BaseRoundService implements RoundService {
 
-    private final AuthenticationService authenticationService;
-    private TurnRepository turnRepository;
     private RoundRepository roundRepository;
-    private GameRepository gameRepository;
-    private DictionaryRepository dictionaryRepository;
 
-    public BaseRoundService(AuthenticationService authenticationService,
-                            TurnRepository turnRepository,
-                            RoundRepository roundRepository,
-                            GameRepository gameRepository,
-                            DictionaryRepository dictionaryRepository) {
-        this.authenticationService = authenticationService;
-        this.turnRepository = turnRepository;
+    @Autowired
+    private AuthenticationService authenticationService;
+
+    @Autowired
+    private TurnService turnService;
+
+    @Autowired
+    private GameService gameService;
+
+    @Autowired
+    private DictionaryService dictionaryService;
+
+    public BaseRoundService(RoundRepository roundRepository) {
         this.roundRepository = roundRepository;
-        this.gameRepository = gameRepository;
-        this.dictionaryRepository = dictionaryRepository;
     }
 
     /**
@@ -46,17 +45,13 @@ public class BaseRoundService implements RoundService {
      * @return ID of the saved round
      */
     @Override
-    public int save(Round round) {
-        Game game = this.gameRepository.findById(round.getGameId()).orElseThrow(() ->
-                new NotFoundException(String.format("Game ID %d not found", round.getGameId())));
-        if (!gameRepository.hasActiveGame(game.getUserId())) {
-            throw new NotFoundException("User has no active games");
-        }
+    public Round save(Round round) {
+        Game game = this.gameService.findById(round.getGameId());
         if (game.getUserId() != authenticationService.getUser().getUserId()) {
             throw new ForbiddenException("This game is not linked to the current user");
         }
 
-        return roundRepository.save(round).getRoundId();
+        return roundRepository.save(round);
     }
 
     /**
@@ -67,8 +62,7 @@ public class BaseRoundService implements RoundService {
      */
     @Override
     public Round findCurrentRound(int gameId) {
-        return roundRepository.findCurrentRound(gameId).orElseThrow(() ->
-                new NotFoundException(String.format("Round ID %d could not be found", gameId)));
+        return roundRepository.findCurrentRound(gameId).orElse(null);
     }
 
     /**
@@ -80,42 +74,29 @@ public class BaseRoundService implements RoundService {
      */
     @Override
     public Round createNewRound(int gameId) {
-        if (!this.gameRepository.hasActiveGame(this.authenticationService.getUser().getUserId())) {
+        if (!this.gameService.hasActiveGame(this.authenticationService.getUser().getUserId())) {
             throw new NotFoundException("No active games could be found");
         }
 
-        Round currentRound = this.roundRepository.findCurrentRound(gameId).orElse(null);
+        // retrieve current round and check if it still has active turns
+        Round currentRound = this.findCurrentRound(gameId);
 
-        // if there is an active round, check if there are still turns left. If not, set the current round on inactive.
         if (currentRound != null) {
-            if (currentRound.getTurnIds()
-                    .stream()
-                    .filter(turnId -> this.turnRepository.findById(turnId.getId()).orElseThrow(() ->
-                            new NotFoundException(
-                                    String.format("Turn ID %d could not be found", turnId.getId())))
-                            .getGuessedWord() != null)
-                    .count() < 5) {
-                throw new GameException(
-                        "There are still turns left on the current round. "
-                                + "Please finish them before creating a new round."
-                );
-            }
-            currentRound.setActive(false);
-            this.roundRepository.save(currentRound);
+            currentRound.checkActiveTurns(this.turnService.findActiveTurnsByRoundId(currentRound.getRoundId()));
         }
 
         // retrieve last round to retrieve the amount of letters the next word needs (5, 6 or 7)
         Round lastRound = this.roundRepository.findLastRound(gameId).orElse(null);
-        Game game = this.gameRepository.findById(gameId).orElseThrow(() ->
-                new NotFoundException(String.format("Game ID %d not found", gameId)));
-        Dictionary dictionary = this.dictionaryRepository.findByLanguage(game.getLanguage()).orElseThrow(() ->
-                new NotFoundException(String.format("Dictionary language %s not found", game.getLanguage())));
+        Game game = this.gameService.findById(gameId);
 
         Round newRoundBuilder = Round.builder()
                 .gameId(new GameId(gameId))
                 .active(true)
                 .build();
-        newRoundBuilder.nextWord(lastRound, dictionary);
+        newRoundBuilder.nextWordLength(lastRound);
+        newRoundBuilder.setWord(
+                this.dictionaryService.retrieveRandomWord(game.getLanguage(), newRoundBuilder.getWordLength())
+        );
 
         Round newRound = this.roundRepository.save(newRoundBuilder);
 
@@ -124,7 +105,7 @@ public class BaseRoundService implements RoundService {
                 .roundId(new RoundId(newRound.getRoundId()))
                 .build();
 
-        this.turnRepository.save(newTurn);
+        this.turnService.save(newTurn);
 
         return newRound;
     }

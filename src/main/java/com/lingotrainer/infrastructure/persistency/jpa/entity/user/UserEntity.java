@@ -2,10 +2,8 @@ package com.lingotrainer.infrastructure.persistency.jpa.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.lingotrainer.infrastructure.persistency.jpa.entity.game.GameEntity;
 import com.lingotrainer.domain.model.user.Role;
-import com.lingotrainer.api.security.json.MyJsonView;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,10 +37,11 @@ public class UserEntity implements UserDetails {
     private int highscore;
 
     @Enumerated(value = EnumType.STRING)
-    @JsonView(MyJsonView.Admin.class)
+    @ToString.Exclude
+    @JsonIgnore
     private Role role;
 
-    private int active = 1;
+    private boolean active = true;
 
     @OneToMany(mappedBy = "user")
     @Builder.Default
@@ -70,21 +69,21 @@ public class UserEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.active == 1;
+        return this.active;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.active == 1;
+        return this.active;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return this.active == 1;
+        return this.active;
     }
 
     @Override
     public boolean isEnabled() {
-        return this.active == 1;
+        return this.active;
     }
 }

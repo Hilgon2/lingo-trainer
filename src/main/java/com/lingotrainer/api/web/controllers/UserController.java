@@ -1,35 +1,44 @@
 package com.lingotrainer.api.web.controllers;
 
+import com.lingotrainer.api.annotation.Authenticated;
 import com.lingotrainer.api.web.mapper.UserFormMapper;
 import com.lingotrainer.api.web.request.CreateUserRequest;
+import com.lingotrainer.api.web.response.UserResponse;
+import com.lingotrainer.application.authentication.AuthenticationService;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.application.user.UserService;
-import com.lingotrainer.api.annotation.Public;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping(path = "/users")
 public class UserController {
 
     private UserService userService;
+    private AuthenticationService authenticationService;
     private UserFormMapper userFormMapper;
 
-    public UserController(UserService userService, UserFormMapper userFormMapper) {
+    public UserController(UserService userService,
+                          AuthenticationService authenticationService,
+                          UserFormMapper userFormMapper) {
         this.userService = userService;
+        this.authenticationService = authenticationService;
         this.userFormMapper = userFormMapper;
     }
 
     @PostMapping
-    @Public
-    public ResponseEntity<User> save(@Param("user") @RequestBody CreateUserRequest user) {
+    public ResponseEntity<UserResponse> createUser(@Param("user") @RequestBody CreateUserRequest user) {
         User newUser = this.userFormMapper.convertToDomainEntity(user);
-        newUser.setActive(1);
-        return ResponseEntity.ok(userService.save(newUser));
+        newUser.setActive(true);
+        return ok(this.userFormMapper.convertToResponse(userService.createNewUser(newUser)));
     }
 
+    @GetMapping(path = "/me")
+    @Authenticated
+    public ResponseEntity<UserResponse> findLoggedInUserDetails() {
+        return ok(this.userFormMapper.convertToResponse(this.authenticationService.getUser()));
+    }
 }

@@ -9,8 +9,6 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class NewRoundResponse {
-    private int roundId;
-    private char firstLetter;
-    private int lettersAmount;
+public class LoginResponse {
+    private String token;
 }

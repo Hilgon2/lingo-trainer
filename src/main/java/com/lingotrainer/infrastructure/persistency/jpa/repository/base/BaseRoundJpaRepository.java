@@ -1,6 +1,7 @@
 package com.lingotrainer.infrastructure.persistency.jpa.repository.base;
 
 import com.lingotrainer.infrastructure.persistency.jpa.entity.game.round.RoundEntity;
+import com.lingotrainer.infrastructure.persistency.jpa.mapper.EntityMapper;
 import com.lingotrainer.infrastructure.persistency.jpa.mapper.RoundMapper;
 import com.lingotrainer.domain.model.game.round.Round;
 import com.lingotrainer.domain.repository.RoundRepository;
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 public class BaseRoundJpaRepository implements RoundRepository {
     private RoundJpaRepository roundJpaRepository;
-    private RoundMapper roundMapper;
+    private EntityMapper<Round, RoundEntity> roundMapper;
 
     public BaseRoundJpaRepository(RoundJpaRepository roundJpaRepository, RoundMapper roundMapper) {
         this.roundJpaRepository = roundJpaRepository;

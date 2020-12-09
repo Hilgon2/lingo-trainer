@@ -33,8 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      *  - @Secured("SOME_ROLE")
      *  - @Authenticated
      *
-     * Or a public resource:
-     *  - @Public
      *
      * @param http Spring HttpSecurity class
      * @throws Exception Any exception that might occur

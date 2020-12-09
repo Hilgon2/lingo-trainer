@@ -16,4 +16,23 @@ public class FormMapperAutowire {
         return new RoundFormMapper();
     }
 
+    @Bean
+    public DictionaryFormMapper dictionaryFormMapper() {
+        return new DictionaryFormMapper();
+    }
+
+    @Bean
+    public GameFormMapper gameFormMapper() {
+        return new GameFormMapper();
+    }
+
+    @Bean
+    public LoginFormMapper loginFormMapper() {
+        return new LoginFormMapper();
+    }
+
+    @Bean
+    public TurnFormMapper turnFormMapper() {
+        return new TurnFormMapper();
+    }
 }

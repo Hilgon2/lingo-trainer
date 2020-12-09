@@ -19,6 +19,10 @@ public class Dictionary {
     private List<String> words = new ArrayList<>();
     private String language;
 
+    public void addWord(String word) {
+        this.words.add(word.toUpperCase());
+    }
+
     public String getRandomWord(WordLength wordLength) {
         String randomWord;
         randomWord = this.words.get(new Random().nextInt(this.words.size()));
