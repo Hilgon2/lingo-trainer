@@ -32,10 +32,8 @@ public class FilterChainExceptionHandler extends OncePerRequestFilter {
 
         try {
             filterChain.doFilter(request, response);
-        } catch (Exception e) {
-            if (!(e instanceof InvalidJwtAuthenticationException)) {
-                log.error("Spring Security Filter Chain Exception:", e);
-            }
+        } catch (InvalidJwtAuthenticationException e) {
+            log.error("Spring Security Filter Chain Exception:", e);
             response.setStatus(500);
             resolver.resolveException(request, response, null, e);
         }
