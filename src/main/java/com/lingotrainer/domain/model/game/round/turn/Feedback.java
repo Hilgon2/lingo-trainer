@@ -84,18 +84,18 @@ public class Feedback {
         // This could otherwise possibly cause an error.
         this.guessedWord = guessedWord.toUpperCase().trim();
 
-        if (!wordExists) {
-            this.code = 5201;
-            this.status = TurnFeedback.GUESSED_WORD_NOT_FOUND;
-        } else if (answer.length() != this.getGuessedWord().length()) {
+        if (answer.length() != this.getGuessedWord().length()) {
             this.code = 5205;
             this.status = TurnFeedback.GUESSED_WORD_DIFF_LENGTH;
         } else if (!this.getGuessedWord().chars().allMatch(Character::isLetter)) {
             this.code = 5210;
             this.status = TurnFeedback.GUESSED_WORD_INVALID_CHAR;
+        } else if (!wordExists) {
+            this.code = 5215;
+            this.status = TurnFeedback.GUESSED_WORD_NOT_FOUND;
             // TODO: change 1500 to 10 (seconds)
         } else if (Duration.between(this.getStartedAt(), Instant.now()).getSeconds() > 1500) {
-            this.code = 5215;
+            this.code = 5220;
             this.status = TurnFeedback.TURN_TIME_OVER;
         }
 
