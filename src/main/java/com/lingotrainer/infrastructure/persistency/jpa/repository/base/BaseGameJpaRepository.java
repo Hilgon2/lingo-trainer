@@ -1,12 +1,12 @@
 package com.lingotrainer.infrastructure.persistency.jpa.repository.base;
 
+import com.lingotrainer.util.exception.NotFoundException;
 import com.lingotrainer.infrastructure.persistency.jpa.entity.game.GameEntity;
 import com.lingotrainer.infrastructure.persistency.jpa.mapper.EntityMapper;
 import com.lingotrainer.infrastructure.persistency.jpa.mapper.GameMapper;
 import com.lingotrainer.domain.model.game.Game;
 import com.lingotrainer.domain.repository.GameRepository;
 import com.lingotrainer.infrastructure.persistency.jpa.repository.GameJpaRepository;
-import com.lingotrainer.application.exception.NotFoundException;
 
 import java.util.Optional;
 

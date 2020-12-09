@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.lingotrainer.domain.model.WordLength;
 import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.domain.repository.DictionaryRepository;
-import com.lingotrainer.application.exception.GeneralException;
-import com.lingotrainer.application.exception.NotFoundException;
+import com.lingotrainer.util.exception.NotFoundException;
+import com.lingotrainer.util.exception.GeneralException;
 
 import java.io.File;
 import java.io.FileWriter;

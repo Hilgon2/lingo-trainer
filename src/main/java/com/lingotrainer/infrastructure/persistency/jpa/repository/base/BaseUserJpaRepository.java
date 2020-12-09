@@ -1,12 +1,12 @@
 package com.lingotrainer.infrastructure.persistency.jpa.repository.base;
 
-import com.lingotrainer.application.exception.NotFoundException;
 import com.lingotrainer.infrastructure.persistency.jpa.entity.user.UserEntity;
 import com.lingotrainer.infrastructure.persistency.jpa.mapper.EntityMapper;
 import com.lingotrainer.infrastructure.persistency.jpa.mapper.UserMapper;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.repository.UserRepository;
 import com.lingotrainer.infrastructure.persistency.jpa.repository.UserJpaRepository;
+import com.lingotrainer.util.exception.NotFoundException;
 
 import java.util.Optional;
 

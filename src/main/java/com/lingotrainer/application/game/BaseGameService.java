@@ -7,8 +7,8 @@ import com.lingotrainer.domain.model.user.UserId;
 import com.lingotrainer.domain.repository.GameRepository;
 import com.lingotrainer.application.exception.DuplicateException;
 import com.lingotrainer.application.exception.ForbiddenException;
-import com.lingotrainer.application.exception.NotFoundException;
 import com.lingotrainer.application.authentication.AuthenticationService;
+import com.lingotrainer.util.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

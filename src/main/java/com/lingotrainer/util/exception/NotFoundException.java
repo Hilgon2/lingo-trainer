@@ -1,4 +1,4 @@
-package com.lingotrainer.application.exception;
+package com.lingotrainer.util.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

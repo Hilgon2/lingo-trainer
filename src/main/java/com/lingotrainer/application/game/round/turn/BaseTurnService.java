@@ -13,7 +13,7 @@ import com.lingotrainer.domain.model.game.round.turn.Turn;
 import com.lingotrainer.domain.model.game.round.turn.TurnId;
 import com.lingotrainer.domain.repository.*;
 import com.lingotrainer.application.exception.GameException;
-import com.lingotrainer.application.exception.NotFoundException;
+import com.lingotrainer.util.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

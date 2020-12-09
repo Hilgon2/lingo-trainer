@@ -8,10 +8,10 @@ import com.lingotrainer.domain.model.game.round.Round;
 import com.lingotrainer.domain.model.game.round.RoundId;
 import com.lingotrainer.domain.model.game.round.turn.Turn;
 import com.lingotrainer.application.exception.ForbiddenException;
-import com.lingotrainer.application.exception.NotFoundException;
 import com.lingotrainer.domain.model.game.Game;
 import com.lingotrainer.application.authentication.AuthenticationService;
 import com.lingotrainer.domain.repository.RoundRepository;
+import com.lingotrainer.util.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

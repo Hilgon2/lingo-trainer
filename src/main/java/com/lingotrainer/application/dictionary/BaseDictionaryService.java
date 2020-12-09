@@ -5,7 +5,7 @@ import com.lingotrainer.domain.model.WordLength;
 import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.domain.model.dictionary.WordFilter;
 import com.lingotrainer.domain.repository.DictionaryRepository;
-import com.lingotrainer.application.exception.GeneralException;
+import com.lingotrainer.util.exception.GeneralException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
