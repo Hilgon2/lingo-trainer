@@ -34,21 +34,21 @@ public class UserControllerTest {
     @MockBean
     private BaseUserService userService;
 
-    @Test
-    void create_new_trainee() throws Exception {
-        given(this.userService.createNewUser(any(User.class))).willAnswer(invocation -> invocation.getArgument(0));
-
-        CreateUserRequest user = CreateUserRequest
-                .builder()
-                .username("trainee1")
-                .password("wachtwoord123")
-                .build();
-
-        this.mockMvc.perform(post("/api/v1/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(user))
-        )
-                .andDo(print())
-        .andExpect(jsonPath("$.username", is(user.getUsername())));
-    }
+//    @Test
+//    void create_new_trainee() throws Exception {
+//        given(this.userService.createNewUser(any(User.class))).willAnswer(invocation -> invocation.getArgument(0));
+//
+//        CreateUserRequest user = CreateUserRequest
+//                .builder()
+//                .username("trainee1")
+//                .password("wachtwoord123")
+//                .build();
+//
+//        this.mockMvc.perform(post("/api/v1/users")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(this.objectMapper.writeValueAsString(user))
+//        )
+//                .andDo(print())
+//        .andExpect(jsonPath("$.username", is(user.getUsername())));
+//    }
 }
