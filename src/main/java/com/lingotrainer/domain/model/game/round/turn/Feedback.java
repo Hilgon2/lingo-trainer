@@ -48,8 +48,7 @@ public class Feedback {
 
     public void setGuessedLetters() {
         if (
-                this.guessedWord.length() == this.answer.length()
-                        && (this.status == null || this.gameOver)
+                this.code == -9999 && this.status == null
         ) {
             int index = 0;
             this.guessedLetters = new ArrayList<>();
