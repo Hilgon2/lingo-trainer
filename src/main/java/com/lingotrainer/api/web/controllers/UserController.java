@@ -30,10 +30,10 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponse> save(@Param("user") @RequestBody CreateUserRequest user) {
+    public ResponseEntity<UserResponse> createUser(@Param("user") @RequestBody CreateUserRequest user) {
         User newUser = this.userFormMapper.convertToDomainEntity(user);
         newUser.setActive(true);
-        return ok(this.userFormMapper.convertToResponse(userService.save(newUser)));
+        return ok(this.userFormMapper.convertToResponse(userService.createNewUser(newUser)));
     }
 
     @GetMapping(path = "/me")

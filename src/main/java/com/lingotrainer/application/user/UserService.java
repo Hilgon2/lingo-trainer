@@ -8,4 +8,5 @@ public interface UserService {
     UserDetails loadUserByUsername(String username);
     User findById(int id);
     User findByUsername(String username);
+    User createNewUser(User user);
 }
