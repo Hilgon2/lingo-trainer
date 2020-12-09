@@ -85,7 +85,7 @@ public class Feedback {
         this.guessedWord = guessedWord.toUpperCase().trim();
 
         if (!wordExists) {
-            this.code = 5200;
+            this.code = 5201;
             this.status = TurnFeedback.GUESSED_WORD_NOT_FOUND;
         } else if (answer.length() != this.getGuessedWord().length()) {
             this.code = 5205;

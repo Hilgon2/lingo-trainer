@@ -5,7 +5,6 @@ import com.lingotrainer.application.exception.NotFoundException;
 import com.lingotrainer.domain.model.user.Role;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.repository.UserRepository;
-import com.lingotrainer.application.exception.DuplicateException;
 import com.lingotrainer.application.exception.ForbiddenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

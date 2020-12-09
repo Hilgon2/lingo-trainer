@@ -47,9 +47,7 @@ public class BaseRoundService implements RoundService {
     @Override
     public Round save(Round round) {
         Game game = this.gameService.findById(round.getGameId());
-        if (!gameService.hasActiveGame(game.getUserId())) {
-            throw new NotFoundException("User has no active games");
-        }
+        
         if (game.getUserId() != authenticationService.getUser().getUserId()) {
             throw new ForbiddenException("This game is not linked to the current user");
         }

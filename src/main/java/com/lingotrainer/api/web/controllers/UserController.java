@@ -21,7 +21,9 @@ public class UserController {
     private AuthenticationService authenticationService;
     private UserFormMapper userFormMapper;
 
-    public UserController(UserService userService, AuthenticationService authenticationService, UserFormMapper userFormMapper) {
+    public UserController(UserService userService,
+                          AuthenticationService authenticationService,
+                          UserFormMapper userFormMapper) {
         this.userService = userService;
         this.authenticationService = authenticationService;
         this.userFormMapper = userFormMapper;

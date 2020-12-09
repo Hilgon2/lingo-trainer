@@ -72,7 +72,9 @@ public class GameController {
     @GetMapping(path = "/{gameId}/rounds/active")
     @Authenticated
     public ResponseEntity<RoundResponse> findCurrentRound(@PathVariable int gameId) {
-        RoundResponse roundResponse = this.roundFormMapper.convertToResponse(this.roundService.findCurrentRound(gameId));
+        RoundResponse roundResponse = this.roundFormMapper.convertToResponse(
+                this.roundService.findCurrentRound(gameId)
+        );
         return ok(roundResponse);
     }
 

@@ -157,6 +157,6 @@ public class BaseTurnService implements TurnService {
             this.turnRepository.save(gameTurn.getNewTurn());
         }
 
-        return turn;
+        return gameTurn.getTurn();
     }
 }

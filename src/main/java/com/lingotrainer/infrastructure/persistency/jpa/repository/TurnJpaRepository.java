@@ -8,7 +8,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TurnJpaRepository extends JpaRepository<TurnEntity, Integer> {
-    @Query(value = "SELECT u FROM #{#entityName} u WHERE u.guessedWord = null AND u.round.game.id = :gameId AND u.round.active = true")
+    @Query(value = "SELECT u FROM #{#entityName} u " +
+            "WHERE u.guessedWord = null " +
+            "AND u.round.game.id = :gameId " +
+            "AND u.round.active = true")
     TurnEntity findCurrentTurn(@Param("gameId") int gameId);
 
     TurnEntity findById(int turnEntity);
