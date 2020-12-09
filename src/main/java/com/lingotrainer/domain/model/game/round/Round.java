@@ -59,19 +59,19 @@ public class Round {
     public WordLength getWordLength() {
         if (this.wordLength != null) {
             return this.wordLength;
-        }
-
-        if (this.word == null) {
+        } else if (this.word == null) {
             return WordLength.FIVE;
-        }
-
-        switch (this.word.length()) {
-            case 6:
-                return WordLength.SIX;
-            case 7:
-                return WordLength.SEVEN;
-            default:
-                return WordLength.FIVE;
+        } else {
+            switch (this.word.length()) {
+                case 5:
+                    return WordLength.FIVE;
+                case 6:
+                    return WordLength.SIX;
+                case 7:
+                    return WordLength.SEVEN;
+                default:
+                    return null;
+            }
         }
     }
 

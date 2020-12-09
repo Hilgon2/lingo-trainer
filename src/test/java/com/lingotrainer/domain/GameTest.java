@@ -1,10 +1,9 @@
-package com.lingotrainer.model.game;
+package com.lingotrainer.domain;
 
 import com.lingotrainer.domain.model.game.Game;
 import com.lingotrainer.domain.model.game.GameId;
 import com.lingotrainer.domain.model.game.GameStatus;
 import com.lingotrainer.domain.model.user.UserId;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +12,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Slf4j
 public class GameTest {
 
     private List<Game> games;

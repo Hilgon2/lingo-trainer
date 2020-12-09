@@ -58,7 +58,8 @@ public class BaseUserService implements UserService, UserDetailsService {
         }
 
         // only an admin can create another admin
-        if (user.getRole() == Role.ADMIN && (this.authenticationService.getUser() == null
+        if (user.getRole() == Role.ADMIN
+                && (this.authenticationService.getUser() == null
                 || this.authenticationService.getUser().getRole() != Role.ADMIN)) {
             throw new ForbiddenException("Only administrators are permitted to create another administrator account");
         }

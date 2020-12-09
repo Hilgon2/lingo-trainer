@@ -45,6 +45,4 @@ public class Turn {
             this.guessedWord = guessedWord.toUpperCase();
         }
     }
-
-
 }
