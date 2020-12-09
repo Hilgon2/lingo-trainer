@@ -5,9 +5,9 @@ name: Java Maven build
 
 on:
   push:
-    branches: [development, staging, master]
+    branches: [development]
   pull_request:
-    branches: [development, staging, master]
+    branches: [development]
 
 jobs:
   build:
@@ -21,4 +21,4 @@ jobs:
       with:
         java-version: 11
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package --file pom.xml -Dspring.profiles.active=development
