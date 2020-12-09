@@ -78,7 +78,7 @@ public class BaseUserService implements UserService, UserDetailsService {
     }
 
     /**
-     * Get user by ID
+     * Get user by ID.
      * @param userId user ID to look for
      * @return returns user information
      */
@@ -89,7 +89,7 @@ public class BaseUserService implements UserService, UserDetailsService {
     }
 
     /**
-     * Get user by username
+     * Get user by username.
      * @param username username to look for
      * @return returns user information object
      */
