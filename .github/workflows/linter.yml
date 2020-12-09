@@ -39,4 +39,5 @@ jobs:
           DEFAULT_BRANCH: development
           VALIDATE_JAVA: true
           FILTER_REGEX_INCLUDE: .*src/.*
+          FILTER_REGEX_EXCLUDE: .*src/test.*
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
