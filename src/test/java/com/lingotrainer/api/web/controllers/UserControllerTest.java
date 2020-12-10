@@ -7,6 +7,7 @@ import com.lingotrainer.api.web.mapper.UserFormMapper;
 import com.lingotrainer.api.web.request.CreateUserRequest;
 import com.lingotrainer.api.web.response.UserResponse;
 import com.lingotrainer.application.authentication.AuthenticationService;
+import com.lingotrainer.application.exception.DuplicateException;
 import com.lingotrainer.application.user.UserService;
 import com.lingotrainer.domain.model.user.Role;
 import com.lingotrainer.domain.model.user.User;
@@ -25,14 +26,20 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -105,6 +112,24 @@ class UserControllerTest {
     @MethodSource("provideUserCreation")
     @DisplayName("Create user")
     void createUserTest(CreateUserRequest createUserRequest, UserResponse userResponse, User user) throws Exception {
+        when(mockUserFormMapper.convertToDomainEntity(any())).thenReturn(user);
+        when(mockUserFormMapper.convertToResponse(any())).thenReturn(userResponse);
+
+        // Run the test
+        final MockHttpServletResponse response = mockMvc.perform(post("/users")
+                .content(this.objectMapper.writer().writeValueAsString(createUserRequest))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // Verify the results
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideUserCreation")
+    @DisplayName("Do not create user with existing username")
+    void doNotCreateUserTest(CreateUserRequest createUserRequest, UserResponse userResponse, User user) throws Exception {
         when(mockUserFormMapper.convertToDomainEntity(createUserRequest)).thenReturn(user);
         when(mockUserFormMapper.convertToResponse(user)).thenReturn(userResponse);
 

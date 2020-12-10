@@ -1,6 +1,5 @@
 package com.lingotrainer.application.game.round.turn;
 
-import com.lingotrainer.application.authentication.AuthenticationService;
 import com.lingotrainer.application.dictionary.DictionaryService;
 import com.lingotrainer.application.game.GameService;
 import com.lingotrainer.application.game.round.RoundService;
@@ -13,7 +12,7 @@ import com.lingotrainer.domain.model.game.round.turn.Turn;
 import com.lingotrainer.domain.model.game.round.turn.TurnId;
 import com.lingotrainer.domain.repository.*;
 import com.lingotrainer.application.exception.GameException;
-import com.lingotrainer.util.exception.NotFoundException;
+import com.lingotrainer.application.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,9 +35,6 @@ public class BaseTurnService implements TurnService {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private AuthenticationService authenticationService;
 
     public BaseTurnService(TurnRepository turnRepository) {
         this.turnRepository = turnRepository;

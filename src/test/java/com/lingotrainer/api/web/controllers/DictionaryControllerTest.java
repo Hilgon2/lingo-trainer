@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -83,8 +84,8 @@ class DictionaryControllerTest {
     @DisplayName("Upload new words to dictionary")
     @WithMockUser(roles = "ADMIN")
     void saveTest(AddDictionaryWordResponse addDictionaryWordResponse, Dictionary dictionary, MockMultipartFile mockMultipartFile) throws Exception {
-        when(mockDictionaryFormMapper.convertToResponse(dictionary)).thenReturn(addDictionaryWordResponse);
-        when(mockDictionaryService.save(mockMultipartFile, testLanguage)).thenReturn(dictionary);
+        when(mockDictionaryFormMapper.convertToResponse(any())).thenReturn(addDictionaryWordResponse);
+        when(mockDictionaryService.save(any(), any())).thenReturn(dictionary);
 
         final MockHttpServletResponse response = mockMvc.perform(multipart("/dictionary")
                 .file(mockMultipartFile)

@@ -6,7 +6,6 @@ import com.lingotrainer.infrastructure.persistency.jpa.mapper.UserMapper;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.repository.UserRepository;
 import com.lingotrainer.infrastructure.persistency.jpa.repository.UserJpaRepository;
-import com.lingotrainer.util.exception.NotFoundException;
 
 import java.util.Optional;
 
@@ -41,7 +40,6 @@ public class BaseUserJpaRepository implements UserRepository {
 
     @Override
     public Optional<User> findById(int userId) {
-        return Optional.ofNullable(this.userMapper.convertToDomainEntity(this.userJpaRepository.findById(userId)
-        .orElseThrow(() -> new NotFoundException(String.format("User ID %d not found", userId)))));
+        return Optional.ofNullable(this.userMapper.convertToDomainEntity(this.userJpaRepository.findById(userId).orElse(null)));
     }
 }

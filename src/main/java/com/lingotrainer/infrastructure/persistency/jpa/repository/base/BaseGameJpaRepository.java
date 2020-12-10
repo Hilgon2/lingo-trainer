@@ -1,6 +1,5 @@
 package com.lingotrainer.infrastructure.persistency.jpa.repository.base;
 
-import com.lingotrainer.util.exception.NotFoundException;
 import com.lingotrainer.infrastructure.persistency.jpa.entity.game.GameEntity;
 import com.lingotrainer.infrastructure.persistency.jpa.mapper.EntityMapper;
 import com.lingotrainer.infrastructure.persistency.jpa.mapper.GameMapper;
@@ -21,8 +20,7 @@ public class BaseGameJpaRepository implements GameRepository {
 
     @Override
     public Optional<Game> findById(int id) {
-        GameEntity gameEntity = this.gameJpaRepository.findById(id).orElseThrow(() ->
-                new NotFoundException(String.format("Game ID %d could not be found", id)));
+        GameEntity gameEntity = this.gameJpaRepository.findById(id).orElse(null);
         if (gameEntity == null) {
             return Optional.empty();
         }
