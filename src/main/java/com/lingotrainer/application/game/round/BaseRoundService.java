@@ -13,7 +13,6 @@ import com.lingotrainer.domain.model.game.round.turn.Turn;
 import com.lingotrainer.application.exception.ForbiddenException;
 import com.lingotrainer.domain.model.game.Game;
 import com.lingotrainer.application.authentication.AuthenticationService;
-import com.lingotrainer.domain.model.game.round.turn.TurnId;
 import com.lingotrainer.domain.repository.RoundRepository;
 import com.lingotrainer.application.exception.NotFoundException;
 import com.lingotrainer.domain.repository.TurnRepository;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class BaseRoundService implements RoundService {
