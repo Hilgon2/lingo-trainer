@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.lingotrainer.application.user.UserService;
 import com.lingotrainer.domain.model.user.User;
 import io.jsonwebtoken.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,13 +19,14 @@ import java.util.Map;
 @Component
 public class JwtTokenProvider {
 
-    @Autowired
     private JwtProperties jwtProperties;
-
-    @Autowired
     private UserService userService;
-
     private String secretKey;
+
+    public JwtTokenProvider(JwtProperties jwtProperties, UserService userService) {
+        this.jwtProperties = jwtProperties;
+        this.userService = userService;
+    }
 
     @PostConstruct
     protected void init() {

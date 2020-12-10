@@ -8,8 +8,7 @@ import com.lingotrainer.domain.repository.GameRepository;
 import com.lingotrainer.application.exception.DuplicateException;
 import com.lingotrainer.application.exception.ForbiddenException;
 import com.lingotrainer.application.authentication.AuthenticationService;
-import com.lingotrainer.util.exception.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.lingotrainer.application.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -18,12 +17,12 @@ import java.io.File;
 public class BaseGameService implements GameService {
 
     private GameRepository gameRepository;
-
-    @Autowired
     private AuthenticationService authenticationService;
 
-    public BaseGameService(GameRepository gameRepository) {
+    public BaseGameService(GameRepository gameRepository,
+                           AuthenticationService authenticationService) {
         this.gameRepository = gameRepository;
+        this.authenticationService = authenticationService;
     }
 
     /**

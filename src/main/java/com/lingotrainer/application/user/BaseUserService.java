@@ -1,13 +1,11 @@
 package com.lingotrainer.application.user;
 
-import com.lingotrainer.application.authentication.AuthenticationService;
 import com.lingotrainer.application.exception.DuplicateException;
 import com.lingotrainer.domain.model.user.Role;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.repository.UserRepository;
 import com.lingotrainer.application.exception.ForbiddenException;
-import com.lingotrainer.util.exception.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.lingotrainer.application.exception.NotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,9 +16,6 @@ public class BaseUserService implements UserService, UserDetailsService {
 
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuthenticationService authenticationService;
 
     public BaseUserService(UserRepository userRepository,
                            PasswordEncoder passwordEncoder) {
@@ -45,7 +40,7 @@ public class BaseUserService implements UserService, UserDetailsService {
      * @return user information of the saved user
      */
     @Override
-    public User createNewUser(User user) {
+    public User createNewUser(User user, User currentUser) {
         if (this.userRepository.existsByUsername(user.getUsername())) {
             throw new DuplicateException(String.format("Gebruikersnaam %s is al in gebruik", user.getUsername()));
         }
@@ -59,8 +54,8 @@ public class BaseUserService implements UserService, UserDetailsService {
 
         // only an admin can create another admin
         if (user.getRole() == Role.ADMIN
-                && (this.authenticationService.getUser() == null
-                || this.authenticationService.getUser().getRole() != Role.ADMIN)) {
+                && (currentUser == null
+                || currentUser.getRole() != Role.ADMIN)) {
             throw new ForbiddenException("Only administrators are permitted to create another administrator account");
         }
         return this.userRepository.save(user);

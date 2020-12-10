@@ -2,7 +2,6 @@ package com.lingotrainer.api.security;
 
 import lombok.extern.slf4j.Slf4j;
 import com.lingotrainer.api.security.jwt.InvalidJwtAuthenticationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -22,9 +21,12 @@ import java.io.IOException;
 @Slf4j
 public class FilterChainExceptionHandler extends OncePerRequestFilter {
 
-    @Autowired
-    @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver resolver;
+
+    public FilterChainExceptionHandler(
+            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
+        this.resolver = resolver;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

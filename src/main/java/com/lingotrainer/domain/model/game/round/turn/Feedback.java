@@ -42,33 +42,64 @@ public class Feedback {
     }
 
     public void doValidation() {
-        this.setGuessedLetters();
+        this.correctGuess = this.guessedWord.equalsIgnoreCase(answer);
         this.defaultValidation();
+        this.setGuessedLetters();
     }
 
     public void setGuessedLetters() {
-        if (
-                this.guessedWord.length() == this.answer.length()
-                        && (this.status == null || this.gameOver)
-        ) {
-            int index = 0;
-            this.guessedLetters = new ArrayList<>();
+        if (this.code == -9999 && this.status == null) {
 
-            for (char letter : this.guessedWord.toCharArray()) {
-                LetterFeedback letterFeedback;
-                if (letter == Character.toUpperCase(answer.charAt(index))) {
-                    letterFeedback = LetterFeedback.CORRECT;
-                } else if (answer.toUpperCase().indexOf(letter) != -1) {
-                    letterFeedback = LetterFeedback.PRESENT;
-                } else {
-                    letterFeedback = LetterFeedback.ABSENT;
-                }
-                this.guessedLetters.add(GuessedLetter.builder()
+            char[] answerChars = this.answer.toCharArray();
+            char[] guessedChars = this.guessedWord.toCharArray();
+            List<GuessedLetter> newGuessedLetters = new ArrayList<>();
+
+            // default all absent
+            for (char letter : guessedChars) {
+                newGuessedLetters.add(GuessedLetter
+                        .builder()
                         .letter(letter)
-                        .letterFeedback(letterFeedback)
+                        .letterFeedback(LetterFeedback.ABSENT)
                         .build());
-                index++;
             }
+
+            // if whole word is correct, set all on correct
+            if (this.correctGuess) {
+                newGuessedLetters.forEach(guessedLetter ->
+                        guessedLetter.setLetterFeedback(LetterFeedback.CORRECT)
+                );
+            } else {
+                // check for the correct letters
+                // if letter is correct, change characters to a hyphen.
+                // This way we can tell not to check for the char again later on
+                for (int guessCount = 0; guessCount < guessedChars.length; guessCount++) {
+                    if (guessedChars[guessCount] == answerChars[guessCount]) {
+                        newGuessedLetters.get(guessCount).setLetterFeedback(LetterFeedback.CORRECT);
+                        guessedChars[guessCount] = '-';
+                        answerChars[guessCount] = '-';
+                    }
+                }
+
+                // first loop through all letters of the guessed word
+                // then only go further if the current char is not a hyphen
+                // then loop through all letters of the answer. Only check characters which are not a hyphen. Then check
+                // if current answer loop is the same as the current guessed character, if so; mark them as PRESENT.
+                for (int guessCount = 0; guessCount < guessedChars.length; guessCount++) {
+                    if (guessedChars[guessCount] != '-') {
+                        for (int answerCount = 0; answerCount < answerChars.length; answerCount++) {
+                            if (answerChars[answerCount] != '-'
+                                    && answerChars[answerCount] == guessedChars[guessCount]) {
+                                newGuessedLetters.get(guessCount)
+                                        .setLetterFeedback(LetterFeedback.PRESENT);
+                                guessedChars[guessCount] = '-';
+                                answerChars[answerCount] = '-';
+                            }
+                        }
+                    }
+                }
+            }
+
+            this.guessedLetters = newGuessedLetters;
         }
     }
 
@@ -98,7 +129,5 @@ public class Feedback {
             this.code = 5220;
             this.status = TurnFeedback.TURN_TIME_OVER;
         }
-
-        this.correctGuess = this.guessedWord.equalsIgnoreCase(answer);
     }
 }

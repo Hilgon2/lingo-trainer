@@ -3,7 +3,6 @@ package com.lingotrainer.domain.model.game;
 import com.lingotrainer.domain.model.game.round.Round;
 import com.lingotrainer.domain.model.game.round.RoundId;
 import com.lingotrainer.domain.model.game.round.turn.Turn;
-import com.lingotrainer.domain.model.game.round.turn.TurnId;
 import com.lingotrainer.domain.model.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +21,7 @@ public class GameTurn {
     private Turn turn;
     private Round round;
     private Game game;
-    private List<TurnId> activeTurns;
+    private List<Turn> activeTurns;
     private Turn newTurn;
     private GameTurnFeedback gameTurnFeedback;
 

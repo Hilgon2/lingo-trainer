@@ -2,6 +2,7 @@ package com.lingotrainer.domain;
 
 import com.lingotrainer.domain.model.dictionary.LingoWordFilter;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -11,7 +12,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class WordFilterTest {
+class WordFilterTest {
     private LingoWordFilter wordFilter;
 
     @BeforeEach
@@ -54,13 +55,15 @@ public class WordFilterTest {
 
     @ParameterizedTest
     @MethodSource("provideWordsWithDifferentLengths")
-    void accept_words_of_5_6_7_letters(String word, boolean shouldAccept) {
+    @DisplayName("Accept words of 5 to 7 letters")
+    void acceptWordsOf5to7Letters(String word, boolean shouldAccept) {
         assertEquals(shouldAccept, this.wordFilter.verify(word, new ArrayList<>()));
     }
 
     @ParameterizedTest
     @MethodSource("provideWordsWithDifferentSymbols")
-    void accept_words_with_lowercase_letters(String word, boolean shouldAccept) {
+    @DisplayName("Accept words with lowercase")
+    void acceptWordsWithLowercase(String word, boolean shouldAccept) {
         assertEquals(shouldAccept, this.wordFilter.verify(word, new ArrayList<>()));
     }
 }
