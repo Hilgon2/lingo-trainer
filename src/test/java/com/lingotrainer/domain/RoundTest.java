@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class RoundTest {
+class RoundTest {
     static Stream<Arguments> provideRoundsForNextWordLength() {
         return Stream.of(
                 Arguments.of(null, WordLength.FIVE),

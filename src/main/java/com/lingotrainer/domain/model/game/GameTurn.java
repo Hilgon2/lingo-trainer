@@ -22,7 +22,7 @@ public class GameTurn {
     private Turn turn;
     private Round round;
     private Game game;
-    private List<TurnId> activeTurns;
+    private List<Turn> activeTurns;
     private Turn newTurn;
     private GameTurnFeedback gameTurnFeedback;
 

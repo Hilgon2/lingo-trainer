@@ -13,7 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class GameTest {
+class GameTest {
 
     private List<Game> games;
     private UserId defaultUserId = new UserId(3);

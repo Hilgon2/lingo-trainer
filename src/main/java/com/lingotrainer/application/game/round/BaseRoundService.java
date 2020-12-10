@@ -209,12 +209,7 @@ public class BaseRoundService implements RoundService {
                 .game(game)
                 .round(round)
                 .turn(turn)
-                .activeTurns(
-                        this.findActiveTurnsByRoundId(round.getRoundId())
-                                .stream()
-                                .map(tempTurn -> new TurnId(tempTurn.getTurnId()))
-                                .collect(Collectors.toList())
-                )
+                .activeTurns(this.findActiveTurnsByRoundId(round.getRoundId()))
                 .build();
         gameTurn.performTurn();
         GameTurnFeedback gameTurnFeedback = gameTurn.getGameTurnFeedback();
