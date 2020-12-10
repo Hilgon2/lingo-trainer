@@ -174,18 +174,6 @@ public class BaseRoundService implements RoundService {
     }
 
     /**
-     * Retrieve the turn information.
-     *
-     * @param turnId ID of the turn
-     * @return turn information based on the given ID
-     */
-    @Override
-    public Turn findTurnById(int turnId) {
-        return this.turnRepository.findById(turnId).orElseThrow(() ->
-                new NotFoundException(String.format("Turn ID %d could not be found", turnId)));
-    }
-
-    /**
      * Find all active turns based on round ID.
      *
      * @param roundId round ID to look for
@@ -231,16 +219,13 @@ public class BaseRoundService implements RoundService {
         gameTurn.performTurn();
         GameTurnFeedback gameTurnFeedback = gameTurn.getGameTurnFeedback();
 
-        if (gameTurnFeedback == GameTurnFeedback.WORD_CORRECT) {
-            this.gameService.save(gameTurn.getGame());
-            this.saveRound(round);
-            if (gameTurn.getUser().getHighscore() > this.userService.findById(game.getUserId()).getHighscore()) {
-                this.userService.save(gameTurn.getUser());
-            }
-        } else if (gameTurnFeedback == GameTurnFeedback.WORD_WRONG_NO_TURNS_LEFT) {
-            this.gameService.save(gameTurn.getGame());
-            this.saveRound(round);
-        } else if (gameTurnFeedback == GameTurnFeedback.WORD_WRONG_NEW_TURN) {
+        this.gameService.save(gameTurn.getGame());
+        this.saveRound(round);
+        if (gameTurn.getUser().getHighscore() > this.userService.findById(game.getUserId()).getHighscore()) {
+            this.userService.save(gameTurn.getUser());
+        }
+
+        if (gameTurnFeedback == GameTurnFeedback.WORD_WRONG_NEW_TURN) {
             this.turnRepository.save(gameTurn.getNewTurn());
         }
 

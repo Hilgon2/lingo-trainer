@@ -55,14 +55,16 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
     @Override
     public boolean existsByWord(String languageCode, String guessedWord) {
         return this.findByLanguage(languageCode).orElseThrow(() ->
-                new LanguageNotFoundException(String.format("Dictionary by language %s could not be found", languageCode)))
+                new LanguageNotFoundException(
+                        String.format("Dictionary by language %s could not be found", languageCode)))
                 .getWords().contains(guessedWord);
     }
 
     @Override
     public String retrieveRandomWord(String languageCode, WordLength wordLength) {
         Dictionary dictionary = this.findByLanguage(languageCode).orElseThrow(() ->
-                new LanguageNotFoundException(String.format("Dictionary language %s could not be found", languageCode)));
+                new LanguageNotFoundException(
+                        String.format("Dictionary language %s could not be found", languageCode)));
         return dictionary.getRandomWord(wordLength);
     }
 

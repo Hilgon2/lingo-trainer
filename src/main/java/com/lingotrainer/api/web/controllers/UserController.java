@@ -32,7 +32,8 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@Param("user") @RequestBody CreateUserRequest user) {
         User newUser = this.userFormMapper.convertToDomainEntity(user);
-        return ok(this.userFormMapper.convertToResponse(userService.createNewUser(newUser, authenticationService.getUser())));
+        return ok(this.userFormMapper.convertToResponse(
+                userService.createNewUser(newUser, authenticationService.getUser())));
     }
 
     @GetMapping(path = "/me")

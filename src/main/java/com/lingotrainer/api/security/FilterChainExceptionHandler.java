@@ -2,7 +2,6 @@ package com.lingotrainer.api.security;
 
 import lombok.extern.slf4j.Slf4j;
 import com.lingotrainer.api.security.jwt.InvalidJwtAuthenticationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;

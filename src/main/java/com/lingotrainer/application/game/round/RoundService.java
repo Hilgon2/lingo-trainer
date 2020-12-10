@@ -18,8 +18,6 @@ public interface RoundService {
 
     Turn playTurn(int gameId, String guessedWord);
 
-    Turn findTurnById(int turnId);
-
     List<Turn> findActiveTurnsByRoundId(int roundId);
 
     Turn saveTurn(Turn turn);

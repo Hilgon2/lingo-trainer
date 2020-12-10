@@ -40,6 +40,7 @@ public class BaseUserJpaRepository implements UserRepository {
 
     @Override
     public Optional<User> findById(int userId) {
-        return Optional.ofNullable(this.userMapper.convertToDomainEntity(this.userJpaRepository.findById(userId).orElse(null)));
+        return Optional.ofNullable(this.userMapper.convertToDomainEntity(
+                this.userJpaRepository.findById(userId).orElse(null)));
     }
 }
