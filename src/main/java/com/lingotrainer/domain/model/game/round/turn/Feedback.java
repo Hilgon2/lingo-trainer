@@ -87,7 +87,8 @@ public class Feedback {
                 for (int guessCount = 0; guessCount < guessedChars.length; guessCount++) {
                     if (guessedChars[guessCount] != '-') {
                         for (int answerCount = 0; answerCount < answerChars.length; answerCount++) {
-                            if (answerChars[answerCount] != '-' && answerChars[answerCount] == guessedChars[guessCount]) {
+                            if (answerChars[answerCount] != '-'
+                                    && answerChars[answerCount] == guessedChars[guessCount]) {
                                 newGuessedLetters.get(guessCount)
                                         .setLetterFeedback(LetterFeedback.PRESENT);
                                 guessedChars[guessCount] = '-';
