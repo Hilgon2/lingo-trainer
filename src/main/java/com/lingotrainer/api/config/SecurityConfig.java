@@ -3,7 +3,6 @@ package com.lingotrainer.api.config;
 import com.lingotrainer.api.security.FilterChainExceptionHandler;
 import com.lingotrainer.api.security.jwt.JwtSecurityConfigurer;
 import com.lingotrainer.api.security.jwt.JwtTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
