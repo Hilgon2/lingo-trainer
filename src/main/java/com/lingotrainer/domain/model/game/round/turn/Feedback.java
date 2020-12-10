@@ -48,9 +48,8 @@ public class Feedback {
     }
 
     public void setGuessedLetters() {
-        if (
-                this.code == -9999 && this.status == null
-        ) {
+        if (this.code == -9999 && this.status == null) {
+
             char[] answerChars = this.answer.toCharArray();
             char[] guessedChars = this.guessedWord.toCharArray();
             List<GuessedLetter> newGuessedLetters = new ArrayList<>();
@@ -71,7 +70,8 @@ public class Feedback {
                 );
             } else {
                 // check for the correct letters
-                // if letter is correct, change characters to a hyphen. This way we can tell not to check for the char again later on
+                // if letter is correct, change characters to a hyphen.
+                // This way we can tell not to check for the char again later on
                 for (int guessCount = 0; guessCount < guessedChars.length; guessCount++) {
                     if (guessedChars[guessCount] == answerChars[guessCount]) {
                         newGuessedLetters.get(guessCount).setLetterFeedback(LetterFeedback.CORRECT);
@@ -88,7 +88,8 @@ public class Feedback {
                     if (guessedChars[guessCount] != '-') {
                         for (int answerCount = 0; answerCount < answerChars.length; answerCount++) {
                             if (answerChars[answerCount] != '-' && answerChars[answerCount] == guessedChars[guessCount]) {
-                                newGuessedLetters.get(guessCount).setLetterFeedback(LetterFeedback.PRESENT);
+                                newGuessedLetters.get(guessCount)
+                                        .setLetterFeedback(LetterFeedback.PRESENT);
                                 guessedChars[guessCount] = '-';
                                 answerChars[answerCount] = '-';
                             }
