@@ -7,16 +7,11 @@ import com.lingotrainer.api.web.mapper.UserFormMapper;
 import com.lingotrainer.api.web.request.CreateUserRequest;
 import com.lingotrainer.api.web.response.UserResponse;
 import com.lingotrainer.application.authentication.AuthenticationService;
-import com.lingotrainer.application.user.UserService;
-import com.lingotrainer.domain.model.game.GameId;
-import com.lingotrainer.domain.model.game.round.Round;
-import com.lingotrainer.domain.model.game.round.turn.Turn;
 import com.lingotrainer.domain.model.user.Role;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.model.user.UserId;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -34,8 +29,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,8 +49,6 @@ class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
-    private UserService mockUserService;
     @MockBean
     private AuthenticationService mockAuthenticationService;
     @MockBean
