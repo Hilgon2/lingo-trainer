@@ -15,11 +15,15 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
     private FilterChainExceptionHandler filterChainExceptionHandler;
+
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider,
+                          FilterChainExceptionHandler filterChainExceptionHandler) {
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.filterChainExceptionHandler = filterChainExceptionHandler;
+    }
 
     @Bean
     @Override

@@ -20,13 +20,14 @@ import java.util.Map;
 @Component
 public class JwtTokenProvider {
 
-    @Autowired
     private JwtProperties jwtProperties;
-
-    @Autowired
     private UserService userService;
-
     private String secretKey;
+
+    public JwtTokenProvider(JwtProperties jwtProperties, UserService userService) {
+        this.jwtProperties = jwtProperties;
+        this.userService = userService;
+    }
 
     @PostConstruct
     protected void init() {

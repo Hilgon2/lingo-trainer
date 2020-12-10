@@ -22,9 +22,12 @@ import java.io.IOException;
 @Slf4j
 public class FilterChainExceptionHandler extends OncePerRequestFilter {
 
-    @Autowired
-    @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver resolver;
+
+    public FilterChainExceptionHandler(
+            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
+        this.resolver = resolver;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

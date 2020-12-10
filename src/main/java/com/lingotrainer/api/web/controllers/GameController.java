@@ -12,7 +12,6 @@ import com.lingotrainer.application.authentication.AuthenticationService;
 import com.lingotrainer.application.game.GameService;
 import com.lingotrainer.api.annotation.Authenticated;
 import com.lingotrainer.application.game.round.RoundService;
-import com.lingotrainer.application.game.round.turn.TurnService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,21 +26,19 @@ public class GameController {
     private GameService gameService;
     private AuthenticationService authenticationService;
     private RoundService roundService;
-    private TurnService turnService;
     private GameFormMapper gameFormMapper;
     private RoundFormMapper roundFormMapper;
     private TurnFormMapper turnFormMapper;
 
     public GameController(GameService gameService,
                           AuthenticationService authenticationService,
-                          RoundService roundService, TurnService turnService,
+                          RoundService roundService,
                           GameFormMapper gameFormMapper,
                           RoundFormMapper roundFormMapper,
                           TurnFormMapper turnFormMapper) {
         this.gameService = gameService;
         this.authenticationService = authenticationService;
         this.roundService = roundService;
-        this.turnService = turnService;
         this.gameFormMapper = gameFormMapper;
         this.roundFormMapper = roundFormMapper;
         this.turnFormMapper = turnFormMapper;
@@ -83,7 +80,7 @@ public class GameController {
     public ResponseEntity<PlayTurnResponse> playTurn(@PathVariable int gameId,
                                                      @RequestBody PlayTurnRequest playTurnRequest) {
         return ok(this.turnFormMapper.convertToResponse(
-                this.turnService.playTurn(gameId, playTurnRequest.getGuessedWord()))
+                this.roundService.playTurn(gameId, playTurnRequest.getGuessedWord()))
         );
     }
 

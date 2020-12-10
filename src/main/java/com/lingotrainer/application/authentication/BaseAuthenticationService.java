@@ -6,7 +6,6 @@ import com.lingotrainer.api.web.response.LoginResponse;
 import com.lingotrainer.application.user.UserService;
 import com.lingotrainer.domain.model.user.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,13 +21,14 @@ public class BaseAuthenticationService implements AuthenticationService {
 
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
     private UserService userService;
 
-    public BaseAuthenticationService(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    public BaseAuthenticationService(AuthenticationManager authenticationManager,
+                                     JwtTokenProvider jwtTokenProvider,
+                                     UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.userService = userService;
     }
 
     /**
