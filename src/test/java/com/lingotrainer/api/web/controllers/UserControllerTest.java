@@ -7,6 +7,7 @@ import com.lingotrainer.api.web.mapper.UserFormMapper;
 import com.lingotrainer.api.web.request.CreateUserRequest;
 import com.lingotrainer.api.web.response.UserResponse;
 import com.lingotrainer.application.authentication.AuthenticationService;
+import com.lingotrainer.application.user.UserService;
 import com.lingotrainer.domain.model.user.Role;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.model.user.UserId;
@@ -49,6 +50,8 @@ class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @MockBean
+    private UserService mockUserService;
     @MockBean
     private AuthenticationService mockAuthenticationService;
     @MockBean
