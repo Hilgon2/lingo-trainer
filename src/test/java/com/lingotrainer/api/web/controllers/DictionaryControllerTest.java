@@ -100,6 +100,7 @@ class DictionaryControllerTest {
     }
 
     @Test
+    @DisplayName("Find available languages")
     void findAvailableLanguagesTest() throws Exception {
         when(mockDictionaryService.findAvailableLanguages()).thenReturn(List.of(dictionary.getLanguage()));
         List<String> languages = List.of(dictionary.getLanguage());
