@@ -110,7 +110,8 @@ class UserControllerTest {
 
         // Run the test
         final MockHttpServletResponse response = mockMvc.perform(post("/users")
-                .content(this.objectMapper.writer().writeValueAsString(createUserRequest)).contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writer().writeValueAsString(createUserRequest))
+                .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
@@ -134,6 +135,7 @@ class UserControllerTest {
 
         // Verify the results
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("username", jsonObject.get("username"));
+        assertEquals(userResponse.getUsername(), jsonObject.get("username"));
+        assertEquals(userResponse.getHighscore(), jsonObject.get("highscore"));
     }
 }
