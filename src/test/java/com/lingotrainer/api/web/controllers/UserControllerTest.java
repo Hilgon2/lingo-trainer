@@ -9,12 +9,18 @@ import com.lingotrainer.api.web.response.UserResponse;
 import com.lingotrainer.application.authentication.AuthenticationService;
 import com.lingotrainer.application.user.UserService;
 import com.lingotrainer.domain.model.game.GameId;
+import com.lingotrainer.domain.model.game.round.Round;
+import com.lingotrainer.domain.model.game.round.turn.Turn;
 import com.lingotrainer.domain.model.user.Role;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.model.user.UserId;
 import org.json.JSONObject;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -27,7 +33,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -54,21 +63,57 @@ class UserControllerTest {
     @MockBean
     private UserFormMapper mockUserFormMapper;
 
-    @Test
-    void testCreateUser() throws Exception {
-        // Setup
+    static Stream<Arguments> provideUserCreation() {
+        return Stream.of(
+                Arguments.of(
+                        CreateUserRequest.builder()
+                                .username("username")
+                                .password("password")
+                                .role(Role.TRAINEE)
+                                .active(true)
+                                .build(),
+                        UserResponse.builder()
+                                .username("username")
+                                .highscore(0)
+                                .build(),
+                        User.builder()
+                                .userId(new UserId(0))
+                                .username("username")
+                                .password("password")
+                                .role(Role.TRAINEE)
+                                .active(true)
+                                .gameIds(new ArrayList<>())
+                                .build()
+                )
+        );
+    }
 
-        // Configure UserFormMapper.convertToDomainEntity(...).
-        final User user = new User(new UserId(0), "username", "password", 0, Role.TRAINEE, false, List.of(new GameId(0)));
-        when(mockUserFormMapper.convertToDomainEntity(new CreateUserRequest("username", "password", Role.TRAINEE, false))).thenReturn(user);
+    static Stream<Arguments> provideLoggedInUserDetails() {
+        return Stream.of(
+                Arguments.of(
+                        UserResponse.builder()
+                                .username("username")
+                                .highscore(0)
+                                .build(),
+                        User.builder()
+                                .userId(new UserId(0))
+                                .username("username")
+                                .password("password")
+                                .role(Role.TRAINEE)
+                                .active(true)
+                                .gameIds(new ArrayList<>())
+                                .build()
+                )
+        );
+    }
 
-        when(mockUserFormMapper.convertToResponse(new User(new UserId(0), "username", "password", 0, Role.TRAINEE, false, List.of(new GameId(0))))).thenReturn(new UserResponse("username", 0));
+    @ParameterizedTest
+    @MethodSource("provideUserCreation")
+    @DisplayName("Create user")
+    void createUserTest(CreateUserRequest createUserRequest, UserResponse userResponse, User user) throws Exception {
+        when(mockUserFormMapper.convertToDomainEntity(createUserRequest)).thenReturn(user);
+        when(mockUserFormMapper.convertToResponse(user)).thenReturn(userResponse);
 
-        // Configure UserService.createNewUser(...).
-        final User user1 = new User(new UserId(0), "username", "password", 0, Role.TRAINEE, false, List.of(new GameId(0)));
-        when(mockUserService.createNewUser(new User(new UserId(0), "username", "password", 0, Role.TRAINEE, false, List.of(new GameId(0))))).thenReturn(user1);
-
-        final CreateUserRequest createUserRequest = CreateUserRequest.builder().username("username").password("password").role(Role.TRAINEE).build();
         // Run the test
         final MockHttpServletResponse response = mockMvc.perform(post("/users")
                 .content(this.objectMapper.writer().writeValueAsString(createUserRequest)).contentType(MediaType.APPLICATION_JSON)
@@ -79,13 +124,11 @@ class UserControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
-    @Test
-    void testFindLoggedInUserDetails() throws Exception {
-        // Setup
-        when(mockUserFormMapper.convertToResponse(new User(new UserId(0), "username", "password", 0, Role.TRAINEE, false, List.of(new GameId(0))))).thenReturn(new UserResponse("username", 0));
-
-        // Configure AuthenticationService.getUser(...).
-        final User user = new User(new UserId(0), "username", "password", 0, Role.TRAINEE, false, List.of(new GameId(0)));
+    @ParameterizedTest
+    @MethodSource("provideLoggedInUserDetails")
+    @DisplayName("Find logged in user details")
+    void findLoggedInUserDetailsTest(UserResponse userResponse, User user) throws Exception {
+        when(mockUserFormMapper.convertToResponse(user)).thenReturn(userResponse);
         when(mockAuthenticationService.getUser()).thenReturn(user);
 
         // Run the test

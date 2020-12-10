@@ -5,6 +5,7 @@ import com.lingotrainer.domain.model.game.GameId;
 import com.lingotrainer.domain.model.game.GameStatus;
 import com.lingotrainer.domain.model.user.UserId;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -43,7 +44,8 @@ public class GameTest {
     }
 
     @Test
-    void has_zero_or_one_active_game() {
+    @DisplayName("Has zero or one active game")
+    void hasZeroOrOneActiveGame() {
         assertTrue(
                 this.games.stream()
                         .filter(game -> game.getGameStatus() == GameStatus.ACTIVE

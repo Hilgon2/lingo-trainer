@@ -4,12 +4,14 @@ import com.lingotrainer.application.exception.GameException;
 import com.lingotrainer.domain.model.WordLength;
 import com.lingotrainer.domain.model.game.round.Round;
 import com.lingotrainer.domain.model.game.round.turn.Turn;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -40,10 +42,9 @@ public class RoundTest {
         );
     }
 
-    static Stream<Arguments> provide_round_with_active_turns() {
+    static Stream<Arguments> provideRoundWithActiveTurns() {
         Round round = Round.builder().build();
-        List<Turn> turns = new ArrayList<>(Arrays.asList(
-                Turn.builder().build(),
+        List<Turn> turns = new ArrayList<>(Collections.singletonList(
                 Turn.builder().build()
         ));
         return Stream.of(
@@ -53,7 +54,8 @@ public class RoundTest {
 
     @ParameterizedTest
     @MethodSource("provideRoundsForNextWordLength")
-    void get_next_word_length(Round lastRound, WordLength shouldAccept) {
+    @DisplayName("Get next word length")
+    void getNextWordLength(Round lastRound, WordLength shouldAccept) {
         Round newRound = Round
                 .builder()
                 .build();
@@ -63,13 +65,15 @@ public class RoundTest {
 
     @ParameterizedTest
     @MethodSource("provideRoundsForCurrentWordLength")
-    void get_current_word_length(Round round, WordLength shouldAccept) {
+    @DisplayName("Get current word length")
+    void getCurrentWordLength(Round round, WordLength shouldAccept) {
         assertEquals(shouldAccept, round.getWordLength());
     }
 
     @ParameterizedTest
-    @MethodSource("provide_round_with_active_turns")
-    void active_turns_left(Round round, List<Turn> turns) {
+    @MethodSource("provideRoundWithActiveTurns")
+    @DisplayName("Throw error on active turns")
+    void activeTurnsLeft(Round round, List<Turn> turns) {
         assertThrows(GameException.class, () -> round.checkActiveTurns(turns));
     }
 }
