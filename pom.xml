@@ -197,6 +197,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/api/security/**</exclude>
+                        <exclude>**/infrastructure/persistency/exception/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

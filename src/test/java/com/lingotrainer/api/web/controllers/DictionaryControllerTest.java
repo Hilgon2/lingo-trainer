@@ -2,8 +2,6 @@ package com.lingotrainer.api.web.controllers;
 
 import com.lingotrainer.WithMockAdmin;
 import com.lingotrainer.WithMockTrainee;
-import com.lingotrainer.api.security.jwt.JwtProperties;
-import com.lingotrainer.api.security.jwt.JwtTokenProvider;
 import com.lingotrainer.api.web.mapper.DictionaryFormMapper;
 import com.lingotrainer.api.web.response.AddDictionaryWordResponse;
 import com.lingotrainer.application.authentication.AuthenticationService;
@@ -14,12 +12,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -27,8 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -43,12 +37,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 
-@ExtendWith(SpringExtension.class)
 @WebMvcTest(DictionaryController.class)
-@ContextConfiguration(classes = {JwtTokenProvider.class, JwtProperties.class})
-@AutoConfigureMockMvc
 @Import(DictionaryController.class)
-class DictionaryControllerTest {
+class DictionaryControllerTest extends TestController {
 
     @Autowired
     private MockMvc mockMvc;
