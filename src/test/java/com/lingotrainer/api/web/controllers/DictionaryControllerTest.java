@@ -40,7 +40,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 
@@ -86,7 +85,7 @@ class DictionaryControllerTest {
     @MethodSource("provideNewDictionaryWords")
     @DisplayName("Should save the dictionary as admin")
     @WithMockAdmin
-    void testShouldSaveDictionary(AddDictionaryWordResponse addDictionaryWordResponse, Dictionary dictionary, MockMultipartFile mockMultipartFile) throws Exception {
+    void test_should_save_dictionary_as_admin(AddDictionaryWordResponse addDictionaryWordResponse, Dictionary dictionary, MockMultipartFile mockMultipartFile) throws Exception {
         when(mockDictionaryFormMapper.convertToResponse(any())).thenReturn(addDictionaryWordResponse);
         when(mockDictionaryService.save(any(), any())).thenReturn(dictionary);
 
@@ -108,7 +107,7 @@ class DictionaryControllerTest {
     @MethodSource("provideNewDictionaryWords")
     @DisplayName("Should not save the dictionary as non-admin")
     @WithMockTrainee
-    void testShouldNotSaveDictionary(AddDictionaryWordResponse addDictionaryWordResponse, Dictionary dictionary, MockMultipartFile mockMultipartFile) throws Exception {
+    void test_should_not_save_dictionary_as_non_admin(AddDictionaryWordResponse addDictionaryWordResponse, Dictionary dictionary, MockMultipartFile mockMultipartFile) throws Exception {
         when(mockDictionaryFormMapper.convertToResponse(any())).thenReturn(addDictionaryWordResponse);
         when(mockDictionaryService.save(any(), any())).thenReturn(dictionary);
 
@@ -118,8 +117,6 @@ class DictionaryControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
-        System.out.println(response.getStatus());
-
         // Verify the results
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
     }
@@ -127,7 +124,7 @@ class DictionaryControllerTest {
     @Test
     @DisplayName("Find available languages")
     @WithMockTrainee
-    void testFindAvailableLanguages() throws Exception {
+    void test_find_available_languages() throws Exception {
         when(mockDictionaryService.findAvailableLanguages()).thenReturn(List.of(dictionary.getLanguage()));
         List<String> languages = List.of(dictionary.getLanguage());
 

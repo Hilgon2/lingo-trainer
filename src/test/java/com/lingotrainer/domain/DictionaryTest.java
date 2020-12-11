@@ -54,7 +54,7 @@ public class DictionaryTest {
     @ParameterizedTest
     @MethodSource("provideWords")
     @DisplayName("Add new word to dictionary")
-    void testAddNewWordToDictionary(String word) {
+    void test_add_new_word_to_dictionary(String word) {
         List<String> words = this.dictionary.getWords();
         words.add(word);
         this.dictionary.addWord(word);
@@ -65,7 +65,7 @@ public class DictionaryTest {
     @ParameterizedTest
     @MethodSource("provideWordLengths")
     @DisplayName("Get random next word")
-    void testGNextRandomWord(WordLength wordLength, int expectedLength) {
+    void test_get_random_next_word_depending_on_word_length(WordLength wordLength, int expectedLength) {
         assertEquals(this.dictionary.getRandomWord(wordLength).length(), expectedLength);
     }
 }

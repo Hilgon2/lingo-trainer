@@ -1,8 +1,6 @@
 package com.lingotrainer.api.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lingotrainer.api.security.jwt.JwtProperties;
-import com.lingotrainer.api.security.jwt.JwtTokenProvider;
 import com.lingotrainer.api.web.mapper.UserFormMapper;
 import com.lingotrainer.api.web.request.CreateUserRequest;
 import com.lingotrainer.api.web.response.UserResponse;
@@ -14,42 +12,37 @@ import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.model.user.UserId;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(UserController.class)
-@ContextConfiguration(classes = {JwtTokenProvider.class, JwtProperties.class})
-@AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(value = UserController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 @Import(UserController.class)
-class UserControllerTest {
+class UserControllerTest extends TestController {
 
     @Autowired
     private MockMvc mockMvc;
@@ -63,6 +56,8 @@ class UserControllerTest {
     private AuthenticationService mockAuthenticationService;
     @MockBean
     private UserFormMapper mockUserFormMapper;
+
+    String TOKEN_ATTR_NAME = "org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository.CSRF_TOKEN";
 
     static Stream<Arguments> provideUserCreation() {
         return Stream.of(
@@ -111,12 +106,16 @@ class UserControllerTest {
     @ParameterizedTest
     @MethodSource("provideUserCreation")
     @DisplayName("Create user")
-    void testShouldCreateUser(CreateUserRequest createUserRequest, UserResponse userResponse, User user) throws Exception {
+    void test_should_create_user(CreateUserRequest createUserRequest, UserResponse userResponse, User user) throws Exception {
         when(mockUserFormMapper.convertToDomainEntity(any())).thenReturn(user);
         when(mockUserFormMapper.convertToResponse(any())).thenReturn(userResponse);
+        HttpSessionCsrfTokenRepository httpSessionCsrfTokenRepository = new HttpSessionCsrfTokenRepository();
+        CsrfToken csrfToken = httpSessionCsrfTokenRepository.generateToken(new MockHttpServletRequest());
 
         // Run the test
         final MockHttpServletResponse response = mockMvc.perform(post("/users")
+                .sessionAttr(TOKEN_ATTR_NAME, csrfToken)
+                .param(csrfToken.getParameterName(), csrfToken.getToken())
                 .content(this.objectMapper.writer().writeValueAsString(createUserRequest))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -129,25 +128,32 @@ class UserControllerTest {
     @ParameterizedTest
     @MethodSource("provideUserCreation")
     @DisplayName("Do not create user with existing username")
-    void testShouldNotCreateUser(CreateUserRequest createUserRequest, UserResponse userResponse, User user) throws Exception {
-        when(mockUserFormMapper.convertToDomainEntity(createUserRequest)).thenReturn(user);
-        when(mockUserFormMapper.convertToResponse(user)).thenReturn(userResponse);
+    void test_should_not_create_user_with_existing_username(CreateUserRequest createUserRequest, UserResponse userResponse, User user) throws Exception {
+        when(mockUserFormMapper.convertToDomainEntity(any())).thenReturn(user);
+        when(mockUserFormMapper.convertToResponse(any())).thenReturn(userResponse);
 
-        // Run the test
-        final MockHttpServletResponse response = mockMvc.perform(post("/users")
+        mockMvc.perform(post("/users")
                 .content(this.objectMapper.writer().writeValueAsString(createUserRequest))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.username", is(userResponse.getUsername())))
+                .andExpect(jsonPath("$.highscore", is(userResponse.getHighscore())))
                 .andReturn().getResponse();
 
-        // Verify the results
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        when(mockUserService.createNewUser(any(), any())).thenThrow(new DuplicateException("Username duplicate"));
+
+        mockMvc.perform(post("/users")
+                .content(this.objectMapper.writer().writeValueAsString(createUserRequest))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andReturn().getResponse();
     }
 
     @ParameterizedTest
     @MethodSource("provideLoggedInUserDetails")
     @DisplayName("Find logged in user details")
-    void testFindLoggedInUserDetails(UserResponse userResponse, User user) throws Exception {
+    void test_find_logged_in_user_details(UserResponse userResponse, User user) throws Exception {
         when(mockUserFormMapper.convertToResponse(user)).thenReturn(userResponse);
         when(mockAuthenticationService.getUser()).thenReturn(user);
 

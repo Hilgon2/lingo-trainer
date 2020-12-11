@@ -56,14 +56,14 @@ class WordFilterTest {
     @ParameterizedTest
     @MethodSource("provideWordsWithDifferentLengths")
     @DisplayName("Accept words of 5 to 7 letters")
-    void testAcceptWordsOf5to7Letters(String word, boolean shouldAccept) {
+    void test_verify_words_of_5_6_7_letters(String word, boolean shouldAccept) {
         assertEquals(shouldAccept, this.wordFilter.verify(word, new ArrayList<>()));
     }
 
     @ParameterizedTest
     @MethodSource("provideWordsWithDifferentSymbols")
     @DisplayName("Accept words with lowercase")
-    void testAcceptWordsWithLowercase(String word, boolean shouldAccept) {
+    void test_accept_words_with_lowercase(String word, boolean shouldAccept) {
         assertEquals(shouldAccept, this.wordFilter.verify(word, new ArrayList<>()));
     }
 }
