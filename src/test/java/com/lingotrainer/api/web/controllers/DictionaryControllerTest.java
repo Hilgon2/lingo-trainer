@@ -1,5 +1,7 @@
 package com.lingotrainer.api.web.controllers;
 
+import com.lingotrainer.WithMockAdmin;
+import com.lingotrainer.WithMockTrainee;
 import com.lingotrainer.api.security.jwt.JwtProperties;
 import com.lingotrainer.api.security.jwt.JwtTokenProvider;
 import com.lingotrainer.api.web.mapper.DictionaryFormMapper;
@@ -8,8 +10,6 @@ import com.lingotrainer.application.authentication.AuthenticationService;
 import com.lingotrainer.application.dictionary.DictionaryService;
 import com.lingotrainer.application.user.UserService;
 import com.lingotrainer.domain.model.dictionary.Dictionary;
-import com.lingotrainer.domain.model.user.Role;
-import com.lingotrainer.domain.model.user.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +27,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -40,6 +39,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(DictionaryController.class)
 @ContextConfiguration(classes = {JwtTokenProvider.class, JwtProperties.class})
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
 @Import(DictionaryController.class)
 class DictionaryControllerTest {
 
@@ -70,12 +70,6 @@ class DictionaryControllerTest {
                                 .words(words)
                                 .build();
 
-    private User traineeUser = User
-            .builder()
-            .username("traineeTester")
-            .role(Role.TRAINEE)
-            .build();
-
     static Stream<Arguments> provideNewDictionaryWords() {
         return Stream.of(
                 Arguments.of(
@@ -91,16 +85,17 @@ class DictionaryControllerTest {
     @ParameterizedTest
     @MethodSource("provideNewDictionaryWords")
     @DisplayName("Should save the dictionary as admin")
-    void testShouldSave(AddDictionaryWordResponse addDictionaryWordResponse, Dictionary dictionary, MockMultipartFile mockMultipartFile) throws Exception {
+    @WithMockAdmin
+    void testShouldSaveDictionary(AddDictionaryWordResponse addDictionaryWordResponse, Dictionary dictionary, MockMultipartFile mockMultipartFile) throws Exception {
         when(mockDictionaryFormMapper.convertToResponse(any())).thenReturn(addDictionaryWordResponse);
         when(mockDictionaryService.save(any(), any())).thenReturn(dictionary);
 
         final MockHttpServletResponse response = mockMvc.perform(multipart("/dictionary")
                 .file(mockMultipartFile)
                 .param("languageCode", testLanguage)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .with(csrf()))
                 .andReturn().getResponse();
-
 
         JSONObject jsonObject = new JSONObject(response.getContentAsString());
 
@@ -112,7 +107,8 @@ class DictionaryControllerTest {
     @ParameterizedTest
     @MethodSource("provideNewDictionaryWords")
     @DisplayName("Should not save the dictionary as non-admin")
-    void testShouldNotSave(AddDictionaryWordResponse addDictionaryWordResponse, Dictionary dictionary, MockMultipartFile mockMultipartFile) throws Exception {
+    @WithMockTrainee
+    void testShouldNotSaveDictionary(AddDictionaryWordResponse addDictionaryWordResponse, Dictionary dictionary, MockMultipartFile mockMultipartFile) throws Exception {
         when(mockDictionaryFormMapper.convertToResponse(any())).thenReturn(addDictionaryWordResponse);
         when(mockDictionaryService.save(any(), any())).thenReturn(dictionary);
 
@@ -122,16 +118,15 @@ class DictionaryControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
-
-        JSONObject jsonObject = new JSONObject(response.getContentAsString());
+        System.out.println(response.getStatus());
 
         // Verify the results
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(testLanguage, jsonObject.get("language"));
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
     }
 
     @Test
     @DisplayName("Find available languages")
+    @WithMockTrainee
     void testFindAvailableLanguages() throws Exception {
         when(mockDictionaryService.findAvailableLanguages()).thenReturn(List.of(dictionary.getLanguage()));
         List<String> languages = List.of(dictionary.getLanguage());
