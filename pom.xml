@@ -196,7 +196,7 @@
                 </executions>
                 <configuration>
                     <excludes>
-<!--                        <exclude>**/api/security/**</exclude>-->
+                        <exclude>**/api/security/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
