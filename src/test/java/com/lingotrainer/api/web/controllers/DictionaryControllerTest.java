@@ -8,6 +8,8 @@ import com.lingotrainer.application.authentication.AuthenticationService;
 import com.lingotrainer.application.dictionary.DictionaryService;
 import com.lingotrainer.application.user.UserService;
 import com.lingotrainer.domain.model.dictionary.Dictionary;
+import com.lingotrainer.domain.model.user.Role;
+import com.lingotrainer.domain.model.user.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,6 +40,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 
@@ -67,6 +70,12 @@ class DictionaryControllerTest {
                                 .words(words)
                                 .build();
 
+    private User traineeUser = User
+            .builder()
+            .username("traineeTester")
+            .role(Role.TRAINEE)
+            .build();
+
     static Stream<Arguments> provideNewDictionaryWords() {
         return Stream.of(
                 Arguments.of(
@@ -82,7 +91,6 @@ class DictionaryControllerTest {
     @ParameterizedTest
     @MethodSource("provideNewDictionaryWords")
     @DisplayName("Upload new words to dictionary")
-    @WithMockUser(roles = "ADMIN")
     void saveTest(AddDictionaryWordResponse addDictionaryWordResponse, Dictionary dictionary, MockMultipartFile mockMultipartFile) throws Exception {
         when(mockDictionaryFormMapper.convertToResponse(any())).thenReturn(addDictionaryWordResponse);
         when(mockDictionaryService.save(any(), any())).thenReturn(dictionary);
@@ -92,6 +100,7 @@ class DictionaryControllerTest {
                 .param("languageCode", testLanguage)
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
+
 
         JSONObject jsonObject = new JSONObject(response.getContentAsString());
 
