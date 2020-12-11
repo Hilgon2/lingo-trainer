@@ -111,7 +111,7 @@ class UserControllerTest {
     @ParameterizedTest
     @MethodSource("provideUserCreation")
     @DisplayName("Create user")
-    void createUserTest(CreateUserRequest createUserRequest, UserResponse userResponse, User user) throws Exception {
+    void testShouldCreateUser(CreateUserRequest createUserRequest, UserResponse userResponse, User user) throws Exception {
         when(mockUserFormMapper.convertToDomainEntity(any())).thenReturn(user);
         when(mockUserFormMapper.convertToResponse(any())).thenReturn(userResponse);
 
@@ -129,7 +129,7 @@ class UserControllerTest {
     @ParameterizedTest
     @MethodSource("provideUserCreation")
     @DisplayName("Do not create user with existing username")
-    void doNotCreateUserTest(CreateUserRequest createUserRequest, UserResponse userResponse, User user) throws Exception {
+    void testShouldNotCreateUser(CreateUserRequest createUserRequest, UserResponse userResponse, User user) throws Exception {
         when(mockUserFormMapper.convertToDomainEntity(createUserRequest)).thenReturn(user);
         when(mockUserFormMapper.convertToResponse(user)).thenReturn(userResponse);
 
@@ -147,7 +147,7 @@ class UserControllerTest {
     @ParameterizedTest
     @MethodSource("provideLoggedInUserDetails")
     @DisplayName("Find logged in user details")
-    void findLoggedInUserDetailsTest(UserResponse userResponse, User user) throws Exception {
+    void testFindLoggedInUserDetails(UserResponse userResponse, User user) throws Exception {
         when(mockUserFormMapper.convertToResponse(user)).thenReturn(userResponse);
         when(mockAuthenticationService.getUser()).thenReturn(user);
 

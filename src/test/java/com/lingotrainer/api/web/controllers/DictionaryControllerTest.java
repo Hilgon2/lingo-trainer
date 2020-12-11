@@ -90,8 +90,29 @@ class DictionaryControllerTest {
 
     @ParameterizedTest
     @MethodSource("provideNewDictionaryWords")
-    @DisplayName("Upload new words to dictionary")
-    void saveTest(AddDictionaryWordResponse addDictionaryWordResponse, Dictionary dictionary, MockMultipartFile mockMultipartFile) throws Exception {
+    @DisplayName("Should save the dictionary as admin")
+    void testShouldSave(AddDictionaryWordResponse addDictionaryWordResponse, Dictionary dictionary, MockMultipartFile mockMultipartFile) throws Exception {
+        when(mockDictionaryFormMapper.convertToResponse(any())).thenReturn(addDictionaryWordResponse);
+        when(mockDictionaryService.save(any(), any())).thenReturn(dictionary);
+
+        final MockHttpServletResponse response = mockMvc.perform(multipart("/dictionary")
+                .file(mockMultipartFile)
+                .param("languageCode", testLanguage)
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+
+        JSONObject jsonObject = new JSONObject(response.getContentAsString());
+
+        // Verify the results
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(testLanguage, jsonObject.get("language"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideNewDictionaryWords")
+    @DisplayName("Should not save the dictionary as non-admin")
+    void testShouldNotSave(AddDictionaryWordResponse addDictionaryWordResponse, Dictionary dictionary, MockMultipartFile mockMultipartFile) throws Exception {
         when(mockDictionaryFormMapper.convertToResponse(any())).thenReturn(addDictionaryWordResponse);
         when(mockDictionaryService.save(any(), any())).thenReturn(dictionary);
 
@@ -111,7 +132,7 @@ class DictionaryControllerTest {
 
     @Test
     @DisplayName("Find available languages")
-    void findAvailableLanguagesTest() throws Exception {
+    void testFindAvailableLanguages() throws Exception {
         when(mockDictionaryService.findAvailableLanguages()).thenReturn(List.of(dictionary.getLanguage()));
         List<String> languages = List.of(dictionary.getLanguage());
 

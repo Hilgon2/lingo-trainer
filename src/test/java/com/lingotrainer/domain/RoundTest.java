@@ -54,7 +54,7 @@ class RoundTest {
     @ParameterizedTest
     @MethodSource("provideRoundsForNextWordLength")
     @DisplayName("Get next word length")
-    void getNextWordLength(Round lastRound, WordLength shouldAccept) {
+    void testGetNextWordLength(Round lastRound, WordLength shouldAccept) {
         Round newRound = Round
                 .builder()
                 .build();
@@ -65,14 +65,14 @@ class RoundTest {
     @ParameterizedTest
     @MethodSource("provideRoundsForCurrentWordLength")
     @DisplayName("Get current word length")
-    void getCurrentWordLength(Round round, WordLength shouldAccept) {
+    void testGetCurrentWordLength(Round round, WordLength shouldAccept) {
         assertEquals(shouldAccept, round.getWordLength());
     }
 
     @ParameterizedTest
     @MethodSource("provideRoundWithActiveTurns")
     @DisplayName("Throw error on active turns")
-    void activeTurnsLeft(Round round, List<Turn> turns) {
+    void testHasActiveTurnsLeft(Round round, List<Turn> turns) {
         assertThrows(GameException.class, () -> round.checkActiveTurns(turns));
     }
 }

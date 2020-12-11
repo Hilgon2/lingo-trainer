@@ -196,11 +196,7 @@
                 </executions>
                 <configuration>
                     <excludes>
-                        <exclude>**/api/security/**</exclude>
-<!--                        <exclude>**/api/config/**</exclude>-->
-<!--                        <exclude>**/DataLoader</exclude>-->
-<!--                        <exclude>infrastructure/persistency/exception/**</exclude>-->
-<!--                        <exclude>infrastructure/persistency/jpa/entity/**</exclude>-->
+<!--                        <exclude>**/api/security/**</exclude>-->
                     </excludes>
                 </configuration>
             </plugin>
