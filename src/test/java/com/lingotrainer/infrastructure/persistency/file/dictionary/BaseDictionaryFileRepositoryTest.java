@@ -135,7 +135,7 @@ class BaseDictionaryFileRepositoryTest {
 
     static Stream<Arguments> provideAvailableLanguages() {
         return Stream.of(
-                Arguments.of(List.of("test-nl_nl"))
+                Arguments.of(List.of("nl_nl"))
         );
     }
 
