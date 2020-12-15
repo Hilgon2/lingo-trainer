@@ -38,8 +38,7 @@ class RoundTest {
         Round newRound = Round
                 .builder()
                 .build();
-        newRound.nextWordLength(lastRound);
-        assertEquals(shouldAccept, newRound.getWordLength());
+        assertEquals(shouldAccept, newRound.retrieveNextWordLength(lastRound));
     }
 
     static Stream<Arguments> provideRoundsForCurrentWordLength() {

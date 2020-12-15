@@ -344,15 +344,6 @@ class BaseRoundServiceTest {
         assertEquals(expectedResult, result);
     }
 
-    @Test
-    @DisplayName("Create new round without having an active game")
-    void test_create_new_round_without_active_game() {
-        when(mockGameService.hasActiveGame(0)).thenReturn(false);
-        when(mockAuthenticationService.getUser()).thenReturn(trainee);
-
-        assertThrows(NotFoundException.class, () -> mockRoundService.createNewRound(0));
-    }
-
     static Stream<Arguments> provideRoundsForFindRoundById() {
         return Stream.of(
                 Arguments.of(1, round,

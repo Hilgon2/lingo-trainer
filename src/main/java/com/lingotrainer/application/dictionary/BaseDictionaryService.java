@@ -39,7 +39,7 @@ public class BaseDictionaryService implements DictionaryService {
 
         try {
             // if file exists, get words list. Otherwise create empty word list.
-            if (new File(String.format(dictionaryPath, dictionary.getLanguage())).exists()) {
+            if (this.dictionaryRepository.findByLanguage(dictionary.getLanguage()).isPresent()) {
                 String targetFileReader = new String(Files.readAllBytes(Paths.get(
                         String.format(dictionaryPath, dictionary.getLanguage()))));
                 dictionary.setWords(gson.fromJson(targetFileReader, List.class));
@@ -48,14 +48,7 @@ public class BaseDictionaryService implements DictionaryService {
             }
 
             // add new words to words list
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    if (this.lingoWordFilter.verify(line, dictionary.getWords())) {
-                        dictionary.addWord(line);
-                    }
-                }
-            }
+            dictionary.addNewWords(file, lingoWordFilter);
 
             return this.dictionaryRepository.save(dictionary);
         } catch (IOException e) {

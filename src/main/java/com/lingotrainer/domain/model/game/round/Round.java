@@ -75,7 +75,7 @@ public class Round {
         }
     }
 
-    public void nextWordLength(Round lastRound) {
+    public WordLength retrieveNextWordLength(Round lastRound) {
         if (lastRound != null) {
             switch (lastRound.getWordLength()) {
                 case FIVE:
@@ -91,6 +91,8 @@ public class Round {
         } else {
             this.wordLength = WordLength.FIVE;
         }
+
+        return this.wordLength;
     }
 
     public void checkActiveTurns(List<Turn> turns) {
