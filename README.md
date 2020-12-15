@@ -36,3 +36,5 @@ Er wordt ook gebruik gemaakt van Environment variables. De volgende zijn nodig v
 | DB_URL | database URL | `jdbc:postgresql://localhost:5432/<databaseName>`; `jdbc:postgresql://localhost:5432/lingo` |
 | DB_USERNAME | database username | `<username>`; `root` |
 | DB_PASSWORD | database wachtwoord | `<password>`; `adminpassword123` |
+
+Dit is alles! 
