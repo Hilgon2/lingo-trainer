@@ -94,7 +94,7 @@ public class Round {
     }
 
     public void checkActiveTurns(List<Turn> turns) {
-        if (turns.size() < 5) {
+        if (turns.size() > 0) {
             throw new GameException(
                     "There are still turns left on the current round. "
                             + "Please finish them before creating a new round."

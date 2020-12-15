@@ -32,12 +32,12 @@ public class TurnMapper implements EntityMapper<Turn, TurnEntity> {
     public List<TurnEntity> convertToPersistableEntities(List<Turn> turns) {
         List<TurnEntity> turnEntities = new ArrayList<>();
 
-        turns.forEach(turn -> TurnEntity.builder()
+        turns.forEach(turn -> turnEntities.add(TurnEntity.builder()
                 .id(turn.getTurnId())
                 .guessedWord(turn.getGuessedWord())
                 .startedAt(turn.getStartedAt())
                 .round(RoundEntity.builder().id(turn.getRoundId()).build())
-                .build());
+                .build()));
 
         return turnEntities;
     }

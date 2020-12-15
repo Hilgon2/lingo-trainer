@@ -23,22 +23,11 @@ public class BaseUserService implements UserService, UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    /**
-     * Save a user, this could be either a new user creation or update of an existing user.
-     * @param user the user to be saved
-     * @return user information of the saved user
-     */
     @Override
     public User save(User user) {
         return this.userRepository.save(user);
     }
 
-    /**
-     * Create a new user. This method is different than the save method.
-     * This method contains multiple checks for a new user.
-     * @param user the user to be saved
-     * @return user information of the saved user
-     */
     @Override
     public User createNewUser(User user, User currentUser) {
         if (this.userRepository.existsByUsername(user.getUsername())) {
@@ -61,23 +50,12 @@ public class BaseUserService implements UserService, UserDetailsService {
         return this.userRepository.save(user);
     }
 
-    /**
-     *  Get user information by username.
-     * @param username username to look for
-     * @return returns user information
-     */
-
     @Override
     public UserDetails loadUserByUsername(String username) {
         return this.userRepository.findByUsername(username).orElseThrow(() ->
                 new NotFoundException(String.format("User with username %s could not be found", username)));
     }
 
-    /**
-     * Get user by ID.
-     * @param userId user ID to look for
-     * @return returns user information
-     */
     @Override
     public User findById(int userId) {
         return this.userRepository.findById(userId).orElseThrow(() ->

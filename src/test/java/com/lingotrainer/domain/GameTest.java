@@ -49,7 +49,7 @@ class GameTest {
     @ParameterizedTest
     @MethodSource("provideGames")
     @DisplayName("Has a maximum of 1 active game")
-    void hasZeroOrOneActiveGame(List<Game> games) {
+    void test_has_zero_or_one_active_game(List<Game> games) {
         assertTrue(
                 games.stream()
                         .filter(game -> game.getGameStatus() == GameStatus.ACTIVE && game.getUserId() == defaultUserId.getId())
