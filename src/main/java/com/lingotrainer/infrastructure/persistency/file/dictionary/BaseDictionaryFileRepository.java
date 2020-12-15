@@ -74,6 +74,11 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
         File file = new File("src/main/resources/dictionary");
         if (file.exists() && file.list() != null) {
             for (String dictionaryName : file.list()) {
+                // continue loop if language is a test language
+                if (dictionaryName.length() > 4 && dictionaryName.substring(0, 5).equals("test-")) {
+                    continue;
+                }
+
                 if (dictionaryName.substring(dictionaryName.length() - 5).equals(".json")) {
                     languages.add(dictionaryName.substring(0, dictionaryName.length() - 5));
                 }
