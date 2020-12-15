@@ -140,10 +140,33 @@ class GameServiceTest {
         assertEquals(expectedResult, result);
     }
 
+    static Stream<Arguments> provideNewGameCreationWithActiveGame() {
+        return Stream.of(
+                Arguments.of(
+                        User.builder()
+                                .userId(new UserId(1))
+                                .username("username")
+                                .password("password")
+                                .highscore(0)
+                                .role(Role.TRAINEE)
+                                .active(true)
+                                .gameIds(new ArrayList<>())
+                                .build(),
+                        Game.builder()
+                                .gameId(new GameId(1))
+                                .userId(new UserId(1))
+                                .score(0)
+                                .language("nl_nl")
+                                .roundIds(new ArrayList<>())
+                                .gameStatus(GameStatus.ACTIVE)
+                                .build()
+                ));
+    }
+
     @ParameterizedTest
-    @MethodSource("provideNewGameCreation")
+    @MethodSource("provideNewGameCreationWithActiveGame")
     @DisplayName("Create a new game when there is still an active game. Should throw exception")
-    void test_create_new_game_when_user_has_active_game(Game expectedResult, User user, Game newGame) {
+    void test_create_new_game_when_user_has_active_game(User user, Game newGame) {
         // Setup
         when(mockGameRepository.hasActiveGame(user.getUserId())).thenReturn(true);
         when(mockAuthenticationService.getUser()).thenReturn(user);
