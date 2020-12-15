@@ -62,11 +62,6 @@ public class BaseUserService implements UserService, UserDetailsService {
                 new NotFoundException(String.format("User ID %d could not be found", userId)));
     }
 
-    /**
-     * Get user by username.
-     * @param username username to look for
-     * @return returns user information object
-     */
     @Override
     public User findByUsername(String username) {
         return this.userRepository.findByUsername(username).orElseThrow(() ->

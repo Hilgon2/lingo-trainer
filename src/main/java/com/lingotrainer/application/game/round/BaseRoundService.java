@@ -61,17 +61,6 @@ public class BaseRoundService implements RoundService {
 
     @Override
     public Round createNewRound(int gameId) {
-        if (!this.gameService.hasActiveGame(this.authenticationService.getUser().getUserId())) {
-            throw new NotFoundException("No active games could be found");
-        }
-
-        // retrieve current round and check if it still has active turns
-        Round currentRound = this.findCurrentRound(gameId);
-
-        if (currentRound != null) {
-            currentRound.checkActiveTurns(this.findActiveTurnsByRoundId(currentRound.getRoundId()));
-        }
-
         // retrieve last round to retrieve the amount of letters the next word needs (5, 6 or 7)
         Round lastRound = this.roundRepository.findLastRound(gameId).orElse(null);
         Game game = this.gameService.findById(gameId);
@@ -80,9 +69,10 @@ public class BaseRoundService implements RoundService {
                 .gameId(new GameId(gameId))
                 .active(true)
                 .build();
-        newRoundBuilder.nextWordLength(lastRound);
+
         newRoundBuilder.setWord(
-                this.dictionaryService.retrieveRandomWord(game.getLanguage(), newRoundBuilder.getWordLength())
+                this.dictionaryService.retrieveRandomWord(game.getLanguage(),
+                        newRoundBuilder.retrieveNextWordLength(lastRound))
         );
 
         Round newRound = this.roundRepository.save(newRoundBuilder);
@@ -158,6 +148,7 @@ public class BaseRoundService implements RoundService {
 
         this.gameService.save(gameTurn.getGame());
         this.saveRound(gameTurn.getRound());
+
         if (gameTurn.getUser().getHighscore() > this.userService.findById(game.getUserId()).getHighscore()) {
             this.userService.save(gameTurn.getUser());
         }

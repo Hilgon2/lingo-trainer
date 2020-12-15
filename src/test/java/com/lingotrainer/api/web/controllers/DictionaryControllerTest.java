@@ -53,7 +53,7 @@ class DictionaryControllerTest extends TestController {
     @MockBean
     private AuthenticationService mockAuthenticationService;
 
-    private static String testLanguage = "nl_nl";
+    private static String testLanguage = "test-nl_nl";
     private static List<String> words = new ArrayList<>(Collections.singletonList("woord, pizza, moeder"));
     private static Dictionary dictionary = Dictionary.builder()
                                 .language(testLanguage)

@@ -29,6 +29,11 @@
         <sonar.projectKey>Hilgon2_lingo-trainer</sonar.projectKey>
         <sonar.organization>terry-hilgon2</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.exclusions>
+            **/api/security/**,
+            **/infrastructure/persistency/exception/**,
+            **/infrastructure/persistency/jpa/entity/user/**
+        </sonar.coverage.exclusions>
     </properties>
 
     <dependencies>

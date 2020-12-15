@@ -46,9 +46,7 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
                     .words(words)
                     .build());
         } catch (IOException e) {
-            throw new FileIOException(
-                    "Someting went wrong trying to read the language file. The file might not exist."
-            );
+            return Optional.empty();
         }
     }
 

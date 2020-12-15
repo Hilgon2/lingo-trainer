@@ -89,7 +89,9 @@ class BaseDictionaryFileRepositoryTest {
     @MethodSource("provideFindByNonExistentLanguage")
     @DisplayName("Find dictionary by language which does not exist")
     void test_find_by_language_which_does_not_exists(String language) {
-        assertThrows(FileIOException.class, () -> mockBaseDictionaryFileRepository.findByLanguage(language));
+        final Optional<Dictionary> result = mockBaseDictionaryFileRepository.findByLanguage(language);
+
+        assertEquals(Optional.empty(), result);
     }
 
     static Stream<Arguments> provideExistsByWord() {

@@ -1,6 +1,5 @@
 package com.lingotrainer.application.dictionary;
 
-import com.lingotrainer.api.web.response.AddDictionaryWordResponse;
 import com.lingotrainer.application.exception.GeneralException;
 import com.lingotrainer.domain.model.WordLength;
 import com.lingotrainer.domain.model.dictionary.Dictionary;
@@ -13,9 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +42,7 @@ class BaseDictionaryServiceTest {
     }
 
     static Stream<Arguments> provideDictionarySave() {
-        String testLanguage = "nl_nl";
+        String testLanguage = "test-nl_nl";
         return Stream.of(
                 Arguments.of(
                         new MockMultipartFile("wordsFile", testLanguage, "application/json", words.toString().getBytes()),
@@ -101,7 +98,7 @@ class BaseDictionaryServiceTest {
     }
 
     static Stream<Arguments> provideDictionarySaveException() {
-        String testLanguage = "nl_nl";
+        String testLanguage = "test-nl_nl";
         return Stream.of(
                 Arguments.of(
                         new MockMultipartFile("wordsFile", testLanguage, "application/json", words.toString().getBytes()),
@@ -126,10 +123,10 @@ class BaseDictionaryServiceTest {
 
     static Stream<Arguments> provideWordExists() {
         return Stream.of(
-                Arguments.of("nl_nl", "schoen", true, true),
-                Arguments.of("en_en", "groen", false, false),
-                Arguments.of("nl_nl", "forest", false, false),
-                Arguments.of("nl_nl", "toets", true, true)
+                Arguments.of("test-nl_nl", "schoen", true, true),
+                Arguments.of("test-en_en", "groen", false, false),
+                Arguments.of("test-nl_nl", "forest", false, false),
+                Arguments.of("test-nl_nl", "toets", true, true)
         );
     }
 
@@ -148,10 +145,10 @@ class BaseDictionaryServiceTest {
 
     static Stream<Arguments> provideRandomWordRetriever() {
         return Stream.of(
-                Arguments.of("nl_nl", WordLength.FIVE, "groen", "groen"),
-                Arguments.of("nl_nl", WordLength.SIX, "schoen", "schoen"),
-                Arguments.of("nl_nl", WordLength.SEVEN, "alsmaar", "alsmaar"),
-                Arguments.of("nl_nl", null, "broek", "broek")
+                Arguments.of("test-nl_nl", WordLength.FIVE, "groen", "groen"),
+                Arguments.of("test-nl_nl", WordLength.SIX, "schoen", "schoen"),
+                Arguments.of("test-nl_nl", WordLength.SEVEN, "alsmaar", "alsmaar"),
+                Arguments.of("test-nl_nl", null, "broek", "broek")
         );
     }
 
@@ -172,13 +169,13 @@ class BaseDictionaryServiceTest {
     @Test
     @DisplayName("Retrieve available languages")
     void test_find_available_languages() {
-        when(mockDictionaryRepository.findAvailableLanguages()).thenReturn(List.of("nl_nl", "en_en"));
+        when(mockDictionaryRepository.findAvailableLanguages()).thenReturn(List.of("test-nl_nl", "test-en_en"));
 
         // Run the test
         final List<String> result = mockDictionaryService.findAvailableLanguages();
 
         // Verify the results
         assertEquals(2, result.size());
-        assertEquals(List.of("nl_nl", "en_en"), result);
+        assertEquals(List.of("test-nl_nl", "test-en_en"), result);
     }
 }
