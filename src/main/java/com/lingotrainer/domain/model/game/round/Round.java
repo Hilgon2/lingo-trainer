@@ -75,7 +75,7 @@ public class Round {
         }
     }
 
-    public void nextWordLength(Round lastRound) {
+    public WordLength retrieveNextWordLength(Round lastRound) {
         if (lastRound != null) {
             switch (lastRound.getWordLength()) {
                 case FIVE:
@@ -91,10 +91,12 @@ public class Round {
         } else {
             this.wordLength = WordLength.FIVE;
         }
+
+        return this.wordLength;
     }
 
     public void checkActiveTurns(List<Turn> turns) {
-        if (turns.size() < 5) {
+        if (turns.size() > 0) {
             throw new GameException(
                     "There are still turns left on the current round. "
                             + "Please finish them before creating a new round."

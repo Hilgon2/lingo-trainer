@@ -10,6 +10,7 @@ public class UserFormMapper {
                 .username(userRequest.getUsername())
                 .role(userRequest.getRole())
                 .password(userRequest.getPassword())
+                .active(userRequest.isActive())
                 .build();
     }
 

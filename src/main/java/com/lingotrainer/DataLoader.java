@@ -22,9 +22,9 @@ public class DataLoader implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         if (!this.userRepository.existsByUsername("terry")) {
             this.userRepository.save(User.builder()
-                    .username("terry")
+                    .username("admin")
                     .role(Role.ADMIN)
-                    .password(passwordEncoder.encode("wachtwoord"))
+                    .password(passwordEncoder.encode("password"))
                     .active(true)
                     .build());
         }

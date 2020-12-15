@@ -3,7 +3,6 @@ package com.lingotrainer.api.config;
 import com.lingotrainer.api.security.FilterChainExceptionHandler;
 import com.lingotrainer.api.security.jwt.JwtSecurityConfigurer;
 import com.lingotrainer.api.security.jwt.JwtTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,11 +14,15 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
     private FilterChainExceptionHandler filterChainExceptionHandler;
+
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider,
+                          FilterChainExceptionHandler filterChainExceptionHandler) {
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.filterChainExceptionHandler = filterChainExceptionHandler;
+    }
 
     @Bean
     @Override

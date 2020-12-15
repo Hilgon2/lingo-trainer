@@ -8,8 +8,7 @@ import com.lingotrainer.domain.repository.GameRepository;
 import com.lingotrainer.application.exception.DuplicateException;
 import com.lingotrainer.application.exception.ForbiddenException;
 import com.lingotrainer.application.authentication.AuthenticationService;
-import com.lingotrainer.util.exception.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.lingotrainer.application.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -18,30 +17,20 @@ import java.io.File;
 public class BaseGameService implements GameService {
 
     private GameRepository gameRepository;
-
-    @Autowired
     private AuthenticationService authenticationService;
 
-    public BaseGameService(GameRepository gameRepository) {
+    public BaseGameService(GameRepository gameRepository,
+                           AuthenticationService authenticationService) {
         this.gameRepository = gameRepository;
+        this.authenticationService = authenticationService;
     }
 
-    /**
-     * Get the game information.
-     * @param id the id of the game to be found
-     * @return game object, containing game information
-     */
     @Override
     public Game findById(int id) {
         return gameRepository.findById(id).orElseThrow(() ->
                 new NotFoundException(String.format("Game ID %d could not be found", id)));
     }
 
-    /**
-     * Create new game for the logged in user, based on the language code.
-     * @param languageCode language of the dictionary
-     * @return game ID of the newly created game
-     */
     @Override
     public Game createNewGame(String languageCode) {
         if (this.gameRepository.hasActiveGame(authenticationService.getUser().getUserId())) {
@@ -63,22 +52,11 @@ public class BaseGameService implements GameService {
         return this.save(game);
     }
 
-    /**
-     * Get the active game of a user.
-     * @param userId the ID of the user
-     * @return game object, containing game information
-     */
     @Override
     public Game findActiveGame(int userId) {
         return this.gameRepository.findActiveGame(userId).orElse(null);
     }
 
-
-    /**
-     * Create or update a game, depending on if the game already exists or not.
-     * @param game game object to be saved
-     * @return ID of the game which was saved
-     */
     @Override
     public Game save(Game game) {
         if (game.getUserId() != authenticationService.getUser().getUserId()) {
@@ -88,11 +66,6 @@ public class BaseGameService implements GameService {
         return this.gameRepository.save(game);
     }
 
-    /**
-     * Check if user has an active game.
-     * @param userId the ID of the user to be checked
-     * @return returns true or false
-     */
     @Override
     public boolean hasActiveGame(int userId) {
         return this.gameRepository.hasActiveGame(userId);

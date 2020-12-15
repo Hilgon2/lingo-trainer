@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.lingotrainer.domain.model.WordLength;
 import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.domain.repository.DictionaryRepository;
-import com.lingotrainer.util.exception.NotFoundException;
-import com.lingotrainer.util.exception.GeneralException;
+import com.lingotrainer.infrastructure.persistency.exception.FileIOException;
+import com.lingotrainer.infrastructure.persistency.exception.LanguageNotFoundException;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -26,7 +26,7 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
                 dictionary.getLanguage()))) {
             targetFileWriter.write(this.gson.toJson(dictionary.getWords()));
         } catch (IOException e) {
-            throw new GeneralException(String.format("Unknown error trying to open the %s language file",
+            throw new FileIOException(String.format("Unknown error trying to open the %s language file",
                     dictionary.getLanguage()));
         }
 
@@ -46,23 +46,23 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
                     .words(words)
                     .build());
         } catch (IOException e) {
-            throw new NotFoundException(
-                    "Someting went wrong trying to read the language file. The file might not exist."
-            );
+            return Optional.empty();
         }
     }
 
     @Override
     public boolean existsByWord(String languageCode, String guessedWord) {
         return this.findByLanguage(languageCode).orElseThrow(() ->
-                new NotFoundException(String.format("Dictionary by language %s could not be found", languageCode)))
+                new LanguageNotFoundException(
+                        String.format("Dictionary by language %s could not be found", languageCode)))
                 .getWords().contains(guessedWord);
     }
 
     @Override
     public String retrieveRandomWord(String languageCode, WordLength wordLength) {
         Dictionary dictionary = this.findByLanguage(languageCode).orElseThrow(() ->
-                new NotFoundException(String.format("Dictionary language %s could not be found", languageCode)));
+                new LanguageNotFoundException(
+                        String.format("Dictionary language %s could not be found", languageCode)));
         return dictionary.getRandomWord(wordLength);
     }
 
@@ -72,6 +72,11 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
         File file = new File("src/main/resources/dictionary");
         if (file.exists() && file.list() != null) {
             for (String dictionaryName : file.list()) {
+                // continue loop if language is a test language
+                if (dictionaryName.length() > 4 && dictionaryName.substring(0, 5).equals("test-")) {
+                    continue;
+                }
+
                 if (dictionaryName.substring(dictionaryName.length() - 5).equals(".json")) {
                     languages.add(dictionaryName.substring(0, dictionaryName.length() - 5));
                 }

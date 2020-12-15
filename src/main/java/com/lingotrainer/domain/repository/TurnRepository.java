@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TurnRepository {
-    Optional<Turn> findCurrentTurn(int roundId);
+    Optional<Turn> findCurrentTurn(int gameId);
 
     Turn save(Turn turn);
     Optional<Turn> findById(int turnId);

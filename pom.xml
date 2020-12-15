@@ -29,6 +29,11 @@
         <sonar.projectKey>Hilgon2_lingo-trainer</sonar.projectKey>
         <sonar.organization>terry-hilgon2</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.exclusions>
+            **/api/security/**,
+            **/infrastructure/persistency/exception/**,
+            **/infrastructure/persistency/jpa/entity/user/**
+        </sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
@@ -174,6 +179,32 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>**/api/security/**</exclude>
+                        <exclude>**/infrastructure/persistency/exception/**</exclude>
+                        <exclude>**/infrastructure/persistency/jpa/entity/user/**</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

@@ -4,22 +4,23 @@ import com.lingotrainer.domain.model.game.Game;
 import com.lingotrainer.domain.model.game.GameId;
 import com.lingotrainer.domain.model.game.GameStatus;
 import com.lingotrainer.domain.model.user.UserId;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class GameTest {
+class GameTest {
 
-    private List<Game> games;
-    private UserId defaultUserId = new UserId(3);
+    private static UserId defaultUserId = new UserId(3);
 
-    @BeforeEach
-    void setup() {
-        this.games = new ArrayList<>();
+    static Stream<Arguments> provideGames() {
+        List<Game> games = new ArrayList<>();
         games.add(Game.builder()
                 .gameId(new GameId(2))
                 .gameStatus(GameStatus.FINISHED)
@@ -40,14 +41,18 @@ public class GameTest {
                 .userId(defaultUserId)
                 .gameStatus(GameStatus.FINISHED)
                 .build());
+
+        return Stream.of(
+                Arguments.of(games));
     }
 
-    @Test
-    void has_zero_or_one_active_game() {
+    @ParameterizedTest
+    @MethodSource("provideGames")
+    @DisplayName("Has a maximum of 1 active game")
+    void test_has_zero_or_one_active_game(List<Game> games) {
         assertTrue(
-                this.games.stream()
-                        .filter(game -> game.getGameStatus() == GameStatus.ACTIVE
-                                && game.getUserId() == this.defaultUserId.getId())
+                games.stream()
+                        .filter(game -> game.getGameStatus() == GameStatus.ACTIVE && game.getUserId() == defaultUserId.getId())
                         .count() <= 1
         );
     }
