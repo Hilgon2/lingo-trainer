@@ -42,8 +42,12 @@ public class Feedback {
     }
 
     public void doValidation() {
-        this.correctGuess = this.guessedWord.equalsIgnoreCase(answer);
         this.defaultValidation();
+
+        if (this.guessedWord != null && this.status == null) {
+            this.correctGuess = this.guessedWord.equalsIgnoreCase(answer);
+        }
+
         this.setGuessedLetters();
     }
 
@@ -108,26 +112,27 @@ public class Feedback {
             this.code = 5200;
             this.setGuessedWord("-");
             status = TurnFeedback.GUESSED_WORD_IS_NULL;
-        }
+        } else {
 
-        // Trim and capitalize the guessed word.
-        // Do this after the null check, because a null does not have a trim or toUpperCase method.
-        // This could otherwise possibly cause an error.
-        this.guessedWord = guessedWord.toUpperCase().trim();
+            // Trim and capitalize the guessed word.
+            // Do this after the null check, because a null does not have a trim or toUpperCase method.
+            // This could otherwise possibly cause an error.
+            this.guessedWord = guessedWord.toUpperCase().trim();
 
-        if (answer.length() != this.getGuessedWord().length()) {
-            this.code = 5205;
-            this.status = TurnFeedback.GUESSED_WORD_DIFF_LENGTH;
-        } else if (!this.getGuessedWord().chars().allMatch(Character::isLetter)) {
-            this.code = 5210;
-            this.status = TurnFeedback.GUESSED_WORD_INVALID_CHAR;
-        } else if (!wordExists) {
-            this.code = 5215;
-            this.status = TurnFeedback.GUESSED_WORD_NOT_FOUND;
-            // TODO: change 1500 to 10 (seconds)
-        } else if (Duration.between(this.getStartedAt(), Instant.now()).getSeconds() > 1500) {
-            this.code = 5220;
-            this.status = TurnFeedback.TURN_TIME_OVER;
+            if (Duration.between(this.getStartedAt(), Instant.now()).getSeconds() > 10) {
+                this.code = 5220;
+                this.status = TurnFeedback.TURN_TIME_OVER;
+            } else if (answer.length() != this.getGuessedWord().length()) {
+                this.code = 5205;
+                this.status = TurnFeedback.GUESSED_WORD_DIFF_LENGTH;
+            } else if (!this.getGuessedWord().chars().allMatch(Character::isLetter)) {
+                this.code = 5210;
+                this.status = TurnFeedback.GUESSED_WORD_INVALID_CHAR;
+            } else if (!wordExists) {
+                this.code = 5215;
+                this.status = TurnFeedback.GUESSED_WORD_NOT_FOUND;
+                // TODO: change 1500 to 10 (seconds)
+            }
         }
     }
 }

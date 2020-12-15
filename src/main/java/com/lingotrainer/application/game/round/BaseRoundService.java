@@ -151,13 +151,8 @@ public class BaseRoundService implements RoundService {
     @Override
     public Turn playTurn(int gameId, String guessedWord) {
         Turn turn = this.turnRepository.findCurrentTurn(gameId).orElseThrow(() ->
-                new NotFoundException(String.format("Active turn of round ID %d not found", gameId)));
+                new NotFoundException(String.format("Active turn of game ID %d not found", gameId)));
         Round round = this.findRoundById(turn.getRoundId());
-
-        if (!round.isActive()) {
-            throw new GameException(String.format("Round ID %d is not active. Please create a new round",
-                    round.getRoundId()));
-        }
 
         // get game and dictionary after active round check
         Game game = this.gameService.findById(round.getGameId());
@@ -213,7 +208,7 @@ public class BaseRoundService implements RoundService {
         GameTurnFeedback gameTurnFeedback = gameTurn.getGameTurnFeedback();
 
         this.gameService.save(gameTurn.getGame());
-        this.saveRound(round);
+        this.saveRound(gameTurn.getRound());
         if (gameTurn.getUser().getHighscore() > this.userService.findById(game.getUserId()).getHighscore()) {
             this.userService.save(gameTurn.getUser());
         }

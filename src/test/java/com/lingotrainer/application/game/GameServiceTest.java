@@ -1,6 +1,8 @@
 package com.lingotrainer.application.game;
 
 import com.lingotrainer.application.authentication.AuthenticationService;
+import com.lingotrainer.application.exception.DuplicateException;
+import com.lingotrainer.application.exception.ForbiddenException;
 import com.lingotrainer.application.exception.NotFoundException;
 import com.lingotrainer.domain.model.game.Game;
 import com.lingotrainer.domain.model.game.GameId;
@@ -138,6 +140,19 @@ class GameServiceTest {
         assertEquals(expectedResult, result);
     }
 
+    @ParameterizedTest
+    @MethodSource("provideNewGameCreation")
+    @DisplayName("Create a new game when there is still an active game. Should throw exception")
+    void test_create_new_game_when_user_has_active_game(Game expectedResult, User user, Game newGame) {
+        // Setup
+        when(mockGameRepository.hasActiveGame(user.getUserId())).thenReturn(true);
+        when(mockAuthenticationService.getUser()).thenReturn(user);
+        when(mockGameRepository.save(any())).thenReturn(newGame);
+        when(mockGameService.save(newGame)).thenReturn(newGame);
+
+        assertThrows(DuplicateException.class, () -> mockGameService.createNewGame(newGame.getLanguage()));
+    }
+
     static Stream<Arguments> provideActiveGame() {
         return Stream.of(
                 Arguments.of(
@@ -247,5 +262,75 @@ class GameServiceTest {
 
         // Verify the results
         assertEquals(expectedResult, result);
+    }
+
+    static Stream<Arguments> provideSaveGamesWithException() {
+        return Stream.of(
+                Arguments.of(
+                        Game.builder()
+                                .gameId(new GameId(0))
+                                .userId(new UserId(1))
+                                .score(0)
+                                .language("nl_nl")
+                                .roundIds(List.of(new RoundId(0)))
+                                .gameStatus(GameStatus.ACTIVE)
+                                .build(),
+                        User.builder()
+                                .userId(new UserId(1))
+                                .username("username")
+                                .password("password")
+                                .highscore(0)
+                                .role(Role.TRAINEE)
+                                .active(true)
+                                .gameIds(new ArrayList<>())
+                                .build(),
+                        Game.builder()
+                                .gameId(new GameId(0))
+                                .userId(new UserId(2))
+                                .score(0)
+                                .language("nl_nl")
+                                .roundIds(List.of(new RoundId(0)))
+                                .gameStatus(GameStatus.ACTIVE)
+                                .build()
+                ),
+                Arguments.of(
+                        Game.builder()
+                                .gameId(new GameId(0))
+                                .userId(new UserId(4))
+                                .score(0)
+                                .language("nl_nl")
+                                .roundIds(List.of(new RoundId(0)))
+                                .gameStatus(GameStatus.ACTIVE)
+                                .build(),
+                        User.builder()
+                                .userId(new UserId(1))
+                                .username("username")
+                                .password("password")
+                                .highscore(0)
+                                .role(Role.TRAINEE)
+                                .active(true)
+                                .gameIds(new ArrayList<>())
+                                .build(),
+                        Game.builder()
+                                .gameId(new GameId(0))
+                                .userId(new UserId(6))
+                                .score(0)
+                                .language("nl_nl")
+                                .roundIds(List.of(new RoundId(0)))
+                                .gameStatus(GameStatus.ACTIVE)
+                                .build()
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideSaveGamesWithException")
+    @DisplayName("Do not save a game when creator of the game is not same as logged in user")
+    void test_save_game_creator_not_same_as_logged_in_user(Game newGame, User user, Game repositorySave) {
+        when(mockAuthenticationService.getUser()).thenReturn(user);
+        when(mockGameRepository.save(newGame)).thenReturn(newGame);
+
+        // Verify the results
+        assertThrows(ForbiddenException.class, () -> mockGameService.save(repositorySave));
     }
 }
