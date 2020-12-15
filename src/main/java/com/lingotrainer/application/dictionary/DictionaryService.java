@@ -33,7 +33,7 @@ public interface DictionaryService {
     String retrieveRandomWord(String languageCode, WordLength wordLength);
 
     /**
-     * Get a list of all the available languages
+     * Get a list of all the available languages.
      * @return list of available languages
      */
     List<String> findAvailableLanguages();
