@@ -24,3 +24,17 @@ Deze import moet aan een aantal voorwaarden voldoen (dit is goed te testen):
 Het woord bestaat uit het gegeven aantal letters (5, 6 of 7 letters)
 Het woord schrijf je niet met een hoofdletter, zoals plaats- en eigennamen
 Het woord bevat geen leestekens, zoals apostrofs, koppelstreepjes en punten
+
+# Getting started
+De applicatie gebruikt een database om het spel bij te houden. Voor deze configuratie zijn er nog een aantal dingen nodig om deze goed te configureren.
+Het Spring profile moet nog gezet worden. Dit kan door bij de de Program Arguments het volgende toe te voegen: `--spring.profiles.active=<profile>`; `--spring.profiles.active=development`.
+
+Er wordt ook gebruik gemaakt van Environment variables. De volgende zijn nodig voor de database:
+| Variable | Doel | Voorbeeld |
+| -------- | ---- | --------- |
+| DDL_AUTO | hibernate ddl-auto instellen. Dit wordt gebruikt om de keuze te maken of de database opnieuw moet worden aangemaakt bij het opstarten van de applicatie. | `create` |
+| DB_URL | database URL | `jdbc:postgresql://localhost:5432/<databaseName>`; `jdbc:postgresql://localhost:5432/lingo` |
+| DB_USERNAME | database username | `<username>`; `root` |
+| DB_PASSWORD | database wachtwoord | `<password>`; `adminpassword123` |
+
+Dit is alles! 
