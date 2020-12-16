@@ -37,8 +37,10 @@ class BaseRoundJpaRepositoryTest {
     private static Round round;
     private static GameEntity game;
 
+    private final static String language = "test-nl_nl";
+
     @BeforeAll
-    static void setup() {
+    static void init() {
         UserEntity user = UserEntity
                 .builder()
                 .id(1)
@@ -50,7 +52,7 @@ class BaseRoundJpaRepositoryTest {
                 .builder()
                 .id(1)
                 .user(user)
-                .language("nl_nl")
+                .language(language)
                 .gameStatus(GameStatus.ACTIVE)
                 .build();
 
