@@ -4,18 +4,17 @@ import com.lingotrainer.application.authentication.AuthenticationService;
 import com.lingotrainer.application.exception.DuplicateException;
 import com.lingotrainer.application.exception.ForbiddenException;
 import com.lingotrainer.application.exception.NotFoundException;
+import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.domain.model.game.Game;
 import com.lingotrainer.domain.model.game.GameId;
 import com.lingotrainer.domain.model.game.GameStatus;
-import com.lingotrainer.domain.model.game.round.Round;
 import com.lingotrainer.domain.model.game.round.RoundId;
 import com.lingotrainer.domain.model.user.Role;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.model.user.UserId;
 import com.lingotrainer.domain.repository.GameRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.lingotrainer.infrastructure.persistency.file.dictionary.BaseDictionaryFileRepository;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -38,12 +37,35 @@ class GameServiceTest {
     @Mock
     private AuthenticationService mockAuthenticationService;
 
+    private static BaseDictionaryFileRepository mockBaseDictionaryFileRepository;
+
     private BaseGameService mockGameService;
+
+    private final static String language = "test-nl_nl";
+
+    @BeforeAll
+    static void init() {
+        // create dictionary before test
+        mockBaseDictionaryFileRepository = new BaseDictionaryFileRepository();
+        Dictionary dictionary = Dictionary
+                .builder()
+                .words(List.of("lopen", "schaap", "koeien", "varken", "alsmaar", "schippen"))
+                .language(language)
+                .build();
+
+        mockBaseDictionaryFileRepository.save(dictionary);
+    }
 
     @BeforeEach
     void setUp() {
         initMocks(this);
         mockGameService = new BaseGameService(mockGameRepository, mockAuthenticationService);
+    }
+
+    @AfterAll
+    static void after() {
+        // delete dictionary after test
+        mockBaseDictionaryFileRepository.delete(language);
     }
 
     static Stream<Arguments> provideFindGameById() {
@@ -53,7 +75,7 @@ class GameServiceTest {
                                 .gameId(new GameId(0))
                                 .userId(new UserId(1))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(List.of(new RoundId(0)))
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build(),
@@ -62,7 +84,7 @@ class GameServiceTest {
                                 .gameId(new GameId(0))
                                 .userId(new UserId(1))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(List.of(new RoundId(0)))
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build()
@@ -98,7 +120,7 @@ class GameServiceTest {
                                 .gameId(new GameId(1))
                                 .userId(new UserId(1))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(new ArrayList<>())
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build(),
@@ -115,7 +137,7 @@ class GameServiceTest {
                                 .gameId(new GameId(1))
                                 .userId(new UserId(1))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(new ArrayList<>())
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build()
@@ -126,7 +148,6 @@ class GameServiceTest {
     @MethodSource("provideNewGameCreation")
     @DisplayName("Create a new game")
     void test_create_new_game(Game expectedResult, User user, Game newGame) {
-        // Setup
         when(mockGameRepository.hasActiveGame(0)).thenReturn(false);
         when(mockAuthenticationService.getUser()).thenReturn(user);
         when(mockGameRepository.save(any())).thenReturn(newGame);
@@ -156,7 +177,7 @@ class GameServiceTest {
                                 .gameId(new GameId(1))
                                 .userId(new UserId(1))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(new ArrayList<>())
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build()
@@ -183,7 +204,7 @@ class GameServiceTest {
                                 .gameId(new GameId(0))
                                 .userId(new UserId(1))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(List.of(new RoundId(0)))
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build(),
@@ -191,7 +212,7 @@ class GameServiceTest {
                                 .gameId(new GameId(0))
                                 .userId(new UserId(1))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(List.of(new RoundId(0)))
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build()
@@ -240,7 +261,7 @@ class GameServiceTest {
                                 .gameId(new GameId(0))
                                 .userId(new UserId(1))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(List.of(new RoundId(0)))
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build(),
@@ -248,7 +269,7 @@ class GameServiceTest {
                                 .gameId(new GameId(0))
                                 .userId(new UserId(1))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(List.of(new RoundId(0)))
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build(),
@@ -265,7 +286,7 @@ class GameServiceTest {
                                 .gameId(new GameId(0))
                                 .userId(new UserId(1))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(List.of(new RoundId(0)))
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build()
@@ -294,7 +315,7 @@ class GameServiceTest {
                                 .gameId(new GameId(0))
                                 .userId(new UserId(1))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(List.of(new RoundId(0)))
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build(),
@@ -311,7 +332,7 @@ class GameServiceTest {
                                 .gameId(new GameId(0))
                                 .userId(new UserId(2))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(List.of(new RoundId(0)))
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build()
@@ -321,7 +342,7 @@ class GameServiceTest {
                                 .gameId(new GameId(0))
                                 .userId(new UserId(4))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(List.of(new RoundId(0)))
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build(),
@@ -338,7 +359,7 @@ class GameServiceTest {
                                 .gameId(new GameId(0))
                                 .userId(new UserId(6))
                                 .score(0)
-                                .language("nl_nl")
+                                .language(language)
                                 .roundIds(List.of(new RoundId(0)))
                                 .gameStatus(GameStatus.ACTIVE)
                                 .build()

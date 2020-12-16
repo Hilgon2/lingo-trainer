@@ -3,14 +3,12 @@ package com.lingotrainer.infrastructure.persistency.file.dictionary;
 import com.lingotrainer.domain.model.WordLength;
 import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.infrastructure.persistency.exception.FileIOException;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -19,12 +17,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BaseDictionaryFileRepositoryTest {
 
-    private BaseDictionaryFileRepository mockBaseDictionaryFileRepository;
+    private static BaseDictionaryFileRepository mockBaseDictionaryFileRepository;
     private final static String language = "test-nl_nl";
     private static Dictionary dictionary;
 
     @BeforeAll
-    static void setup() {
+    static void init() {
         dictionary = Dictionary
                 .builder()
                 .words(List.of("lopen", "schaap", "koeien", "varken", "alsmaar", "schippen"))
@@ -35,6 +33,12 @@ class BaseDictionaryFileRepositoryTest {
     @BeforeEach
     void setUp() {
         mockBaseDictionaryFileRepository = new BaseDictionaryFileRepository();
+    }
+
+    @AfterAll
+    static void after() {
+        // delete dictionary after test
+        mockBaseDictionaryFileRepository.delete(language);
     }
 
     static Stream<Arguments> provideSaveDictionary() {
@@ -135,13 +139,13 @@ class BaseDictionaryFileRepositoryTest {
 
     static Stream<Arguments> provideAvailableLanguages() {
         return Stream.of(
-                Arguments.of(List.of("nl_nl"))
+                Arguments.of(new ArrayList<>())
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideAvailableLanguages")
-    @DisplayName("Find all available languages, without test languages")
+    @DisplayName("Find all available languages")
     void test_find_available_languages(List<String> expectedResult) {
         // Run the test
         final List<String> result = mockBaseDictionaryFileRepository.findAvailableLanguages();

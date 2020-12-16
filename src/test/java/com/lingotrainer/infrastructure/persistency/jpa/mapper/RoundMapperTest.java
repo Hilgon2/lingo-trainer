@@ -37,7 +37,7 @@ class RoundMapperTest {
     private static List<RoundEntity> roundEntities;
 
     @BeforeAll
-    static void setup() {
+    static void init() {
         round = Round
                 .builder()
                 .roundId(new RoundId(1))

@@ -35,6 +35,9 @@ class BaseDictionaryServiceTest {
 
     private static List<String> words = new ArrayList<>(Collections.singletonList("woord, pizza, moeder"));
 
+    private final static String language = "test-nl_nl";
+    private final static String language2 = "test-en_en";
+
     @BeforeEach
     void setUp() {
         initMocks(this);
@@ -42,41 +45,40 @@ class BaseDictionaryServiceTest {
     }
 
     static Stream<Arguments> provideDictionarySave() {
-        String testLanguage = "test-nl_nl";
         return Stream.of(
                 Arguments.of(
-                        new MockMultipartFile("wordsFile", testLanguage, "application/json", words.toString().getBytes()),
+                        new MockMultipartFile("wordsFile", language, "application/json", words.toString().getBytes()),
                         false,
                         Dictionary
                                 .builder()
-                                .language(testLanguage)
+                                .language(language)
                                 .build(),
                         Dictionary
                                 .builder()
-                                .language(testLanguage)
+                                .language(language)
                                 .words(words)
                                 .build(),
                         Dictionary
                                 .builder()
-                                .language(testLanguage)
+                                .language(language)
                                 .words(words)
                                 .build()
                 ),
                 Arguments.of(
-                        new MockMultipartFile("wordsFile", testLanguage, "application/json", "".getBytes()),
+                        new MockMultipartFile("wordsFile", language, "application/json", "".getBytes()),
                         true,
                         Dictionary
                                 .builder()
-                                .language(testLanguage)
+                                .language(language)
                                 .build(),
                         Dictionary
                                 .builder()
-                                .language(testLanguage)
+                                .language(language)
                                 .words(words)
                                 .build(),
                         Dictionary
                                 .builder()
-                                .language(testLanguage)
+                                .language(language)
                                 .words(words)
                                 .build()
                 )
@@ -98,13 +100,12 @@ class BaseDictionaryServiceTest {
     }
 
     static Stream<Arguments> provideDictionarySaveException() {
-        String testLanguage = "test-nl_nl";
         return Stream.of(
                 Arguments.of(
-                        new MockMultipartFile("wordsFile", testLanguage, "application/json", words.toString().getBytes()),
+                        new MockMultipartFile("wordsFile", language, "application/json", words.toString().getBytes()),
                         Dictionary
                                 .builder()
-                                .language(testLanguage)
+                                .language(language)
                                 .build()
                 )
         );
@@ -123,10 +124,10 @@ class BaseDictionaryServiceTest {
 
     static Stream<Arguments> provideWordExists() {
         return Stream.of(
-                Arguments.of("test-nl_nl", "schoen", true, true),
-                Arguments.of("test-en_en", "groen", false, false),
-                Arguments.of("test-nl_nl", "forest", false, false),
-                Arguments.of("test-nl_nl", "toets", true, true)
+                Arguments.of(language, "schoen", true, true),
+                Arguments.of(language2, "groen", false, false),
+                Arguments.of(language, "forest", false, false),
+                Arguments.of(language, "toets", true, true)
         );
     }
 
@@ -145,10 +146,10 @@ class BaseDictionaryServiceTest {
 
     static Stream<Arguments> provideRandomWordRetriever() {
         return Stream.of(
-                Arguments.of("test-nl_nl", WordLength.FIVE, "groen", "groen"),
-                Arguments.of("test-nl_nl", WordLength.SIX, "schoen", "schoen"),
-                Arguments.of("test-nl_nl", WordLength.SEVEN, "alsmaar", "alsmaar"),
-                Arguments.of("test-nl_nl", null, "broek", "broek")
+                Arguments.of(language, WordLength.FIVE, "groen", "groen"),
+                Arguments.of(language, WordLength.SIX, "schoen", "schoen"),
+                Arguments.of(language, WordLength.SEVEN, "alsmaar", "alsmaar"),
+                Arguments.of(language, null, "broek", "broek")
         );
     }
 
@@ -169,13 +170,13 @@ class BaseDictionaryServiceTest {
     @Test
     @DisplayName("Retrieve available languages")
     void test_find_available_languages() {
-        when(mockDictionaryRepository.findAvailableLanguages()).thenReturn(List.of("test-nl_nl", "test-en_en"));
+        when(mockDictionaryRepository.findAvailableLanguages()).thenReturn(List.of(language, language2));
 
         // Run the test
         final List<String> result = mockDictionaryService.findAvailableLanguages();
 
         // Verify the results
         assertEquals(2, result.size());
-        assertEquals(List.of("test-nl_nl", "test-en_en"), result);
+        assertEquals(List.of(language, language2), result);
     }
 }

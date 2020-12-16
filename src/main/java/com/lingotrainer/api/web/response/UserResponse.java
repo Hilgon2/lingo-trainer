@@ -10,4 +10,5 @@ import lombok.*;
 public class UserResponse {
     private String username;
     private int highscore;
+    private boolean admin;
 }

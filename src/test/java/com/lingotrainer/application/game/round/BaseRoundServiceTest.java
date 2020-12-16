@@ -67,6 +67,8 @@ class BaseRoundServiceTest {
 
     private static Instant currentTime = Instant.now();
 
+    private static final String language = "test-nl_nl";
+
     @BeforeEach
     void setUp() {
         initMocks(this);
@@ -74,7 +76,7 @@ class BaseRoundServiceTest {
     }
 
     @BeforeAll
-    static void setup() {
+    static void init() {
         admin = User
                 .builder()
                 .userId(new UserId(1))
@@ -113,7 +115,7 @@ class BaseRoundServiceTest {
                 .gameId(new GameId(1))
                 .userId(new UserId(2))
                 .roundIds(new ArrayList<>(List.of(new RoundId(1))))
-                .language("nl_nl")
+                .language(language)
                 .gameStatus(GameStatus.ACTIVE)
                 .score(0)
                 .build();
@@ -123,7 +125,7 @@ class BaseRoundServiceTest {
                 .gameId(new GameId(2))
                 .userId(new UserId(3))
                 .roundIds(new ArrayList<>(List.of(new RoundId(1))))
-                .language("nl_nl")
+                .language(language)
                 .gameStatus(GameStatus.ACTIVE)
                 .score(0)
                 .build();
