@@ -12,4 +12,5 @@ public interface DictionaryRepository {
     boolean existsByWord(String languageCode, String guessedWord);
     String retrieveRandomWord(String languageCode, WordLength wordLength);
     List<String> findAvailableLanguages();
+    void delete(String language);
 }

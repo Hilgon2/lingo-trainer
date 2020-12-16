@@ -36,8 +36,10 @@ class GameMapperTest {
     private static List<Game> games;
     private static List<GameEntity> gameEntities;
 
+    private final static String language = "test-nl_nl";
+
     @BeforeAll
-    static void setup() {
+    static void init() {
         UserEntity userEntity =
                 UserEntity
                         .builder()
@@ -48,7 +50,7 @@ class GameMapperTest {
                 .builder()
                 .id(1)
                 .user(userEntity)
-                .language("nl_nl")
+                .language(language)
                 .gameStatus(GameStatus.ACTIVE)
                 .rounds(List.of(
                         RoundEntity
@@ -62,7 +64,7 @@ class GameMapperTest {
                 .builder()
                 .gameId(new GameId(1))
                 .userId(new UserId(1))
-                .language("nl_nl")
+                .language(language)
                 .gameStatus(GameStatus.ACTIVE)
                 .roundIds(List.of(new RoundId(1)))
                 .build();
@@ -72,7 +74,7 @@ class GameMapperTest {
                         .builder()
                         .gameId(new GameId(2))
                         .userId(new UserId(1))
-                        .language("nl_nl")
+                        .language(language)
                         .gameStatus(GameStatus.FINISHED)
                         .roundIds(List.of(new RoundId(1)))
                         .build(),
@@ -80,7 +82,7 @@ class GameMapperTest {
                         .builder()
                         .gameId(new GameId(3))
                         .userId(new UserId(1))
-                        .language("nl_nl")
+                        .language(language)
                         .gameStatus(GameStatus.FINISHED)
                         .roundIds(List.of(new RoundId(2)))
                         .build(),
@@ -88,7 +90,7 @@ class GameMapperTest {
                         .builder()
                         .gameId(new GameId(4))
                         .userId(new UserId(1))
-                        .language("nl_nl")
+                        .language(language)
                         .gameStatus(GameStatus.ACTIVE)
                         .roundIds(List.of(new RoundId(3)))
                         .build()
@@ -99,7 +101,7 @@ class GameMapperTest {
                         .builder()
                         .id(2)
                         .user(userEntity)
-                        .language("nl_nl")
+                        .language(language)
                         .gameStatus(GameStatus.FINISHED)
                         .rounds(List.of(
                                 RoundEntity
@@ -112,7 +114,7 @@ class GameMapperTest {
                         .builder()
                         .id(3)
                         .user(userEntity)
-                        .language("nl_nl")
+                        .language(language)
                         .gameStatus(GameStatus.FINISHED)
                         .rounds(List.of(
                                 RoundEntity
@@ -125,7 +127,7 @@ class GameMapperTest {
                         .builder()
                         .id(4)
                         .user(userEntity)
-                        .language("nl_nl")
+                        .language(language)
                         .gameStatus(GameStatus.ACTIVE)
                         .rounds(List.of(
                                 RoundEntity

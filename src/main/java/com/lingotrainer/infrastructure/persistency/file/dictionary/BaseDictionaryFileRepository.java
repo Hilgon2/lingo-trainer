@@ -85,4 +85,10 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
 
         return languages;
     }
+
+    @Override
+    public void delete(String language) {
+        File file = new File(String.format("src/main/resources/dictionary/%s.json", language));
+        file.delete();
+    }
 }

@@ -35,7 +35,7 @@ class BaseUserJpaRepositoryTest {
     private static UserEntity userEntity;
 
     @BeforeAll
-    static void setup() {
+    static void init() {
         user = User
                 .builder()
                 .userId(new UserId(1))
