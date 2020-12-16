@@ -1,9 +1,7 @@
 package com.lingotrainer.domain.model.game.round;
 
-import com.lingotrainer.application.exception.GameException;
 import com.lingotrainer.domain.model.WordLength;
 import com.lingotrainer.domain.model.game.GameId;
-import com.lingotrainer.domain.model.game.round.turn.Turn;
 import com.lingotrainer.domain.model.game.round.turn.TurnId;
 import lombok.*;
 
@@ -93,14 +91,5 @@ public class Round {
         }
 
         return this.wordLength;
-    }
-
-    public void checkActiveTurns(List<Turn> turns) {
-        if (turns.size() > 0) {
-            throw new GameException(
-                    "There are still turns left on the current round. "
-                            + "Please finish them before creating a new round."
-            );
-        }
     }
 }

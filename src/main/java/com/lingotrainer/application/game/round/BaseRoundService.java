@@ -49,7 +49,7 @@ public class BaseRoundService implements RoundService {
     public Round saveRound(Round round) {
         Game game = this.gameService.findById(round.getGameId());
         if (game.getUserId() != authenticationService.getUser().getUserId()) {
-            throw new ForbiddenException("This game is not linked to the current user");
+            throw new ForbiddenException("Deze game is niet gekoppeld aan de huidige gebruiker");
         }
 
         return roundRepository.save(round);

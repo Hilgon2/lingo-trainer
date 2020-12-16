@@ -49,7 +49,7 @@ public class BaseDictionaryService implements DictionaryService {
 
             return this.dictionaryRepository.save(dictionary);
         } catch (IOException e) {
-            throw new GeneralException(String.format("Unknown error trying to open the %s language file",
+            throw new GeneralException(String.format("Onbekende fout bij het openen van de woordenlijst van %s",
                     dictionary.getLanguage()));
         }
     }

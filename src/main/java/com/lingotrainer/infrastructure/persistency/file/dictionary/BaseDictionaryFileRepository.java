@@ -26,7 +26,7 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
                 dictionary.getLanguage()))) {
             targetFileWriter.write(this.gson.toJson(dictionary.getWords()));
         } catch (IOException e) {
-            throw new FileIOException(String.format("Unknown error trying to open the %s language file",
+            throw new FileIOException(String.format("Onbekende fout bij het openen van de woordenlijst %s",
                     dictionary.getLanguage()));
         }
 
