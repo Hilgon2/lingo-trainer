@@ -119,7 +119,8 @@ public class Feedback {
             // This could otherwise possibly cause an error.
             this.guessedWord = guessedWord.toUpperCase().trim();
 
-            if (Duration.between(this.getStartedAt(), Instant.now()).getSeconds() > 10) {
+            // TODO: change 1500 to 10 (seconds)
+            if (Duration.between(this.getStartedAt(), Instant.now()).getSeconds() > 1500) {
                 this.code = 5220;
                 this.status = TurnFeedback.TURN_TIME_OVER;
             } else if (answer.length() != this.getGuessedWord().length()) {
@@ -131,7 +132,6 @@ public class Feedback {
             } else if (!wordExists) {
                 this.code = 5215;
                 this.status = TurnFeedback.GUESSED_WORD_NOT_FOUND;
-                // TODO: change 1500 to 10 (seconds)
             }
         }
     }
