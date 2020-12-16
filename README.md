@@ -33,8 +33,8 @@ Er wordt ook gebruik gemaakt van Environment variables. De volgende zijn nodig v
 | Variable | Doel | Voorbeeld |
 | -------- | ---- | --------- |
 | DDL_AUTO | hibernate ddl-auto instellen. Dit wordt gebruikt om de keuze te maken of de database opnieuw moet worden aangemaakt bij het opstarten van de applicatie. | `create` |
-| DB_URL | database URL | `jdbc:postgresql://localhost:5432/<databaseName>`; `jdbc:postgresql://localhost:5432/lingo` |
-| DB_USERNAME | database username | `<username>`; `root` |
-| DB_PASSWORD | database wachtwoord | `<password>`; `adminpassword123` |
+| DB_URL | database URL | `jdbc:postgresql://localhost:5432/lingo` |
+| DB_USERNAME | database username |`root` |
+| DB_PASSWORD | database wachtwoord | `adminpassword123` |
 
 Dit is alles! 
