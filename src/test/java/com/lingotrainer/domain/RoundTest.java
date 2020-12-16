@@ -64,37 +64,4 @@ class RoundTest {
     void test_get_current_word_length(Round round, WordLength shouldAccept) {
         assertEquals(shouldAccept, round.getWordLength());
     }
-
-    static Stream<Arguments> provideRoundWithActiveTurns() {
-        return Stream.of(
-                Arguments.of(Round.builder().roundId(new RoundId(2)).build(), new ArrayList<>(Collections.singletonList(
-                        Turn.builder().build()
-                ))),
-                Arguments.of(Round.builder().roundId(new RoundId(3)).build(), new ArrayList<>(List.of(
-                        Turn.builder().build(),
-                        Turn.builder().build()
-                )))
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideRoundWithActiveTurns")
-    @DisplayName("Throw error on active turns")
-    void test_round_has_active_turns_exception(Round round, List<Turn> turns) {
-        assertThrows(GameException.class, () -> round.checkActiveTurns(turns));
-    }
-
-    static Stream<Arguments> provideRoundWithNoActiveTurns() {
-        return Stream.of(
-                Arguments.of(Round.builder().roundId(new RoundId(2)).build(), new ArrayList<>()),
-                Arguments.of(Round.builder().roundId(new RoundId(3)).build(), new ArrayList<>())
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideRoundWithNoActiveTurns")
-    @DisplayName("Do not throw an error with no active turns")
-    void test_round_has_no_active_turns(Round round, List<Turn> turns) {
-        assertDoesNotThrow(() -> round.checkActiveTurns(turns));
-    }
 }

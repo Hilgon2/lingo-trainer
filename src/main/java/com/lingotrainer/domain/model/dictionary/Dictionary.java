@@ -1,6 +1,6 @@
 package com.lingotrainer.domain.model.dictionary;
 
-import com.lingotrainer.application.exception.GeneralException;
+import com.lingotrainer.domain.exception.DictionaryFileIOException;
 import com.lingotrainer.domain.model.WordLength;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,7 +33,7 @@ public class Dictionary {
                 }
             }
         } catch (IOException e) {
-            throw new GeneralException(String.format("Unknown error trying to open the %s language file",
+            throw new DictionaryFileIOException(String.format("Unknown error trying to open the %s language file",
                     this.getLanguage()));
         }
     }
