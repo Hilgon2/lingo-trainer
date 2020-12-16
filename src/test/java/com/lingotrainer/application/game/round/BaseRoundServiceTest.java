@@ -468,7 +468,7 @@ class BaseRoundServiceTest {
         Turn playTurnTime = Turn
                 .builder()
                 .roundId(new RoundId(1))
-                .startedAt(Instant.now().minusSeconds(1501))
+                .startedAt(Instant.now().minusSeconds(11))
                 .build();
 
         return Stream.of(
