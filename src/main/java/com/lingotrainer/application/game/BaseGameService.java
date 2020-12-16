@@ -34,11 +34,11 @@ public class BaseGameService implements GameService {
     @Override
     public Game createNewGame(String languageCode) {
         if (this.gameRepository.hasActiveGame(authenticationService.getUser().getUserId())) {
-            throw new DuplicateException("An active game by the user already exists");
+            throw new DuplicateException("Er is nog een lopende game");
         }
 
         if (!new File(String.format("src/main/resources/dictionary/%s.json", languageCode)).exists()) {
-            throw new NotFoundException(String.format("Language code '%s' not found.", languageCode));
+            throw new NotFoundException(String.format("Woordenlijst '%s' kon niet worden gevonden.", languageCode));
         }
 
         User user = this.authenticationService.getUser();
@@ -60,7 +60,7 @@ public class BaseGameService implements GameService {
     @Override
     public Game save(Game game) {
         if (game.getUserId() != authenticationService.getUser().getUserId()) {
-            throw new ForbiddenException("This game is not linked to the current user");
+            throw new ForbiddenException("Deze game is niet gekoppeld aan de huidige gebruiker");
         }
 
         return this.gameRepository.save(game);

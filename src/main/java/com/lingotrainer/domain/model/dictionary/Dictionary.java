@@ -33,7 +33,7 @@ public class Dictionary {
                 }
             }
         } catch (IOException e) {
-            throw new DictionaryFileIOException(String.format("Unknown error trying to open the %s language file",
+            throw new DictionaryFileIOException(String.format("Onbekende fout bij het openen van de woordenlijst %s",
                     this.getLanguage()));
         }
     }
