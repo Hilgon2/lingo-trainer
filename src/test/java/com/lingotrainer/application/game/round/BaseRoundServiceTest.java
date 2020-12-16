@@ -2,6 +2,7 @@ package com.lingotrainer.application.game.round;
 
 import com.lingotrainer.application.authentication.AuthenticationService;
 import com.lingotrainer.application.dictionary.DictionaryService;
+import com.lingotrainer.application.exception.DuplicateException;
 import com.lingotrainer.application.exception.NotFoundException;
 import com.lingotrainer.application.game.BaseGameService;
 import com.lingotrainer.application.user.UserService;
@@ -298,7 +299,7 @@ class BaseRoundServiceTest {
                 ),
                 // without current round
                 Arguments.of(
-                        trainee, 1, null, round, game, "toetsen",
+                        trainee, 1, round2, round, game, "toetsen",
                         Round
                                 .builder()
                                 .roundId(new RoundId(2))
@@ -328,9 +329,8 @@ class BaseRoundServiceTest {
     @DisplayName("Create new round")
     void test_create_new_round(User user, int gameId, Round currentRound, Round lastRound,
                                Game game, String randomWord, Round newRound, Turn newTurn, Round expectedResult) {
-        when(mockGameService.hasActiveGame(user.getUserId())).thenReturn(true);
         when(mockAuthenticationService.getUser()).thenReturn(user);
-        when(mockRoundRepository.findCurrentRound(gameId)).thenReturn(Optional.ofNullable(currentRound));
+        when(mockRoundRepository.findCurrentRound(gameId)).thenReturn(Optional.empty());
         when(mockRoundRepository.findLastRound(gameId)).thenReturn(Optional.ofNullable(lastRound));
         when(mockGameService.findById(gameId)).thenReturn(game);
         when(mockDictionaryService.retrieveRandomWord(game.getLanguage(), WordLength.SEVEN)).thenReturn(randomWord);
@@ -342,6 +342,23 @@ class BaseRoundServiceTest {
 
         // Verify the results
         assertEquals(expectedResult, result);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideNewRounds")
+    @DisplayName("Create new round when there is another active round")
+    void test_create_new_round_with_active_round(User user, int gameId, Round currentRound, Round lastRound,
+                               Game game, String randomWord, Round newRound, Turn newTurn, Round voidRound) {
+        when(mockAuthenticationService.getUser()).thenReturn(user);
+        when(mockRoundRepository.findCurrentRound(gameId)).thenReturn(Optional.ofNullable(currentRound));
+        when(mockRoundRepository.findLastRound(gameId)).thenReturn(Optional.ofNullable(lastRound));
+        when(mockGameService.findById(gameId)).thenReturn(game);
+        when(mockDictionaryService.retrieveRandomWord(game.getLanguage(), WordLength.SEVEN)).thenReturn(randomWord);
+        when(mockRoundRepository.save(any())).thenReturn(newRound);
+        when(mockTurnRepository.save(newTurn)).thenReturn(newTurn);
+
+        // Verify the results
+        assertThrows(DuplicateException.class, () ->  mockRoundService.createNewRound(gameId));
     }
 
     static Stream<Arguments> provideRoundsForFindRoundById() {
@@ -451,7 +468,7 @@ class BaseRoundServiceTest {
         Turn playTurnTime = Turn
                 .builder()
                 .roundId(new RoundId(1))
-                .startedAt(Instant.now().minusSeconds(15))
+                .startedAt(Instant.now().minusSeconds(11))
                 .build();
 
         return Stream.of(
@@ -466,7 +483,7 @@ class BaseRoundServiceTest {
     @ParameterizedTest
     @MethodSource("providePlayTurn")
     @DisplayName("Play turn")
-    void testPlayTurn(int userId, int gameId, int roundId,
+    void test_play_turn(int userId, int gameId, int roundId,
                       User user, Game currentGame, Round currentRound, Turn currentTurn,
                       String guessedWord, boolean wordExists, List<Turn> activeTurns, TurnFeedback expectedResult
     ) {

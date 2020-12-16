@@ -32,6 +32,8 @@ public class Feedback {
     private boolean wordExists;
     private Instant startedAt;
 
+    private static final int TIME_LIMIT = 10;
+
     public Feedback(String answer, String guessedWord, boolean wordExists, Instant startedAt) {
         this.answer = answer;
         this.guessedWord = guessedWord;
@@ -119,7 +121,7 @@ public class Feedback {
             // This could otherwise possibly cause an error.
             this.guessedWord = guessedWord.toUpperCase().trim();
 
-            if (Duration.between(this.getStartedAt(), Instant.now()).getSeconds() > 10) {
+            if (Duration.between(this.getStartedAt(), Instant.now()).getSeconds() > TIME_LIMIT) {
                 this.code = 5220;
                 this.status = TurnFeedback.TURN_TIME_OVER;
             } else if (answer.length() != this.getGuessedWord().length()) {
@@ -131,7 +133,6 @@ public class Feedback {
             } else if (!wordExists) {
                 this.code = 5215;
                 this.status = TurnFeedback.GUESSED_WORD_NOT_FOUND;
-                // TODO: change 1500 to 10 (seconds)
             }
         }
     }

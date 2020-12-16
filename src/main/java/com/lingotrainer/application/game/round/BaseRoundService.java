@@ -1,6 +1,7 @@
 package com.lingotrainer.application.game.round;
 
 import com.lingotrainer.application.dictionary.DictionaryService;
+import com.lingotrainer.application.exception.DuplicateException;
 import com.lingotrainer.application.game.GameService;
 import com.lingotrainer.application.user.UserService;
 import com.lingotrainer.domain.model.game.GameId;
@@ -48,7 +49,7 @@ public class BaseRoundService implements RoundService {
     public Round saveRound(Round round) {
         Game game = this.gameService.findById(round.getGameId());
         if (game.getUserId() != authenticationService.getUser().getUserId()) {
-            throw new ForbiddenException("This game is not linked to the current user");
+            throw new ForbiddenException("Deze game is niet gekoppeld aan de huidige gebruiker");
         }
 
         return roundRepository.save(round);
@@ -61,6 +62,9 @@ public class BaseRoundService implements RoundService {
 
     @Override
     public Round createNewRound(int gameId) {
+        if (this.findCurrentRound(gameId) != null) {
+            throw new DuplicateException("Er is al een actieve ronde aanwezig");
+        }
         // retrieve last round to retrieve the amount of letters the next word needs (5, 6 or 7)
         Round lastRound = this.roundRepository.findLastRound(gameId).orElse(null);
         Game game = this.gameService.findById(gameId);

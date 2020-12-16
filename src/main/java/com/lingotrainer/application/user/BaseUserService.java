@@ -45,7 +45,7 @@ public class BaseUserService implements UserService, UserDetailsService {
         if (user.getRole() == Role.ADMIN
                 && (currentUser == null
                 || currentUser.getRole() != Role.ADMIN)) {
-            throw new ForbiddenException("Only administrators are permitted to create another administrator account");
+            throw new ForbiddenException("Enkel administrators mogen een ander administrator account aanmaken");
         }
         return this.userRepository.save(user);
     }
@@ -53,18 +53,18 @@ public class BaseUserService implements UserService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         return this.userRepository.findByUsername(username).orElseThrow(() ->
-                new NotFoundException(String.format("User with username %s could not be found", username)));
+                new NotFoundException(String.format("Gebruiker met de naam %s kon niet gevonden worden", username)));
     }
 
     @Override
     public User findById(int userId) {
         return this.userRepository.findById(userId).orElseThrow(() ->
-                new NotFoundException(String.format("User ID %d could not be found", userId)));
+                new NotFoundException(String.format("Gebruiker ID %d kon niet gevonden worden", userId)));
     }
 
     @Override
     public User findByUsername(String username) {
         return this.userRepository.findByUsername(username).orElseThrow(() ->
-                new NotFoundException(String.format("Username %s could not be found", username)));
+                new NotFoundException(String.format("Gebruiker met de naam %s kon niet gevonden worden", username)));
     }
 }

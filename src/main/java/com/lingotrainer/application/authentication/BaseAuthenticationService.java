@@ -61,7 +61,7 @@ public class BaseAuthenticationService implements AuthenticationService {
                     .token(token)
                     .build();
         } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username/password");
+            throw new BadCredentialsException("Ongeldige gebruikersnaam en/of wachtwoord");
         }
     }
 }
