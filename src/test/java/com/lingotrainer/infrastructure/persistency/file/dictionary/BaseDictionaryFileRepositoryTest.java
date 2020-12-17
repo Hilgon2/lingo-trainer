@@ -139,18 +139,18 @@ class BaseDictionaryFileRepositoryTest {
 
     static Stream<Arguments> provideAvailableLanguages() {
         return Stream.of(
-                Arguments.of(new ArrayList<>())
+                Arguments.of("test-nl_nl")
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideAvailableLanguages")
-    @DisplayName("Find all available languages")
-    void test_find_available_languages(List<String> expectedResult) {
+    @DisplayName("Find all available languages includes the test dictionary")
+    void test_find_available_languages(String expectedResult) {
         // Run the test
         final List<String> result = mockBaseDictionaryFileRepository.findAvailableLanguages();
 
         // Verify the results
-        assertEquals(expectedResult, result);
+        assertTrue(result.contains(expectedResult));
     }
 }

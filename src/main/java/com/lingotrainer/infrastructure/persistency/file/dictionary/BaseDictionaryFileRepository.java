@@ -72,11 +72,6 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
         File file = new File("src/main/resources/dictionary");
         if (file.exists() && file.list() != null) {
             for (String dictionaryName : file.list()) {
-                // continue loop if language is a test language
-                if (dictionaryName.length() > 4 && dictionaryName.substring(0, 5).equals("test-")) {
-                    continue;
-                }
-
                 if (dictionaryName.substring(dictionaryName.length() - 5).equals(".json")) {
                     languages.add(dictionaryName.substring(0, dictionaryName.length() - 5));
                 }
@@ -87,8 +82,23 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
     }
 
     @Override
-    public void delete(String language) {
+    public boolean delete(String language) {
         File file = new File(String.format("src/main/resources/dictionary/%s.json", language));
-        file.delete();
+        return file.delete();
+    }
+
+    @Override
+    public List<String> findWordsByLanguage(String language) throws IOException {
+        String dictionaryPath = "src/main/resources/dictionary/%s.json";
+        List<String> words = new ArrayList<>();
+
+        // if file exists, get words list
+        if (this.findByLanguage(language).isPresent()) {
+            String targetFileReader = new String(Files.readAllBytes(Paths.get(
+                    String.format(dictionaryPath, language))));
+            words = gson.fromJson(targetFileReader, List.class);
+        }
+
+        return words;
     }
 }
