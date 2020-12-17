@@ -20,7 +20,7 @@ public class BaseDictionaryFileRepository implements DictionaryRepository {
 
     private Gson gson = new Gson();
     private final ClassLoader classLoader = getClass().getClassLoader();
-    private final static String DICTIONARY_STRING = "dictionary/%s.json";
+    private static final String DICTIONARY_STRING = "dictionary/%s.json";
 
     @Override
     public Dictionary save(Dictionary dictionary) {

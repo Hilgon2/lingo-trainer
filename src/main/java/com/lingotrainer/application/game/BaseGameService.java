@@ -38,7 +38,8 @@ public class BaseGameService implements GameService {
             throw new DuplicateException("Er is nog een lopende game");
         }
 
-        if (!new File(this.classLoader.getResource(".").getFile() + String.format("dictionary/%s.json", language)).exists()) {
+        if (!new File(this.classLoader.getResource(".").getFile() + String.format("dictionary/%s.json", language))
+                .exists()) {
             throw new NotFoundException(String.format("Woordenlijst '%s' kon niet worden gevonden.", language));
         }
 
