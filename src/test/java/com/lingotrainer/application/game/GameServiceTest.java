@@ -180,21 +180,22 @@ class GameServiceTest {
                                 .language(language)
                                 .roundIds(new ArrayList<>())
                                 .gameStatus(GameStatus.ACTIVE)
-                                .build()
+                                .build(),
+                        language
                 ));
     }
 
     @ParameterizedTest
     @MethodSource("provideNewGameCreationWithActiveGame")
     @DisplayName("Create a new game when there is still an active game. Should throw exception")
-    void test_create_new_game_when_user_has_active_game(User user, Game newGame) {
+    void test_create_new_game_when_user_has_active_game(User user, Game newGame, String language) {
         // Setup
         when(mockGameRepository.hasActiveGame(user.getUserId())).thenReturn(true);
         when(mockAuthenticationService.getUser()).thenReturn(user);
         when(mockGameRepository.save(any())).thenReturn(newGame);
         when(mockGameService.save(newGame)).thenReturn(newGame);
 
-        assertThrows(DuplicateException.class, () -> mockGameService.createNewGame(newGame.getLanguage()));
+        assertThrows(DuplicateException.class, () -> mockGameService.createNewGame(language));
     }
 
     static Stream<Arguments> provideActiveGame() {

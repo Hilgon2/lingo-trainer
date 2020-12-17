@@ -1,6 +1,5 @@
 package com.lingotrainer.application.dictionary;
 
-import com.google.gson.Gson;
 import com.lingotrainer.domain.model.WordLength;
 import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.domain.model.dictionary.WordFilter;
@@ -10,9 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,22 +23,14 @@ public class BaseDictionaryService implements DictionaryService {
     }
 
     @Override
-    public Dictionary save(MultipartFile file, String languageCode) {
-        Gson gson = new Gson();
+    public Dictionary save(MultipartFile file, String language) {
         Dictionary dictionary = Dictionary.builder()
-                .language(languageCode)
+                .language(language)
                 .build();
-        String dictionaryPath = "src/main/resources/dictionary/%s.json";
 
         try {
-            // if file exists, get words list. Otherwise create empty word list.
-            if (this.dictionaryRepository.findByLanguage(dictionary.getLanguage()).isPresent()) {
-                String targetFileReader = new String(Files.readAllBytes(Paths.get(
-                        String.format(dictionaryPath, dictionary.getLanguage()))));
-                dictionary.setWords(gson.fromJson(targetFileReader, List.class));
-            } else {
-                dictionary.setWords(new ArrayList<>());
-            }
+            // set words, because file is empty before filling
+            dictionary.setWords(this.dictionaryRepository.findWordsByLanguage(dictionary.getLanguage()));
 
             // add new words to words list
             dictionary.addNewWords(file, lingoWordFilter);
