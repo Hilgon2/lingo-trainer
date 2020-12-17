@@ -31,7 +31,6 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.coverage.exclusions>
             **/api/security/**,
-            **/infrastructure/persistency/exception/**,
             **/infrastructure/persistency/jpa/entity/user/**
         </sonar.coverage.exclusions>
     </properties>
@@ -202,7 +201,6 @@
                 <configuration>
                     <excludes>
                         <exclude>**/api/security/**</exclude>
-                        <exclude>**/infrastructure/persistency/exception/**</exclude>
                         <exclude>**/infrastructure/persistency/jpa/entity/user/**</exclude>
                     </excludes>
                 </configuration>

@@ -3,6 +3,7 @@ package com.lingotrainer.infrastructure.persistency.file.dictionary;
 import com.lingotrainer.domain.model.WordLength;
 import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.infrastructure.persistency.exception.FileIOException;
+import com.lingotrainer.infrastructure.persistency.exception.LanguageNotFoundException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -68,7 +69,8 @@ class BaseDictionaryFileRepositoryTest {
 
     static Stream<Arguments> provideFindByLanguage() {
         return Stream.of(
-                Arguments.of(language, Optional.ofNullable(dictionary))
+                Arguments.of(language, Optional.ofNullable(dictionary)),
+                Arguments.of("test_test_test_test", Optional.empty())
         );
     }
 
@@ -116,6 +118,25 @@ class BaseDictionaryFileRepositoryTest {
 
         // Verify the results
         assertEquals(expectedResult, result);
+    }
+
+    static Stream<Arguments> provideExistsByWordWithNonExistentDictionary() {
+        String nonExistentLanguage = "test_test_test_test";
+        return Stream.of(
+                Arguments.of(nonExistentLanguage, "spinnenwebben"),
+                Arguments.of(nonExistentLanguage, "koeien"),
+                Arguments.of(nonExistentLanguage, "varken"),
+                Arguments.of(nonExistentLanguage, "laptopscherm"),
+                Arguments.of(nonExistentLanguage, "lopen")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideExistsByWordWithNonExistentDictionary")
+    @DisplayName("Word exists in dictionary which does not exist")
+    void test_exists_by_word_with_non_existent_dictionary(String language, String guessedWord) {
+        // Verify the results
+        assertThrows(LanguageNotFoundException.class, () -> mockBaseDictionaryFileRepository.existsByWord(language, guessedWord));
     }
 
     static Stream<Arguments> provideRandomWordRetriever() {
