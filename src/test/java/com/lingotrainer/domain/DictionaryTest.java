@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DictionaryTest {
+class DictionaryTest {
 
     Dictionary dictionary;
     String language;

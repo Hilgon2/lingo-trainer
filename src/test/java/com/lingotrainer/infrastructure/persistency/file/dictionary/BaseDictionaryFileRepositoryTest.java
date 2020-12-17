@@ -3,11 +3,13 @@ package com.lingotrainer.infrastructure.persistency.file.dictionary;
 import com.lingotrainer.domain.model.WordLength;
 import com.lingotrainer.domain.model.dictionary.Dictionary;
 import com.lingotrainer.infrastructure.persistency.exception.FileIOException;
+import com.lingotrainer.infrastructure.persistency.exception.LanguageNotFoundException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,7 @@ class BaseDictionaryFileRepositoryTest {
 
     private static BaseDictionaryFileRepository mockBaseDictionaryFileRepository;
     private final static String language = "test-nl_nl";
+    private final static String nonExistentLanguage = "test_test_test_test";
     private static Dictionary dictionary;
 
     @BeforeAll
@@ -68,7 +71,8 @@ class BaseDictionaryFileRepositoryTest {
 
     static Stream<Arguments> provideFindByLanguage() {
         return Stream.of(
-                Arguments.of(language, Optional.ofNullable(dictionary))
+                Arguments.of(language, Optional.ofNullable(dictionary)),
+                Arguments.of(nonExistentLanguage, Optional.empty())
         );
     }
 
@@ -118,6 +122,24 @@ class BaseDictionaryFileRepositoryTest {
         assertEquals(expectedResult, result);
     }
 
+    static Stream<Arguments> provideExistsByWordWithNonExistentDictionary() {
+        return Stream.of(
+                Arguments.of(nonExistentLanguage, "spinnenwebben"),
+                Arguments.of(nonExistentLanguage, "koeien"),
+                Arguments.of(nonExistentLanguage, "varken"),
+                Arguments.of(nonExistentLanguage, "laptopscherm"),
+                Arguments.of(nonExistentLanguage, "lopen")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideExistsByWordWithNonExistentDictionary")
+    @DisplayName("Word exists in dictionary which does not exist")
+    void test_exists_by_word_with_non_existent_dictionary(String language, String guessedWord) {
+        // Verify the results
+        assertThrows(LanguageNotFoundException.class, () -> mockBaseDictionaryFileRepository.existsByWord(language, guessedWord));
+    }
+
     static Stream<Arguments> provideRandomWordRetriever() {
         return Stream.of(
                 Arguments.of(language, WordLength.FIVE, 5),
@@ -137,18 +159,52 @@ class BaseDictionaryFileRepositoryTest {
         assertEquals(expectedResult, result.length());
     }
 
+    static Stream<Arguments> provideRandomWordRetrieverUnknownLanguage() {
+        return Stream.of(
+                Arguments.of(nonExistentLanguage, WordLength.FIVE),
+                Arguments.of(nonExistentLanguage, WordLength.SIX),
+                Arguments.of(nonExistentLanguage, WordLength.SEVEN)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideRandomWordRetrieverUnknownLanguage")
+    @DisplayName("Get random word from dictionary which does not exist")
+    void test_retrieve_random_word_non_existent_language(String language, WordLength wordLength) {
+        // Verify the results
+        assertThrows(LanguageNotFoundException.class, () -> mockBaseDictionaryFileRepository.retrieveRandomWord(language, wordLength));
+    }
+
     static Stream<Arguments> provideAvailableLanguages() {
         return Stream.of(
-                Arguments.of(new ArrayList<>())
+                Arguments.of(language)
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideAvailableLanguages")
-    @DisplayName("Find all available languages")
-    void test_find_available_languages(List<String> expectedResult) {
+    @DisplayName("Find all available languages includes the test dictionary")
+    void test_find_available_languages(String expectedResult) {
         // Run the test
         final List<String> result = mockBaseDictionaryFileRepository.findAvailableLanguages();
+
+        // Verify the results
+        assertTrue(result.contains(expectedResult));
+    }
+
+    static Stream<Arguments> provideFindWordsByLanguage() {
+        return Stream.of(
+                Arguments.of(language, new ArrayList<>(List.of("lopen", "schaap", "koeien", "varken", "alsmaar", "schippen"))),
+                Arguments.of(nonExistentLanguage, new ArrayList<>())
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideFindWordsByLanguage")
+    @DisplayName("Find the words by language. Return empty list of dictionary does not exist")
+    void test_find_words_by_language(String language, List<String> expectedResult) throws IOException {
+        // Run the test
+        final List<String> result = mockBaseDictionaryFileRepository.findWordsByLanguage(language);
 
         // Verify the results
         assertEquals(expectedResult, result);
