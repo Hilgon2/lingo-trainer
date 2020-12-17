@@ -106,7 +106,8 @@ class BaseDictionaryServiceTest {
                         Dictionary
                                 .builder()
                                 .language(language)
-                                .build()
+                                .build(),
+                        language
                 )
         );
     }
@@ -114,12 +115,12 @@ class BaseDictionaryServiceTest {
     @ParameterizedTest
     @MethodSource("provideDictionarySaveException")
     @DisplayName("Save a dictionary with invalid file. Should throw exception")
-    void test_save_dictionary_exception(MockMultipartFile file, Dictionary dictionary) {
+    void test_save_dictionary_exception(MockMultipartFile file, Dictionary dictionary, String language) {
         when(mockLingoWordFilter.verify("word", words)).thenReturn(true);
         when(mockDictionaryRepository.save(any())).thenThrow(GeneralException.class);
 
         // Verify the results
-        assertThrows(GeneralException.class, () -> mockDictionaryService.save(file, dictionary.getLanguage()));
+        assertThrows(GeneralException.class, () -> mockDictionaryService.save(file, language));
     }
 
     static Stream<Arguments> provideWordExists() {

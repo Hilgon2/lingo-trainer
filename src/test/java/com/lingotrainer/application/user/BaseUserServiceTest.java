@@ -385,20 +385,20 @@ class BaseUserServiceTest {
 
     static Stream<Arguments> provideFindByIdAbsent() {
         return Stream.of(
-                Arguments.of(new UserId(1)),
-                Arguments.of(new UserId(5)),
-                Arguments.of(new UserId(9))
+                Arguments.of(1),
+                Arguments.of(5),
+                Arguments.of(9)
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideFindByIdAbsent")
     @DisplayName("User ID should not be found")
-    void test_find_by_id_user_not_found(UserId userId) {
-        when(mockUserRepository.findById(userId.getId())).thenReturn(Optional.empty());
+    void test_find_by_id_user_not_found(int userId) {
+        when(mockUserRepository.findById(userId)).thenReturn(Optional.empty());
 
         // Verify the results
-        assertThrows(NotFoundException.class, () -> mockUserService.findById(userId.getId()));
+        assertThrows(NotFoundException.class, () -> mockUserService.findById(userId));
     }
 
     @ParameterizedTest
