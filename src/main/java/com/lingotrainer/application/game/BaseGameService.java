@@ -18,6 +18,7 @@ public class BaseGameService implements GameService {
 
     private GameRepository gameRepository;
     private AuthenticationService authenticationService;
+    private final ClassLoader classLoader = getClass().getClassLoader();
 
     public BaseGameService(GameRepository gameRepository,
                            AuthenticationService authenticationService) {
@@ -32,20 +33,20 @@ public class BaseGameService implements GameService {
     }
 
     @Override
-    public Game createNewGame(String languageCode) {
+    public Game createNewGame(String language) {
         if (this.gameRepository.hasActiveGame(authenticationService.getUser().getUserId())) {
             throw new DuplicateException("Er is nog een lopende game");
         }
 
-        if (!new File(String.format("src/main/resources/dictionary/%s.json", languageCode)).exists()) {
-            throw new NotFoundException(String.format("Woordenlijst '%s' kon niet worden gevonden.", languageCode));
+        if (!new File(this.classLoader.getResource(".").getFile() + String.format("dictionary/%s.json", language)).exists()) {
+            throw new NotFoundException(String.format("Woordenlijst '%s' kon niet worden gevonden.", language));
         }
 
         User user = this.authenticationService.getUser();
 
         Game game = Game.builder()
                 .userId(new UserId(user.getUserId()))
-                .language(languageCode)
+                .language(language)
                 .gameStatus(GameStatus.ACTIVE)
                 .build();
 
