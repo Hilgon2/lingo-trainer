@@ -23,7 +23,5 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml -Dspring.profiles.active=staging
 
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload to Codecov
+      uses: codecov/codecov-action@v1
