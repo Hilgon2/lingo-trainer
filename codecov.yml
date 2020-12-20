@@ -1,3 +1,0 @@
-ignore:
-  - "**/api/security/**"
-  - "**/infrastructure/persistency/jpa/entity/user/**"
