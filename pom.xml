@@ -143,29 +143,15 @@
             <artifactId>h2</artifactId>
             <version>1.4.200</version>
         </dependency>
-
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>5.4.24.Final</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
             <version>3.0.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>2.3.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
-            <version>2.3.2</version>
         </dependency>
     </dependencies>
 
@@ -217,14 +203,6 @@
                         <exclude>**/api/security/**</exclude>
                         <exclude>**/infrastructure/persistency/jpa/entity/user/**</exclude>
                     </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <version>4.3.0</version>
-                <configuration>
-                    <repoToken>cNGcxF5b54NgnasMwCuQVSLwtbtZxlm6M</repoToken>
                 </configuration>
             </plugin>
         </plugins>
