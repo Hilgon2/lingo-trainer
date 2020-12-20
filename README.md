@@ -1,5 +1,5 @@
 # Lingo trainer API
-![test coverage](https://github.com/Hilgon2/lingo-trainer/blob/development/.github/badges/jacoco.svg)
+[![codecov](https://codecov.io/gh/Hilgon2/lingo-trainer/branch/development/graph/badge.svg?token=666J6NGEUR)](https://codecov.io/gh/Hilgon2/lingo-trainer)
 
 Voor het vak Backend Programming moeten wij een Lingo trainer maken. Deze trainer biedt de gebruiker een tool aan om te kijken of die het in zich heeft om mee te kunnen doen aan het geweldige spelshow Lingo! 
 
