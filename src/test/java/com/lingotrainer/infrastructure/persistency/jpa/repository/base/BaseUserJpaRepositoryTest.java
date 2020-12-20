@@ -1,5 +1,6 @@
 package com.lingotrainer.infrastructure.persistency.jpa.repository.base;
 
+import com.lingotrainer.domain.model.user.Role;
 import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.model.user.UserId;
 import com.lingotrainer.infrastructure.persistency.jpa.entity.user.UserEntity;
@@ -14,6 +15,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -69,7 +72,8 @@ class BaseUserJpaRepositoryTest {
                                 .username("testaccount")
                                 .password("testaccountpassword")
                                 .build())
-                )
+                ),
+                Arguments.of("accounttest", null, null, Optional.empty())
         );
     }
 
@@ -79,26 +83,6 @@ class BaseUserJpaRepositoryTest {
     void test_find_by_username(String username, UserEntity userEntity, User user, Optional<User> expectedResult) {
         when(mockUserMapper.convertToDomainEntity(userEntity)).thenReturn(user);
         when(mockUserJpaRepository.findByUsername(username)).thenReturn(userEntity);
-
-        // Run the test
-        final Optional<User> result = mockBaseUserJpaRepository.findByUsername(username);
-
-        // Verify the results
-        assertEquals(expectedResult, result);
-    }
-
-    static Stream<Arguments> provideFindByUsernameNotFound() {
-        return Stream.of(
-                Arguments.of("accounttest", Optional.empty())
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideFindByUsernameNotFound")
-    @DisplayName("User not found by username")
-    void test_find_by_username_not_found(String username, Optional<User> expectedResult) {
-        when(mockUserMapper.convertToDomainEntity(null)).thenReturn(null);
-        when(mockUserJpaRepository.findByUsername("username")).thenReturn(null);
 
         // Run the test
         final Optional<User> result = mockBaseUserJpaRepository.findByUsername(username);
@@ -155,12 +139,18 @@ class BaseUserJpaRepositoryTest {
                         1,
                         user,
                         userEntity,
-                        User
+                        Optional.of(User
                                 .builder()
                                 .userId(new UserId(1))
                                 .username("testaccount")
                                 .password("testaccountpassword")
-                                .build()
+                                .build())
+                ),
+                Arguments.of(
+                        31,
+                        null,
+                        userEntity,
+                        Optional.empty()
                 )
         );
     }
@@ -169,7 +159,7 @@ class BaseUserJpaRepositoryTest {
     @ParameterizedTest
     @MethodSource("provideFindById")
     @DisplayName("Find by ID")
-    void test_find_user_by_id(int userId, User user, UserEntity userEntity, User expectedResult) {
+    void test_find_user_by_id(int userId, User user, UserEntity userEntity, Optional<User> expectedResult) {
         when(mockUserMapper.convertToDomainEntity(userEntity)).thenReturn(user);
         when(mockUserJpaRepository.findById(userId)).thenReturn(Optional.of(userEntity));
 
@@ -177,31 +167,102 @@ class BaseUserJpaRepositoryTest {
         final Optional<User> result = mockBaseUserJpaRepository.findById(userId);
 
         // Verify the results
-        assertEquals(Optional.of(expectedResult), result);
+        assertEquals(expectedResult, result);
     }
 
-    static Stream<Arguments> provideFindByIdNotFound() {
+    static Stream<Arguments> provideHighscoresList() {
         return Stream.of(
                 Arguments.of(
-                        31,
-                        user,
-                        userEntity,
-                        Optional.empty()
-                )
-        );
+                        new ArrayList<>(List.of(
+                                UserEntity
+                                        .builder()
+                                        .username("tester1")
+                                        .highscore(16)
+                                        .role(Role.TRAINEE)
+                                        .build(),
+                                UserEntity
+                                        .builder()
+                                        .username("tester2")
+                                        .highscore(11)
+                                        .role(Role.TRAINEE)
+                                        .build(),
+                                UserEntity
+                                        .builder()
+                                        .username("tester3")
+                                        .highscore(7)
+                                        .role(Role.TRAINEE)
+                                        .build(),
+                                UserEntity
+                                        .builder()
+                                        .username("tester4")
+                                        .highscore(1)
+                                        .role(Role.TRAINEE)
+                                        .build()
+                        )),
+                        new ArrayList<>(List.of(
+                                User
+                                        .builder()
+                                        .username("tester1")
+                                        .highscore(16)
+                                        .role(Role.TRAINEE)
+                                        .build(),
+                                User
+                                        .builder()
+                                        .username("tester2")
+                                        .highscore(11)
+                                        .role(Role.TRAINEE)
+                                        .build(),
+                                User
+                                        .builder()
+                                        .username("tester3")
+                                        .highscore(7)
+                                        .role(Role.TRAINEE)
+                                        .build(),
+                                User
+                                        .builder()
+                                        .username("tester4")
+                                        .highscore(1)
+                                        .role(Role.TRAINEE)
+                                        .build()
+                        )),
+                        new ArrayList<>(List.of(
+                                User
+                                        .builder()
+                                        .username("tester1")
+                                        .highscore(16)
+                                        .role(Role.TRAINEE)
+                                        .build(),
+                                User
+                                        .builder()
+                                        .username("tester2")
+                                        .highscore(11)
+                                        .role(Role.TRAINEE)
+                                        .build(),
+                                User
+                                        .builder()
+                                        .username("tester3")
+                                        .highscore(7)
+                                        .role(Role.TRAINEE)
+                                        .build(),
+                                User
+                                        .builder()
+                                        .username("tester4")
+                                        .highscore(1)
+                                        .role(Role.TRAINEE)
+                                        .build()
+                        )
+                        )));
     }
 
     @ParameterizedTest
-    @MethodSource("provideFindByIdNotFound")
-    @DisplayName("Find by ID user not found")
-    void test_find_user_by_id_not_found(int userId, User user, UserEntity userEntity, Optional<User> expectedResult) {
-        when(mockUserMapper.convertToDomainEntity(userEntity)).thenReturn(user);
-        when(mockUserJpaRepository.findById(userId)).thenReturn(Optional.empty());
+    @MethodSource("provideHighscoresList")
+    @DisplayName("Get top 10 users by highscore")
+    void test_find_top_10_users_by_highscore(List<UserEntity> userEntities, List<User> users, List<User> expectedResult) {
+        when(mockUserMapper.convertToDomainEntities(userEntities)).thenReturn(users);
+        when(mockUserJpaRepository.findTop10ByOrderByHighscoreDesc()).thenReturn(userEntities);
 
-        // Run the test
-        final Optional<User> result = mockBaseUserJpaRepository.findById(userId);
+        final List<User> result = mockBaseUserJpaRepository.retrieveTopHighscores();
 
-        // Verify the results
         assertEquals(expectedResult, result);
     }
 }

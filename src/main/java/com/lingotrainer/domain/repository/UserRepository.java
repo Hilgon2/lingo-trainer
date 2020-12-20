@@ -2,6 +2,7 @@ package com.lingotrainer.domain.repository;
 
 import com.lingotrainer.domain.model.user.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
@@ -11,4 +12,6 @@ public interface UserRepository {
     boolean existsByUsername(String username);
 
     User save(User user);
+
+    List<User> retrieveTopHighscores();
 }

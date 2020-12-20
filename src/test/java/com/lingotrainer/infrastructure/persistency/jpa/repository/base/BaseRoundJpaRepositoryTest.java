@@ -31,7 +31,7 @@ class BaseRoundJpaRepositoryTest {
     @Mock
     private RoundMapper mockRoundMapper;
 
-    private BaseRoundJpaRepository baseRoundJpaRepositoryUnderTest;
+    private BaseRoundJpaRepository baseRoundJpaRepositoryTest;
 
     private static RoundEntity roundEntity;
     private static Round round;
@@ -75,7 +75,7 @@ class BaseRoundJpaRepositoryTest {
     @BeforeEach
     void setUp() {
         initMocks(this);
-        baseRoundJpaRepositoryUnderTest = new BaseRoundJpaRepository(mockRoundJpaRepository, mockRoundMapper);
+        baseRoundJpaRepositoryTest = new BaseRoundJpaRepository(mockRoundJpaRepository, mockRoundMapper);
     }
 
     static Stream<Arguments> provideCurrentRound() {
@@ -103,7 +103,7 @@ class BaseRoundJpaRepositoryTest {
         when(mockRoundMapper.convertToDomainEntity(roundEntity)).thenReturn(round);
 
         // Run the test
-        final Optional<Round> result = baseRoundJpaRepositoryUnderTest.findCurrentRound(gameId);
+        final Optional<Round> result = baseRoundJpaRepositoryTest.findCurrentRound(gameId);
 
         // Verify the results
         assertEquals(expectedResult, result);
@@ -155,7 +155,7 @@ class BaseRoundJpaRepositoryTest {
         when(mockRoundMapper.convertToDomainEntity(roundEntity)).thenReturn(round);
 
         // Run the test
-        final Optional<Round> result = baseRoundJpaRepositoryUnderTest.findLastRound(gameId);
+        final Optional<Round> result = baseRoundJpaRepositoryTest.findLastRound(gameId);
 
         // Verify the results
         assertEquals(expectedResult, result);
@@ -185,7 +185,7 @@ class BaseRoundJpaRepositoryTest {
         when(mockRoundMapper.convertToPersistableEntity(round)).thenReturn(roundEntity);
 
         // Run the test
-        final Round result = baseRoundJpaRepositoryUnderTest.save(round);
+        final Round result = baseRoundJpaRepositoryTest.save(round);
 
         // Verify the results
         assertEquals(expectedResult, result);
@@ -216,7 +216,7 @@ class BaseRoundJpaRepositoryTest {
         when(mockRoundMapper.convertToDomainEntity(roundEntity)).thenReturn(round);
 
         // Run the test
-        final Optional<Round> result = baseRoundJpaRepositoryUnderTest.findById(roundId);
+        final Optional<Round> result = baseRoundJpaRepositoryTest.findById(roundId);
 
         // Verify the results
         assertEquals(expectedResult, result);
