@@ -3,6 +3,8 @@ package com.lingotrainer.application.user;
 import com.lingotrainer.domain.model.user.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.List;
+
 public interface UserService {
     /**
      * Save a user, this could be either a new user creation or update of an existing user.
@@ -39,4 +41,10 @@ public interface UserService {
      * @return returns user information object
      */
     User findByUsername(String username);
+
+    /**
+     * Get a list of top users by it's highscores
+     * @return list of users by highscore
+     */
+    List<User> retrieveTopHighscores();
 }

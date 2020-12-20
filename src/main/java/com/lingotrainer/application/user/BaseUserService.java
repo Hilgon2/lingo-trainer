@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BaseUserService implements UserService, UserDetailsService {
 
@@ -66,5 +68,10 @@ public class BaseUserService implements UserService, UserDetailsService {
     public User findByUsername(String username) {
         return this.userRepository.findByUsername(username).orElseThrow(() ->
                 new NotFoundException(String.format("Gebruiker met de naam %s kon niet gevonden worden", username)));
+    }
+
+    @Override
+    public List<User> retrieveTopHighscores() {
+        return this.userRepository.retrieveTopHighscores();
     }
 }

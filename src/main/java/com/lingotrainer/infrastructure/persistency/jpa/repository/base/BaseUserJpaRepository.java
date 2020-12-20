@@ -7,6 +7,7 @@ import com.lingotrainer.domain.model.user.User;
 import com.lingotrainer.domain.repository.UserRepository;
 import com.lingotrainer.infrastructure.persistency.jpa.repository.UserJpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public class BaseUserJpaRepository implements UserRepository {
@@ -42,5 +43,12 @@ public class BaseUserJpaRepository implements UserRepository {
     public Optional<User> findById(int userId) {
         return Optional.ofNullable(this.userMapper.convertToDomainEntity(
                 this.userJpaRepository.findById(userId).orElse(null)));
+    }
+
+    @Override
+    public List<User> retrieveTopHighscores() {
+        return this.userMapper.convertToDomainEntities(
+                this.userJpaRepository.findTop10ByOrderByHighscoreDesc()
+        );
     }
 }
